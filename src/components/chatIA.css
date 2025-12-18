@@ -1,0 +1,119 @@
+.chat-egipcio-wrapper {
+  width: 90%;
+  max-width: 800px;
+  margin: 40px auto;
+  background: rgba(0, 0, 0, 0.65);
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow:
+    0 0 20px rgba(255, 215, 120, 0.2),
+    inset 0 0 10px rgba(255, 215, 120, 0.1);
+  backdrop-filter: blur(2px);
+  position: relative;
+}
+
+.chat-titulo {
+  text-align: center;
+  color: #f4e6b2;
+  font-size: 2rem;
+  margin-bottom: 15px;
+  text-shadow: 0 0 12px rgba(255, 215, 120, 0.8);
+}
+
+.chat-contenedor {
+  height: 400px;
+  overflow-y: auto;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(30, 30, 30, 0.5);
+  box-shadow: inset 0 0 12px rgba(0,0,0,0.6);
+}
+
+/* Mensajes */
+.mensaje-burbuja {
+  max-width: 75%;
+  padding: 10px 14px;
+  margin: 10px 0;
+  border-radius: 12px;
+  animation: fadeIn 0.3s ease;
+  white-space: pre-wrap;
+}
+
+.mensaje-burbuja.user {
+  background: #ffd47a;
+  color: #3e2f2f;
+  align-self: flex-end;
+  margin-left: auto;
+  box-shadow: 0 0 10px rgba(255, 215, 120, 0.5);
+}
+
+.mensaje-burbuja.ia {
+  background: rgba(255, 255, 255, 0.15);
+  color: #f4e6b2;
+  border: 1px solid rgba(255, 215, 120, 0.3);
+  box-shadow: 0 0 10px rgba(255, 215, 120, 0.3);
+}
+
+.escribiendo {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* Input */
+.chat-input-box {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.chat-input-box input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+.chat-input-box button {
+  padding: 10px 20px;
+  background: #d4a657;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.chat-input-box button:hover {
+  background: #f2d598;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 🔄 BOTÓN UNIVERSAL REFRESH */
+.refresh-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  background: rgba(255, 215, 120, 0.18);
+  border: 1px solid rgba(255, 215, 120, 0.35);
+  color: #f4e6b2;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: 0.2s ease;
+  box-shadow: 0 0 10px rgba(255, 215, 120, 0.2);
+}
+
+.refresh-btn:hover {
+  background: rgba(255, 215, 120, 0.35);
+  box-shadow: 0 0 14px rgba(255, 215, 120, 0.4);
+}
+
+.refresh-btn:active {
+  transform: scale(0.96);
+}

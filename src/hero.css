@@ -1,0 +1,185 @@
+/* PRESENTACIÓN DEL AUTOR */
+.presentacion-autor {
+  margin-top: 25px;
+  text-align: center;
+  color: #f4e6b2;
+  font-size: 1.2rem;
+  text-shadow: 0 0 6px rgba(0,0,0,0.8);
+  animation: fadeIn 2s ease forwards;
+}
+
+/* BOTÓN SOBRE MÍ */
+.btn-sobre-mi {
+  margin-top: 10px;
+  background: #d4a657;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 10px;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+
+  box-shadow:
+    0 0 12px rgba(255, 200, 110, 0.4),
+    inset 0 0 6px rgba(255, 220, 150, 0.25);
+
+  transition: 0.3s ease;
+}
+
+.btn-sobre-mi:hover {
+  background: #f2d598;
+  transform: scale(1.05);
+}
+
+/* TEXTO DESPLEGABLE SOBRE MÍ */
+.sobre-mi-texto {
+  margin-top: 15px;
+  padding: 18px 22px;
+  background: rgba(0,0,0,0.55);
+  border-radius: 12px;
+  color: #f4e6b2;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+
+  border: 1px solid rgba(255, 215, 140, 0.35);
+  box-shadow:
+    0 0 18px rgba(255, 215, 140, 0.25),
+    inset 0 0 8px rgba(255, 215, 140, 0.15);
+
+  animation: fadeIn 0.8s ease forwards;
+}
+/* CONTENEDOR GENERAL */
+.hero-section {
+  text-align: center;
+  padding: 20px;
+}
+
+/* 💛 TÍTULO GRANDE Y DORADO */
+.hero-titulo-grande {
+  color: #f4e6b2;
+  font-size: 3rem;
+  margin-bottom: 25px;
+  text-shadow:
+    0 0 12px rgba(255, 215, 120, 0.9),
+    0 0 28px rgba(255, 180, 80, 0.5),
+    3px 3px 10px black;
+  font-weight: bold;
+  letter-spacing: 2px;
+  animation: fadeIn 1.2s ease forwards;
+}
+
+/* 🔥 CUADRO MÍSTICO EGIPCIO */
+.mensaje-inicial-egipto {
+  max-width: 850px;
+  margin: 20px auto;
+  padding: 22px 28px;
+  text-align: center;
+
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 15px;
+  backdrop-filter: blur(3px);
+
+  border: 1px solid rgba(255, 215, 140, 0.4);
+  box-shadow:
+    0 0 25px rgba(255, 215, 140, 0.25),
+    inset 0 0 10px rgba(255, 215, 140, 0.15);
+
+  color: #f4e6b2;
+  font-size: 1.2rem;
+  line-height: 1.7;
+  font-weight: 500;
+
+  animation: fadeIn 1.5s ease forwards;
+}
+
+/* PRESENTACIÓN DEL AUTOR */
+.presentacion-autor {
+  margin-top: 25px;
+  text-align: center;
+  color: #f4e6b2;
+  font-size: 1.2rem;
+  text-shadow: 0 0 6px rgba(0,0,0,0.8);
+  animation: fadeIn 2s ease forwards;
+}
+
+/* BOTÓN SOBRE MÍ */
+.btn-sobre-mi {
+  margin-top: 10px;
+  background: #d4a657;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 10px;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+
+  box-shadow:
+    0 0 12px rgba(255, 200, 110, 0.4),
+    inset 0 0 6px rgba(255, 220, 150, 0.25);
+
+  transition: 0.3s ease;
+}
+
+.btn-sobre-mi:hover {
+  background: #f2d598;
+  transform: scale(1.05);
+}
+
+/* DESPLEGABLE SOBRE MÍ */
+.sobre-mi-texto {
+  margin-top: 15px;
+  padding: 18px 22px;
+  background: rgba(0,0,0,0.55);
+  border-radius: 12px;
+  color: #f4e6b2;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+
+  border: 1px solid rgba(255, 215, 140, 0.35);
+  box-shadow:
+    0 0 18px rgba(255, 215, 140, 0.25),
+    inset 0 0 8px rgba(255, 215, 140, 0.15);
+
+  animation: fadeIn 0.8s ease forwards;
+}
+
+/* ANIMACIÓN GENERAL */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Reducimos la altura total del Hero sin afectar su diseño */
+.hero-section {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* El cuadro místico debajo del título será más compacto */
+.mensaje-inicial-egipto {
+  margin-bottom: 10px !important;
+  padding: 16px 20px !important;
+}
+
+/* Reducimos el espacio bajo el texto del autor */
+.presentacion-autor {
+  margin-top: 10px !important;
+  margin-bottom: 0 !important;
+}
+
+/* Reducimos el espacio del desplegable “Sobre mí” */
+.sobre-mi-texto {
+  margin-top: 10px !important;
+  padding: 14px 18px !important;
+}

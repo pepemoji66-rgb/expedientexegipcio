@@ -1,0 +1,86 @@
+/* ===== HEADER ===== */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: rgba(0, 0, 0, 0.45);
+  position: sticky;
+  top: 0;
+  z-index: 2000;
+}
+
+/* ===== LOGO ===== */
+.logo {
+  font-size: 1.8rem;
+  color: #ffd47a;
+  font-weight: bold;
+  text-shadow: 0 0 8px rgba(255, 194, 54, 0.7);
+}
+
+/* ===== BOTÓN MENÚ ===== */
+.menu-btn {
+  background: #ff9a2a;
+  color: #3e2f2f;
+  font-weight: bold;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 0 12px rgba(255, 168, 0, 0.6);
+  transition: 0.3s ease;
+}
+
+.menu-btn:hover {
+  background: #ffc26e;
+}
+
+/* ===== MENÚ LATERAL DERECHO ===== */
+.side-menu {
+  position: fixed;
+  top: 0;
+  right: -260px;
+  height: 100%;
+  width: 240px;
+  background: rgba(20, 20, 20, 0.92);
+  backdrop-filter: blur(6px);
+  padding: 80px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  transition: right 0.35s ease;
+  z-index: 3000;
+  border-left: 2px solid #ff9a2a;
+}
+
+/* Cuando el menú está abierto */
+body.menu-abierto .side-menu {
+  right: 0;
+}
+
+/* ===== BOTONES DEL MENÚ LATERAL ===== */
+.side-menu button {
+  background: #ff9a2a;
+  border: none;
+  padding: 12px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #3e2f2f;
+  font-size: 16px;
+  box-shadow: 0 0 10px rgba(255, 176, 0, 0.4);
+  transition: 0.3s;
+}
+
+.side-menu button:hover {
+  background: #ffc26e;
+}
+
+
+
+/* Hover */
+.btn-menu-elegante:hover {
+  background: linear-gradient(to bottom, #ffc977, #e7a543);
+  transform: scale(1.05);
+}

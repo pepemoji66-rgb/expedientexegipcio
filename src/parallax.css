@@ -1,0 +1,13 @@
+.parallax-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 130%;
+  height: 130%;
+  background-size: cover;
+  background-position: center;
+  z-index: -10;
+  opacity: 0.9;
+  pointer-events: none;
+  transition: transform 0.5s ease-out; /* más suave todavía */
+}

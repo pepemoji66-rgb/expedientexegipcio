@@ -1,0 +1,52 @@
+/* BOTÓN DE MÚSICA */
+.btn-audio {
+  position: fixed;
+  top: 85px;
+  left: 20px;
+  background: #d4a657;
+  color: black;
+  padding: 10px 15px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+
+  box-shadow:
+    0 0 12px rgba(255, 215, 120, 0.5),
+    inset 0 0 6px rgba(255, 215, 120, 0.3);
+
+  transition: 0.25s ease-in-out;
+  z-index: 9999999; /* SIEMPRE visible */
+}
+
+.btn-audio:hover {
+  background: #f4dca3;
+}
+
+.btn-audio.activo {
+  background: #f5e2b6;
+}
+
+/* CONTROL DE VOLUMEN */
+.volumen-container {
+  position: fixed;
+  top: 135px;
+  left: 20px;
+  z-index: 9999999;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background: rgba(0, 0, 0, 0.45);
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 215, 120, 0.4);
+
+  backdrop-filter: blur(2px);
+}
+
+.volumen-container input {
+  width: 120px;
+}

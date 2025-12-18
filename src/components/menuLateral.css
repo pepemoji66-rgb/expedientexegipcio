@@ -1,0 +1,57 @@
+/* Fondo oscuro cuando el menú está abierto */
+.overlay-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 20;
+}
+
+/* MENÚ LATERAL A LA DERECHA */
+.menu-lateral {
+  position: fixed;
+  top: 0;
+  right: -260px;   /* oculto a la derecha */
+  width: 240px;
+  height: 100%;
+  background: #1a1a1aba;
+  backdrop-filter: blur(5px);
+  box-shadow: -2px 0px 10px black;
+  padding: 20px;
+  z-index: 30;
+  transition: right 0.35s ease;
+}
+
+.menu-lateral.abierto {
+  right: 0;
+}
+
+/* Botón cerrar */
+.cerrar-menu {
+  background: transparent;
+  border: none;
+  color: #f4e6b2;
+  font-size: 26px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+/* Botones dentro del menú */
+.menu-nav button {
+  width: 100%;
+  background: #e8c97f;
+  border: none;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.menu-nav button:hover {
+  background: #ffe9b3;
+  transform: translateX(-5px); /* animación hacia la izquierda */
+}

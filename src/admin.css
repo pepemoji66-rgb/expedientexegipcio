@@ -1,0 +1,78 @@
+/* CONTENEDOR */
+.tabla-contenedor {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 25px;
+  
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 15px;
+  backdrop-filter: blur(5px);
+
+  border: 1px solid rgba(255, 215, 140, 0.35);
+  box-shadow:
+      0 0 25px rgba(255, 200, 130, 0.25),
+      inset 0 0 10px rgba(255, 200, 130, 0.1);
+}
+
+/* TABLA */
+.tabla-egipcia {
+  width: 100%;
+  border-collapse: collapse;
+  color: #f4e6b2;
+  font-size: 0.95rem;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+/* CABECERA */
+.tabla-egipcia thead tr {
+  background: #c4a552;
+  color: #2a1e0c;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.tabla-egipcia th {
+  padding: 12px 15px;
+  text-shadow: 0 0 4px rgba(0,0,0,0.6);
+}
+
+/* FILAS */
+.tabla-egipcia tbody tr {
+  background: rgba(0, 0, 0, 0.65);
+  border-bottom: 1px solid rgba(255, 215, 140, 0.15);
+}
+
+.tabla-egipcia tbody tr:nth-child(even) {
+  background: rgba(50, 40, 20, 0.55);
+}
+
+/* HOVER */
+.tabla-egipcia tbody tr:hover {
+  background: rgba(255, 220, 150, 0.18);
+  transition: 0.2s;
+}
+
+/* CELDAS */
+.tabla-egipcia td {
+  padding: 10px 12px;
+}
+
+/* BOTÓN ELIMINAR */
+.btn-eliminar-egipcio {
+  padding: 6px 12px;
+  background: #b93131;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.25s;
+  box-shadow: 0 0 8px rgba(0,0,0,0.4);
+}
+
+.btn-eliminar-egipcio:hover {
+  background: #ff4d4d;
+  transform: scale(1.05);
+}

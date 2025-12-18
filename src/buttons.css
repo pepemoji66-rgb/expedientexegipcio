@@ -1,0 +1,165 @@
+/* =======================
+   BOTONES MODERNOS CENTRADOS
+========================= */
+
+/* Estilo general para todos los botones */
+button,
+.main-nav a,
+.hero .btn-sobre-mi,
+#toggle-galeria,
+form button {
+    display: inline-block;
+    padding: 12px 25px;
+    background-color: #ff9a2a;  /* naranja principal */
+    color: #3e2f2f;             /* texto oscuro visible */
+    font-weight: bold;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+
+    /* Sombra y transición para efecto moderno */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+}
+
+/* Efecto hover */
+button:hover,
+.main-nav a:hover,
+.hero .btn-sobre-mi:hover,
+#toggle-galeria:hover,
+form button:hover {
+    background-color: #ffc26e;  /* naranja claro */
+    transform: scale(1.05);      /* ligero aumento de tamaño */
+    box-shadow: 0 6px 10px rgba(0,0,0,0.2);
+}
+
+/* Botones de formulario ocupan todo el ancho y centrados */
+form button {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Botón Hero "Sobre mí" centrado */
+.hero .btn-sobre-mi {
+    margin: 20px auto 0 auto;
+    display: block;
+}
+
+/* Botón Galería centrado */
+#toggle-galeria {
+    margin: 20px auto;
+    display: block;
+}
+
+/* Botones de navegación centrados (si necesitas) */
+.main-nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+/* Botón Mostrar / Ocultar Audio centrado */
+#audio-section button#toggle-audio {
+    display: block;        /* hace que el botón sea un bloque */
+    margin: 20px auto;     /* centrado horizontalmente */
+    padding: 12px 25px;
+    background-color: #ff9a2a;
+    color: #3e2f2f;
+    font-weight: bold;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+}
+
+#audio-section button#toggle-audio:hover {
+    background-color: #ffc26e;
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.2);
+}
+/* Botón Mostrar / Ocultar Audio centrado *//* Botón Mostrar / Ocultar Audio centrado */
+#audios .acordeon-btn {
+    display: block;          /* para que margin auto funcione */
+    margin: 20px auto;       /* centrado horizontal */
+    padding: 12px 25px;
+    background-color: #ff9a2a;
+    color: #3e2f2f;
+    font-weight: bold;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+}
+
+#audios .acordeon-btn:hover {
+    background-color: #ffc26e;
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.2);
+}
+/* -----------------------
+   BOTONES CENTRADOS GENERALES
+------------------------- */
+button.centered,
+button.center,
+.btn-center {
+    display: block;          /* Para que margin auto funcione */
+    margin: 20px auto;       /* Centrado horizontal */
+    padding: 12px 25px;
+    background-color: #ff9a2a; /* Color principal de los botones */
+    color: #3e2f2f;
+    font-weight: bold;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+}
+
+button.centered:hover,
+button.center:hover,
+.btn-center:hover {
+    background-color: #ffc26e;
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.2);
+}
+/* -----------------------
+   CENTRAR BOTONES EN GRUPOS
+------------------------- */
+.button-group,
+.btn-group,
+.center-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;   /* separación entre botones */
+    margin: 20px 0;
+}
+
+.button-group button,
+.btn-group button,
+.center-buttons button {
+    background-color: #ff9a2a;
+    color: #3e2f2f;
+    font-weight: bold;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.button-group button:hover,
+.btn-group button:hover,
+.center-buttons button:hover {
+    background-color: #ffc26e;
+}
+

@@ -1,0 +1,72 @@
+.minijuego-wrapper {
+  padding: 20px;
+  text-align: center;
+  color: #f4e6b2;
+}
+
+.titulo-juego {
+  font-size: 28px;
+  margin-bottom: 20px;
+  text-shadow: 0 0 5px #000;
+}
+
+/* Caja de pregunta */
+.pregunta-box {
+  background: rgba(20, 20, 20, 0.7);
+  padding: 25px;
+  border-radius: 12px;
+  width: 80%;
+  margin: 0 auto;
+  box-shadow: 0 0 10px #000;
+}
+
+.texto-pregunta {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+/* Botones */
+.btn-opcion {
+  display: block;
+  width: 100%;
+  background: #e0a14d;
+  border: 2px solid #8a5f20;
+  color: black;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.btn-opcion:hover {
+  background: #ffd58c;
+}
+
+/* Maldición (fallo) */
+.maldicion {
+  color: red;
+  font-size: 22px;
+  margin-bottom: 20px;
+  animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  50% { transform: translateX(8px); }
+  75% { transform: translateX(-8px); }
+  100% { transform: translateX(0); }
+}
+
+/* Final */
+.final-juego {
+  padding: 30px;
+  background: rgba(50, 30, 10, 0.8);
+  border-radius: 12px;
+  width: 80%;
+  margin: 0 auto;
+  box-shadow: 0 0 10px #000;
+}

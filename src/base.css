@@ -1,0 +1,192 @@
+/* ================================
+   ESTRUCTURA PRINCIPAL
+================================ */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: "Poppins", sans-serif;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* El contenido NO debe estar centrado verticalmente */
+#contenido-principal {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* ================================
+   FONDO
+================================ */
+body {
+  background-image: url("./imagenes/12.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: scroll;
+  color: #f5f5f5;
+  line-height: 1.6;
+  position: relative;
+  z-index: 0;
+
+  /* ELIMINAMOS el blur global que creaba capas extra */
+  backdrop-filter: none !important;
+}
+
+/* ================================
+   OVERLAY QUE BLOQUEABA LA GALERÍA (ARREGLADO)
+================================ */
+
+/* 🔥 ESTE era el culpable. Lo corregimos totalmente. */
+body::before {
+  content: "";
+  position: absolute;       /* ← ya NO es fixed */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;               /* ← ya NO cubre media pantalla */
+  background: transparent;  /* ← sin overlay */
+  pointer-events: none;
+  z-index: -10 !important;  /* ← siempre detrás de todo */
+}
+
+/* ================================
+   CONTENEDORES GENERALES
+================================ */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* ================================
+   TÍTULOS
+================================ */
+h1, h2, h3, h4 {
+  color: #f4e6b2 !important;
+  text-shadow:
+    0 0 10px rgba(255, 215, 100, 0.6),
+    0 0 20px rgba(255, 180, 50, 0.4),
+    2px 2px 10px rgba(0, 0, 0, 0.6);
+}
+
+/* ================================
+   ENLACES
+================================ */
+a {
+  color: #ffd87a;
+  text-decoration: none;
+  transition: 0.3s;
+}
+a:hover {
+  color: #fff1c4;
+}
+
+/* ================================
+   BOTONES
+================================ */
+.btn {
+  background: #ffb800;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  color: #3e2f2f;
+}
+.btn:hover {
+  background: #ffd666;
+}
+
+/* ================================
+   RESET LISTAS
+================================ */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ================================
+   SCROLL
+================================ */
+section[id] {
+  scroll-margin-top: 120px;
+  scroll-behavior: smooth;
+}
+
+section {
+  padding-top: 20px !important;
+  padding-bottom: 20px !important;
+}
+
+.contenido-relacionado,
+.galeria,
+.videos {
+  margin-top: 20px !important;
+  margin-bottom: 20px !important;
+}
+
+/* ================================
+   CAJAS / TARJETAS
+================================ */
+.form-box, .contenido-relacionado, .galeria, .videos, .card {
+  border: 1px solid rgba(255, 200, 120, 0.35);
+  box-shadow:
+    0 0 15px rgba(255, 210, 120, 0.2),
+    inset 0 0 10px rgba(255, 200, 120, 0.1);
+}
+
+/* ================================
+   EFECTOS VISUALES
+================================ */
+.estrellas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.arena-suave {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.25;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.13),
+    rgba(255, 255, 255, 0) 70%
+  );
+}
+
+/* ================================
+   MOSAICO (IMÁGENES)
+================================ */
+.mosaico-item img {
+  width: 100%;
+  height: auto;
+  max-height: 450px;
+  object-fit: cover;
+}

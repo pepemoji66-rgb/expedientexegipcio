@@ -1,0 +1,17 @@
+.titulo-principal {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.titulo-principal h2 {
+    font-size: 2rem;
+    background: rgba(0, 0, 0, 0.45);
+    padding: 15px 25px;
+    border-radius: 12px;
+    color: #ffe5a6;
+    box-shadow: 0 0 35px rgba(255, 255, 255, 0.25);
+    text-align: center;
+    width: fit-content;
+}
