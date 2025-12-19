@@ -1,94 +1,108 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "./api";
 import "./admin.css";
 
-function AdminPage({ usuariosFiltrados = [] }) {
-
+function AdminPage({
+  usuariosFiltrados = [],
+  imagenesGaleria = [],
+  setImagenesGaleria
+}) {
+  // =========================
+  // USUARIOS
+  // =========================
   const [usuarios, setUsuarios] = useState([]);
-  const [paginaActual, setPaginaActual] = useState(1);
+  const [paginaUsuarios, setPaginaUsuarios] = useState(1);
   const usuariosPorPagina = 10;
 
-  // Cargar todos o filtrados
   useEffect(() => {
     if (usuariosFiltrados.length === 0) {
       cargarUsuarios();
     } else {
       setUsuarios(usuariosFiltrados);
-      setPaginaActual(1);
+      setPaginaUsuarios(1);
     }
   }, [usuariosFiltrados]);
 
   const cargarUsuarios = async () => {
-    const res = await axios.get("http://localhost:5000/api/usuarios");
+    const res = await api.get("/usuarios");
     setUsuarios(res.data);
   };
 
-  // ELIMINAR UNO
   const eliminarUsuario = async (id) => {
     if (!window.confirm("¿Seguro que deseas eliminar este usuario?")) return;
-
-    await axios.delete(`http://localhost:5000/api/usuarios/${id}`);
+    await api.delete(`/usuarios/${id}`);
     cargarUsuarios();
   };
 
-  // ELIMINAR TODOS
   const eliminarTodos = async () => {
     if (!window.confirm("⚠ Esto borrará TODOS los usuarios. ¿Seguro?")) return;
-
-    await axios.delete("http://localhost:5000/api/usuarios");
+    await api.delete("/usuarios");
     cargarUsuarios();
   };
 
-  // PAGINACIÓN
-  const indiceUltimo = paginaActual * usuariosPorPagina;
-  const indicePrimero = indiceUltimo - usuariosPorPagina;
-  const usuariosActuales = usuarios.slice(indicePrimero, indiceUltimo);
+  const indiceUltimoUsuario = paginaUsuarios * usuariosPorPagina;
+  const indicePrimerUsuario = indiceUltimoUsuario - usuariosPorPagina;
+  const usuariosActuales = usuarios.slice(
+    indicePrimerUsuario,
+    indiceUltimoUsuario
+  );
 
-  const totalPaginas = Math.ceil(usuarios.length / usuariosPorPagina);
+  const totalPaginasUsuarios = Math.ceil(
+    usuarios.length / usuariosPorPagina
+  );
 
-  const cambiarPagina = (num) => {
-    if (num >= 1 && num <= totalPaginas) {
-      setPaginaActual(num);
-    }
+  // =========================
+  // GALERÍA (PAGINADA)
+  // =========================
+  const imagenesPorPagina = 10;
+  const [paginaGaleria, setPaginaGaleria] = useState(1);
+
+  const totalPaginasGaleria = Math.ceil(
+    imagenesGaleria.length / imagenesPorPagina
+  );
+
+  const indiceUltimaImg = paginaGaleria * imagenesPorPagina;
+  const indicePrimeraImg = indiceUltimaImg - imagenesPorPagina;
+
+  const imagenesPagina = imagenesGaleria.slice(
+    indicePrimeraImg,
+    indiceUltimaImg
+  );
+
+  const toggleVisibleImagen = (id) => {
+    setImagenesGaleria((prev) =>
+      prev.map((img) =>
+        img.id === id ? { ...img, visible: !img.visible } : img
+      )
+    );
   };
+const eliminarImagen = (id) => {
+  if (!window.confirm("¿Seguro que quieres borrar esta imagen?")) return;
 
+  setImagenesGaleria(prev =>
+    prev.filter(img => img.id !== id)
+  );
+};
+
+  // =========================
+  // RENDER
+  // =========================
   return (
     <div style={{ padding: "20px" }}>
       <h2 style={{ textAlign: "center", color: "#f4e6b2" }}>
         Panel de Administración
       </h2>
 
-      {/* BOTÓN VOLVER */}
       <button
         onClick={() => (window.location.href = "/")}
-        style={{
-          background: "#888",
-          padding: "10px 20px",
-          border: "none",
-          cursor: "pointer",
-          marginBottom: "20px",
-        }}
+        style={{ marginBottom: "20px" }}
       >
         ⬅ Volver
       </button>
 
-      {/* BOTÓN ELIMINAR TODOS */}
-      <button
-        onClick={eliminarTodos}
-        style={{
-          background: "red",
-          color: "white",
-          padding: "10px 20px",
-          border: "none",
-          cursor: "pointer",
-          marginBottom: "20px",
-          marginLeft: "10px",
-        }}
-      >
-        ❌ Eliminar TODOS
-      </button>
-
-      {/* TABLA */}
+      {/* =========================
+          USUARIOS
+      ========================= */}
       <div className="tabla-contenedor">
         <table className="tabla-egipcia">
           <thead>
@@ -102,7 +116,6 @@ function AdminPage({ usuariosFiltrados = [] }) {
               <th>Acciones</th>
             </tr>
           </thead>
-
           <tbody>
             {usuariosActuales.map((user) => (
               <tr key={user.id}>
@@ -126,40 +139,102 @@ function AdminPage({ usuariosFiltrados = [] }) {
         </table>
       </div>
 
-      {/* CONTROLES DE PAGINACIÓN */}
+      {/* PAGINACIÓN USUARIOS */}
       <div style={{ textAlign: "center", marginTop: "20px" }}>
-        <button
-          onClick={() => cambiarPagina(paginaActual - 1)}
-          disabled={paginaActual === 1}
-          style={{ marginRight: "10px" }}
-        >
-          ⬅ Anterior
-        </button>
-
-        {Array.from({ length: totalPaginas }, (_, i) => (
+        {Array.from({ length: totalPaginasUsuarios }, (_, i) => (
           <button
             key={i}
-            onClick={() => cambiarPagina(i + 1)}
+            onClick={() => setPaginaUsuarios(i + 1)}
             style={{
               margin: "0 5px",
-              background: paginaActual === i + 1 ? "#c4a552" : "#333",
-              color: "white",
-              padding: "6px 12px",
-              border: "none",
-              borderRadius: "5px",
+              background: paginaUsuarios === i + 1 ? "#c4a552" : "#333",
+              color: "white"
             }}
           >
             {i + 1}
           </button>
         ))}
+      </div>
 
-        <button
-          onClick={() => cambiarPagina(paginaActual + 1)}
-          disabled={paginaActual === totalPaginas}
-          style={{ marginLeft: "10px" }}
-        >
-          Siguiente ➡
-        </button>
+      {/* =========================
+          GALERÍA
+      ========================= */}
+      <hr style={{ margin: "50px 0" }} />
+
+      <h3 style={{ color: "#f4e6b2" }}>Gestión de Galería</h3>
+
+      <div className="tabla-contenedor">
+        <table className="tabla-egipcia">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Miniatura</th>
+              <th>Título</th>
+              <th>Visible</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {imagenesPagina.map((img) => (
+              <tr key={img.id}>
+                <td>{img.id}</td>
+                <td>
+                  <img
+                    src={img.src}
+                    alt={img.titulo}
+                    style={{ width: "70px", borderRadius: "6px" }}
+                  />
+                </td>
+                <td>{img.titulo}</td>
+                <td>{img.visible ? "Sí" : "No"}</td>
+                <td>
+                  <button
+                    onClick={() => toggleVisibleImagen(img.id)}
+                    style={{
+                      background: img.visible ? "#b33" : "#2a8",
+                      color: "white",
+                      border: "none",
+                      padding: "6px 10px",
+                      borderRadius: "4px"
+                    }}
+                  >
+                    {img.visible ? "Ocultar" : "Mostrar"}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+<button
+  onClick={() => eliminarImagen(img.id)}
+  style={{
+    background: "#000",
+    color: "white",
+    border: "none",
+    padding: "6px 10px",
+    borderRadius: "4px",
+    marginLeft: "6px"
+  }}
+>
+  🗑️ Eliminar
+</button>
+
+      {/* PAGINACIÓN GALERÍA */}
+      <div style={{ textAlign: "center", marginTop: "20px" }}>
+        {Array.from({ length: totalPaginasGaleria }, (_, i) => (
+          <button
+            key={i}
+            onClick={() => setPaginaGaleria(i + 1)}
+            style={{
+              margin: "0 5px",
+              background: paginaGaleria === i + 1 ? "#c4a552" : "#333",
+              color: "white"
+            }}
+          >
+            {i + 1}
+          </button>
+        ))}
       </div>
     </div>
   );
