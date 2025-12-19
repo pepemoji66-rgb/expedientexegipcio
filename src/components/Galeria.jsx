@@ -6,7 +6,25 @@ export default function Galeria({ imagenes = [] }) {
   const [esVertical, setEsVertical] = useState(false);
   const [cargando, setCargando] = useState(false);
 
-  // --- FIX ANTI-FREEZE: asegura que nada quede bloqueado ---
+  // PAGINACIÓN
+  const imagenesPorPagina = 10;
+  const [paginaActual, setPaginaActual] = useState(1);
+
+  // solo imágenes visibles
+  const imagenesVisibles = imagenes.filter(img => img.visible);
+
+  const totalPaginas = Math.ceil(
+    imagenesVisibles.length / imagenesPorPagina
+  );
+
+  const indiceUltima = paginaActual * imagenesPorPagina;
+  const indicePrimera = indiceUltima - imagenesPorPagina;
+
+  const imagenesPagina = imagenesVisibles.slice(
+    indicePrimera,
+    indiceUltima
+  );
+
   useEffect(() => {
     document.body.style.overflow = "auto";
   }, []);
@@ -21,12 +39,9 @@ export default function Galeria({ imagenes = [] }) {
       setEsVertical(img.height > img.width);
       setImagenActiva(src);
       setCargando(false);
-
-      // bloquear body cuando está la imagen abierta
       document.body.style.overflow = "hidden";
     };
 
-    // fail-safe si la imagen tarda demasiado en cargar
     setTimeout(() => setCargando(false), 1200);
   };
 
@@ -35,43 +50,91 @@ export default function Galeria({ imagenes = [] }) {
     document.body.style.overflow = "auto";
   };
 
-
+  const cambiarPagina = (num) => {
+    if (num >= 1 && num <= totalPaginas) {
+      setPaginaActual(num);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <section className="galeria-mosaico">
       <h2 className="titulo-galeria">Galería Egipcia</h2>
 
       <div className="galeria-grid">
-  {imagenes.map((img) => (
-    <div
-      key={img.id}
-      className="galeria-item"
-      onClick={() => abrirLightbox(img.src)}
-    >
-      <img
-        src={img.src}
-        alt={img.titulo || "Foto galería"}
-        draggable="false"
-      />
-    </div>
-  ))}
-</div>
+        {imagenesPagina.map((img) => (
+          <div
+            key={img.id}
+            className="galeria-item"
+            onClick={() => abrirLightbox(img.src)}
+          >
+            <img src={img.src} alt={img.titulo} draggable="false" />
+          </div>
+        ))}
+      </div>
 
+      {/* PAGINACIÓN */}
+      {totalPaginas > 1 && (
+        <div style={{ textAlign: "center", marginTop: "30px" }}>
+          <button
+            onClick={() => cambiarPagina(paginaActual - 1)}
+            disabled={paginaActual === 1}
+            style={{ marginRight: "10px" }}
+          >
+            ⬅ Anterior
+          </button>
 
-      {/* Loader corregido, no bloquea clics */}
+          {Array.from({ length: totalPaginas }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => cambiarPagina(i + 1)}
+              style={{
+                margin: "0 5px",
+                background:
+                  paginaActual === i + 1 ? "#c4a552" : "#333",
+                color: "white",
+                padding: "6px 12px",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer"
+              }}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            onClick={() => cambiarPagina(paginaActual + 1)}
+            disabled={paginaActual === totalPaginas}
+            style={{ marginLeft: "10px" }}
+          >
+            Siguiente ➡
+          </button>
+        </div>
+      )}
+
+      {/* LOADER */}
       {cargando && (
         <div className="lightbox loader-fix">
           <div className="loader-arena"></div>
         </div>
       )}
 
+      {/* LIGHTBOX */}
       {imagenActiva && !cargando && (
         <div className="lightbox" onClick={cerrarLightbox}>
           <div
-            className={`lightbox-contenido scroll-interno ${esVertical ? "vertical" : ""}`}
+            className={`lightbox-contenido scroll-interno ${
+              esVertical ? "vertical" : ""
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
-            <button className="lightbox-cerrar" onClick={cerrarLightbox}>✦</button>
+            <button
+              className="lightbox-cerrar"
+              onClick={cerrarLightbox}
+            >
+              ✦
+            </button>
 
             <img src={imagenActiva} alt="Ampliada" />
           </div>

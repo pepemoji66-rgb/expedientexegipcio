@@ -24,7 +24,6 @@ import Esfinge from "./components/Esfinge";
 import Minijuego from "./components/Minijuego";
 import Ra from "./components/Ra";
 import Home from "./components/Home";
-
 import ChatUsuarios from "./components/Chat/ChatUsuarios";
 
 // CSS
@@ -42,6 +41,26 @@ function App() {
   const [seccionActiva, setSeccionActiva] = useState("inicio");
   const [usuariosFiltrados, setUsuariosFiltrados] = useState([]);
   const { auth } = useContext(AuthContext);
+
+  // 🔑 ESTADO COMPARTIDO DE LA GALERÍA (MOCK)
+  const [imagenesGaleria, setImagenesGaleria] = useState([
+  { id: 1, src: "/imagenes/1.avif", titulo: "Imagen 1", orden: 1, visible: true },
+  { id: 2, src: "/imagenes/2.avif", titulo: "Imagen 2", orden: 2, visible: true },
+  { id: 3, src: "/imagenes/3.avif", titulo: "Imagen 3", orden: 3, visible: true },
+  { id: 4, src: "/imagenes/4.avif", titulo: "Imagen 4", orden: 4, visible: true },
+  { id: 5, src: "/imagenes/5.avif", titulo: "Imagen 5", orden: 5, visible: true },
+  { id: 6, src: "/imagenes/6.avif", titulo: "Imagen 6", orden: 6, visible: true },
+  { id: 7, src: "/imagenes/7.avif", titulo: "Imagen 7", orden: 7, visible: true },
+  { id: 8, src: "/imagenes/8.avif", titulo: "Imagen 8", orden: 8, visible: true },
+  { id: 9, src: "/imagenes/9.avif", titulo: "Imagen 9", orden: 9, visible: true },
+  { id: 10, src: "/imagenes/10.avif", titulo: "Imagen 10", orden: 10, visible: true },
+  { id: 11, src: "/imagenes/11.avif", titulo: "Imagen 11", orden: 11, visible: true },
+  { id: 12, src: "/imagenes/12.avif", titulo: "Imagen 12", orden: 12, visible: true },
+  { id: 13, src: "/imagenes/14.avif", titulo: "Imagen 13", orden: 13, visible: true },
+  { id: 14, src: "/imagenes/15.avif", titulo: "Imagen 14", orden: 14, visible: true },
+  { id: 15, src: "/imagenes/esfinge.jpg", titulo: "Esfinge", orden: 15, visible: true }
+]);
+
 
   useEffect(() => {
     const estrella = document.querySelector(".estrella-fugaz");
@@ -76,7 +95,7 @@ function App() {
 
           <div id="contenido-principal">
             <Routes>
-              {/* HOME */}
+              {/* HOME / SECCIONES */}
               <Route
                 path="/"
                 element={
@@ -92,10 +111,19 @@ function App() {
 
                     {auth && seccionActiva === "audio" && <AudioSection />}
                     {auth && seccionActiva === "videos" && <Videos />}
-                    {auth && seccionActiva === "galeria" && <Galeria />}
+
+                    {auth && seccionActiva === "galeria" && (
+                      <Galeria
+                        imagenes={imagenesGaleria
+                          .filter(img => img.visible)
+                          .sort((a, b) => a.orden - b.orden)}
+                      />
+                    )}
+
                     {auth && seccionActiva === "mapa" && (
                       <MapaInteractivo setSeccionActiva={setSeccionActiva} />
                     )}
+
                     {auth && seccionActiva === "minijuego" && <Minijuego />}
                     {auth && seccionActiva === "ra" && <Ra />}
                   </>
@@ -107,7 +135,11 @@ function App() {
                 path="/admin"
                 element={
                   auth ? (
-                    <AdminPage usuariosFiltrados={usuariosFiltrados} />
+                    <AdminPage
+                      usuariosFiltrados={usuariosFiltrados}
+                      imagenesGaleria={imagenesGaleria}
+                      setImagenesGaleria={setImagenesGaleria}
+                    />
                   ) : (
                     <h2 style={{ textAlign: "center" }}>
                       Debes iniciar sesión para ver esta página.
@@ -116,7 +148,7 @@ function App() {
                 }
               />
 
-              {/* CHAT USUARIOS */}
+              {/* CHAT */}
               <Route path="/chat-usuarios" element={<ChatUsuarios />} />
             </Routes>
           </div>
