@@ -76,13 +76,14 @@ function AdminPage({
       )
     );
   };
-const eliminarImagen = (id) => {
-  if (!window.confirm("¿Seguro que quieres borrar esta imagen?")) return;
 
-  setImagenesGaleria(prev =>
-    prev.filter(img => img.id !== id)
-  );
-};
+  const eliminarImagen = (id) => {
+    if (!window.confirm("¿Seguro que quieres borrar esta imagen?")) return;
+
+    setImagenesGaleria((prev) =>
+      prev.filter((img) => img.id !== id)
+    );
+  };
 
   // =========================
   // RENDER
@@ -171,7 +172,7 @@ const eliminarImagen = (id) => {
               <th>Miniatura</th>
               <th>Título</th>
               <th>Visible</th>
-              <th>Acción</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -200,25 +201,26 @@ const eliminarImagen = (id) => {
                   >
                     {img.visible ? "Ocultar" : "Mostrar"}
                   </button>
+
+                  <button
+                    onClick={() => eliminarImagen(img.id)}
+                    style={{
+                      background: "#000",
+                      color: "white",
+                      border: "none",
+                      padding: "6px 10px",
+                      borderRadius: "4px",
+                      marginLeft: "6px"
+                    }}
+                  >
+                    🗑️ Eliminar
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-<button
-  onClick={() => eliminarImagen(img.id)}
-  style={{
-    background: "#000",
-    color: "white",
-    border: "none",
-    padding: "6px 10px",
-    borderRadius: "4px",
-    marginLeft: "6px"
-  }}
->
-  🗑️ Eliminar
-</button>
 
       {/* PAGINACIÓN GALERÍA */}
       <div style={{ textAlign: "center", marginTop: "20px" }}>
