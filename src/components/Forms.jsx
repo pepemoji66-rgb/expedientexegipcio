@@ -1,6 +1,7 @@
 import React, { useState, startTransition, useContext } from "react";
-import axios from "axios";
+import api from "../api";
 import { AuthContext } from "../AuthContext";
+import { useNavigate } from "react-router-dom";
 import "../forms.css";
 
 // COMPONENTES
@@ -12,9 +13,9 @@ import ModalRegistro from "./Forms/ModalRegistro";
 import ModalBuscar from "./Forms/ModalBuscar";
 
 function Forms({ setResultadosBusqueda }) {
+  const navigate = useNavigate();
   const { auth, setAuth } = useContext(AuthContext);
 
-  // 🔥 CAMBIO: ahora comprobamos si existe "user", no si es "true"
   const [authUser, setAuthUser] = useState(
     localStorage.getItem("user") !== null
   );
@@ -68,13 +69,12 @@ function Forms({ setResultadosBusqueda }) {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/api/login", {
+      const res = await api.post("/login", {
         email: loginEmail,
         password: loginPass
       });
 
       if (res.data.ok) {
-        // 🔥 CAMBIO IMPORTANTE
         localStorage.setItem("user", JSON.stringify(res.data.user));
         setAuthUser(true);
         alert("Sesión iniciada correctamente");
@@ -85,7 +85,6 @@ function Forms({ setResultadosBusqueda }) {
   };
 
   const logoutUser = () => {
-    // 🔥 CAMBIO
     localStorage.removeItem("user");
     setAuthUser(false);
   };
@@ -94,7 +93,7 @@ function Forms({ setResultadosBusqueda }) {
   const handleRegistro = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/usuarios", {
+      await api.post("/usuarios", {
         nombre,
         email,
         ciudad,
@@ -123,7 +122,7 @@ function Forms({ setResultadosBusqueda }) {
     if (!auth) return alert("Debes iniciar sesión como admin.");
 
     try {
-      const res = await axios.get("http://localhost:5000/api/usuarios", {
+      const res = await api.get("/usuarios", {
         params: {
           nombre: buscarNombre,
           ciudad: buscarCiudad,
@@ -135,7 +134,7 @@ function Forms({ setResultadosBusqueda }) {
       startTransition(() => {
         setResultadosBusqueda(res.data);
         setModalBuscar(false);
-        window.location.href = "/admin";
+        navigate("/admin");
       });
     } catch {
       alert("Error realizando la búsqueda.");
@@ -146,12 +145,12 @@ function Forms({ setResultadosBusqueda }) {
     if (!auth) return alert("Debes iniciar sesión como admin.");
 
     try {
-      const res = await axios.get("http://localhost:5000/api/usuarios");
+      const res = await api.get("/usuarios");
 
       startTransition(() => {
         setResultadosBusqueda(res.data);
         setModalBuscar(false);
-        window.location.href = "/admin";
+        navigate("/admin");
       });
     } catch {
       alert("Error buscando todos los usuarios.");
