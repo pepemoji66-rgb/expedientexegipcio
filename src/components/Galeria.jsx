@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../galeria.css";
 
-export default function Galeria() {
+export default function Galeria({ imagenes = [] }) {
   const [imagenActiva, setImagenActiva] = useState(null);
   const [esVertical, setEsVertical] = useState(false);
   const [cargando, setCargando] = useState(false);
@@ -35,39 +35,28 @@ export default function Galeria() {
     document.body.style.overflow = "auto";
   };
 
-  const imagenes = [
-    "/imagenes/1.avif",
-    "/imagenes/2.avif",
-    "/imagenes/3.avif",
-    "/imagenes/4.avif",
-    "/imagenes/5.avif",
-    "/imagenes/6.avif",
-    "/imagenes/7.avif",
-    "/imagenes/8.avif",
-    "/imagenes/9.avif",
-    "/imagenes/10.avif",
-    "/imagenes/11.avif",
-    "/imagenes/12.avif",
-    "/imagenes/14.avif",
-    "/imagenes/15.avif",
-    "/imagenes/esfinge.jpg"
-  ];
+
 
   return (
     <section className="galeria-mosaico">
       <h2 className="titulo-galeria">Galería Egipcia</h2>
 
       <div className="galeria-grid">
-        {imagenes.map((img, index) => (
-          <div
-            key={index}
-            className="galeria-item"
-            onClick={() => abrirLightbox(img)}
-          >
-            <img src={img} alt="Foto galería" draggable="false" />
-          </div>
-        ))}
-      </div>
+  {imagenes.map((img) => (
+    <div
+      key={img.id}
+      className="galeria-item"
+      onClick={() => abrirLightbox(img.src)}
+    >
+      <img
+        src={img.src}
+        alt={img.titulo || "Foto galería"}
+        draggable="false"
+      />
+    </div>
+  ))}
+</div>
+
 
       {/* Loader corregido, no bloquea clics */}
       {cargando && (
