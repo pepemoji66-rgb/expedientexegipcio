@@ -1,65 +1,86 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./esfinge.css";
-import ContenidoRelacionado from "./ContenidoRelacionado";  // ✅ AÑADIDO
 
 export default function Esfinge() {
   const [mostrarTexto, setMostrarTexto] = useState(false);
+  const [mostrarNoticias, setMostrarNoticias] = useState(false);
+  const [noticias, setNoticias] = useState([]);
+
+  useEffect(() => {
+    const traerNoticias = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/noticias");
+        setNoticias(res.data);
+      } catch (error) {
+        console.error("Error al pedir noticias:", error);
+      }
+    };
+    traerNoticias();
+  }, []);
 
   return (
-    <div className="esfinge-wrapper">
+    <div className="esfinge-gran-contenedor">
+      <header className="esfinge-header">
+        <div className="linea-dorada"></div>
+        <h2 className="esfinge-titulo">La Cámara de la Esfinge</h2>
+        <div className="linea-dorada"></div>
+      </header>
 
-      <h2 className="esfinge-titulo">La Gran Esfinge de Giza</h2>
-
-      {/* IMAGEN PRINCIPAL */}
-      <div className="esfinge-imagen-contenedor">
-        <img
-          src="/imagenes/esfinge.jpg"
-          alt="La Esfinge de Giza"
-          className="esfinge-imagen"
-        />
+      <div className="templo-marco">
+        <div className="esfinge-imagen-contenedor">
+          <img 
+            src="/imagenes/esfinge.jpg" 
+            alt="Esfinge" 
+            className={`esfinge-imagen ${(mostrarTexto || mostrarNoticias) ? 'imagen-peque' : ''}`} 
+          />
+        </div>
       </div>
 
-      {/* BOTÓN MOSTRAR/OCULTAR */}
-      <button
-        className="btn-esfinge"
-        onClick={() => setMostrarTexto(!mostrarTexto)}
-      >
-        {mostrarTexto ? "Ocultar historia" : "Mostrar historia"}
-      </button>
+      <div className="controles-esfinge">
+        <button className={`btn-cartucho ${mostrarTexto ? "activo" : ""}`} 
+          onClick={() => { setMostrarTexto(!mostrarTexto); setMostrarNoticias(false); }}>
+          <span className="icono-egipcio">𓂀</span> {mostrarTexto ? "CERRAR" : "HISTORIA"}
+        </button>
 
-      {/* TEXTO QUE SE OCULTA/MUESTRA */}
-      {mostrarTexto && (
-        <div className="esfinge-texto-wrapper">
+        <button className={`btn-cartucho ${mostrarNoticias ? "activo" : ""}`}
+          onClick={() => { setMostrarNoticias(!mostrarNoticias); setMostrarTexto(false); }}>
+          <span className="icono-egipcio">📜</span> {mostrarNoticias ? "CERRAR" : "NOTICIAS"}
+        </button>
+      </div>
 
-          <p className="esfinge-texto">
-            La Gran Esfinge de Giza es uno de los monumentos más icónicos del antiguo Egipto.
-            Se cree que fue tallada hace más de 4.500 años, durante el reinado del faraón Kefrén,
-            aunque su origen exacto y su propósito siguen siendo objeto de debate entre los historiadores.
-          </p>
+      {(mostrarTexto || mostrarNoticias) && (
+        <div className="papiro-texto-animado">
+          <div className="esfinge-texto-contenido">
+            {mostrarTexto && (
+              <div className="contenido-historia">
+                <h2 className="titulo-papiro-interno">El Guardián del Horizonte</h2>
+                <p className="texto-noticia-papiro">La Gran Esfinge es el guardián eterno de las pirámides, tallada en roca caliza. Representa la unión de la sabiduría y la fuerza.</p>
+              </div>
+            )}
 
-          <p className="esfinge-texto">
-            La Esfinge combina el cuerpo de un león —símbolo de fuerza, protección y realeza—
-            con la cabeza humana, representando la inteligencia y el poder divino del faraón.
-            Custodiaba la entrada al complejo funerario de Giza, protegiendo el camino hacia las pirámides.
-          </p>
-
-          <p className="esfinge-texto">
-            Mide unos 73 metros de largo y más de 20 metros de altura. A lo largo de los siglos,
-            ha sobrevivido tormentas de arena, erosión, restauraciones fallidas y el paso del tiempo.
-            Aun así, continúa siendo un símbolo eterno de misterio, poder y grandeza del antiguo Egipto.
-          </p>
-
-          <p className="esfinge-texto">
-            Hoy en día, la Esfinge sigue cautivando a millones de visitantes,
-            recordándonos la profundidad histórica y espiritual de la civilización egipcia.
-          </p>
-
+            {mostrarNoticias && (
+              <div className="contenido-noticias">
+                <h2 className="titulo-papiro-interno">Crónicas de Egipto</h2>
+                {noticias.length > 0 ? (
+                  noticias.map((n) => (
+                    <div key={n.id} className="noticia-item-papiro">
+                      <h3 className="titulo-noticia-dorado">{n.titulo}</h3>
+                      <p className="texto-noticia-papiro">{n.resumen}</p>
+                      <div style={{ textAlign: 'center' }}>
+                        <a href={n.url_enlace} target="_blank" rel="noreferrer" className="link-egipcio-visible">
+                          LEER CRÓNICA COMPLETA →
+                        </a>
+                      </div>
+                    </div>
+                  ))
+                ) : <p className="texto-noticia-papiro">Sin noticias en la arena...</p>}
+              </div>
+            )}
+          </div>
         </div>
       )}
-
-      {/* 🟩 SECCIÓN DE CONTENIDO RELACIONADO + NOTICIAS */}
-      <ContenidoRelacionado />   {/* ✅ Añadido aquí sin romper nada */}
-
+      <div className="divisor-seccion"><span className="rombo-dorado"></span></div>
     </div>
   );
 }

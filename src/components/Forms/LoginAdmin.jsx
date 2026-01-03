@@ -11,33 +11,35 @@ function LoginAdmin({
 }) {
   return (
     <div className="form-card">
-      <h3>Login Admin</h3>
+      <h3>Acceso Administrador</h3>
 
-      {auth ? (
-        <button className="btn-form btn-red" onClick={logoutAdmin}>
-          Cerrar sesión
-        </button>
-      ) : (
+      {!auth ? (
         <form onSubmit={handleLoginAdmin}>
-          <div className="input-group">
-            <label>Usuario</label>
-            <input
-              value={adminNombre}
-              onChange={(e) => setAdminNombre(e.target.value)}
-            />
-          </div>
+          <input
+            type="text"
+            placeholder="Nombre admin"
+            value={adminNombre}
+            onChange={(e) => setAdminNombre(e.target.value)}
+          />
 
-          <div className="input-group">
-            <label>Contraseña</label>
-            <input
-              type="password"
-              value={adminPassword}
-              onChange={(e) => setAdminPassword(e.target.value)}
-            />
-          </div>
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={adminPassword}
+            onChange={(e) => setAdminPassword(e.target.value)}
+          />
 
-          <button className="btn-form btn-red">Entrar</button>
+          <button className="btn-form btn-yellow" type="submit">
+            Entrar
+          </button>
         </form>
+      ) : (
+        <div style={{ textAlign: "center" }}>
+          <p>Administrador conectado</p>
+          <button className="btn-form" onClick={logoutAdmin}>
+            Cerrar sesión
+          </button>
+        </div>
       )}
     </div>
   );

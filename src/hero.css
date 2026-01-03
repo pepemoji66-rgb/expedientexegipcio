@@ -1,185 +1,141 @@
-/* PRESENTACIÓN DEL AUTOR */
-.presentacion-autor {
-  margin-top: 25px;
-  text-align: center;
-  color: #f4e6b2;
-  font-size: 1.2rem;
-  text-shadow: 0 0 6px rgba(0,0,0,0.8);
-  animation: fadeIn 2s ease forwards;
-}
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
 
-/* BOTÓN SOBRE MÍ */
-.btn-sobre-mi {
-  margin-top: 10px;
-  background: #d4a657;
-  border: none;
-  padding: 12px 22px;
-  border-radius: 10px;
-  color: black;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 1rem;
-
-  box-shadow:
-    0 0 12px rgba(255, 200, 110, 0.4),
-    inset 0 0 6px rgba(255, 220, 150, 0.25);
-
-  transition: 0.3s ease;
-}
-
-.btn-sobre-mi:hover {
-  background: #f2d598;
-  transform: scale(1.05);
-}
-
-/* TEXTO DESPLEGABLE SOBRE MÍ */
-.sobre-mi-texto {
-  margin-top: 15px;
-  padding: 18px 22px;
-  background: rgba(0,0,0,0.55);
-  border-radius: 12px;
-  color: #f4e6b2;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.6;
-
-  border: 1px solid rgba(255, 215, 140, 0.35);
-  box-shadow:
-    0 0 18px rgba(255, 215, 140, 0.25),
-    inset 0 0 8px rgba(255, 215, 140, 0.15);
-
-  animation: fadeIn 0.8s ease forwards;
-}
-/* CONTENEDOR GENERAL */
 .hero-section {
-  text-align: center;
-  padding: 20px;
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Mantiene la esfinge quieta */
+  overflow: hidden;
 }
 
-/* 💛 TÍTULO GRANDE Y DORADO */
+.hero-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+  z-index: 1;
+}
+
+.hero-container-dual {
+  position: relative;
+  z-index: 2;
+  width: 90%;
+  max-width: 1300px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+}
+
+/* --- LADO DEL TEXTO --- */
+.hero-text-side {
+  flex: 1;
+  max-width: 600px;
+  z-index: 10;
+}
+
 .hero-titulo-grande {
-  color: #f4e6b2;
+  font-family: 'Cinzel', serif;
   font-size: 3rem;
+  color: #ffdf7f;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 10px rgba(0,0,0,0.9);
+}
+
+.hero-box-mística {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  padding: 25px;
+  border-left: 4px solid #ffdf7f;
+  border-radius: 0 15px 15px 0;
   margin-bottom: 25px;
-  text-shadow:
-    0 0 12px rgba(255, 215, 120, 0.9),
-    0 0 28px rgba(255, 180, 80, 0.5),
-    3px 3px 10px black;
-  font-weight: bold;
-  letter-spacing: 2px;
-  animation: fadeIn 1.2s ease forwards;
+  box-shadow: 10px 10px 30px rgba(0,0,0,0.5);
 }
 
-/* 🔥 CUADRO MÍSTICO EGIPCIO */
-.mensaje-inicial-egipto {
-  max-width: 850px;
-  margin: 20px auto;
-  padding: 22px 28px;
-  text-align: center;
-
-  background: rgba(0, 0, 0, 0.55);
-  border-radius: 15px;
-  backdrop-filter: blur(3px);
-
-  border: 1px solid rgba(255, 215, 140, 0.4);
-  box-shadow:
-    0 0 25px rgba(255, 215, 140, 0.25),
-    inset 0 0 10px rgba(255, 215, 140, 0.15);
-
+.mensaje-texto-egipto {
+  font-family: 'Cinzel', serif;
+  font-size: 1.05rem;
   color: #f4e6b2;
-  font-size: 1.2rem;
   line-height: 1.7;
-  font-weight: 500;
-
-  animation: fadeIn 1.5s ease forwards;
 }
 
-/* PRESENTACIÓN DEL AUTOR */
-.presentacion-autor {
-  margin-top: 25px;
-  text-align: center;
-  color: #f4e6b2;
-  font-size: 1.2rem;
-  text-shadow: 0 0 6px rgba(0,0,0,0.8);
-  animation: fadeIn 2s ease forwards;
+/* --- LA MOMIA EN LA ARENA --- */
+.hero-image-side {
+  position: absolute;
+  right: 5%;
+  bottom: 5%; /* Para que pise la arena de la foto */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* BOTÓN SOBRE MÍ */
-.btn-sobre-mi {
-  margin-top: 10px;
-  background: #d4a657;
+.contenedor-momia-arena {
+  position: relative;
+  /* Movimiento muy sutil de respiración */
+  animation: vaivenMistico 12s ease-in-out infinite;
+}
+
+.momia-integrada {
+  width: 220px; /* Tamaño ideal para perspectiva */
+  height: auto;
+  filter: brightness(0.7) sepia(0.3) contrast(1.1);
+  /* Difuminamos los pies para que se mezclen con la arena */
+  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+
+.sombra-pies {
+  width: 120px;
+  height: 15px;
+  background: rgba(0, 0, 0, 0.5);
+  filter: blur(12px);
+  border-radius: 50%;
+  margin-top: -15px;
+}
+
+@keyframes vaivenMistico {
+  0%, 100% { transform: translateY(0); opacity: 0.8; }
+  50% { transform: translateY(-10px); opacity: 0.9; }
+}
+
+/* --- BOTONES Y OTROS --- */
+.btn-sobre-mi-egipcio {
+  background: #f39c12;
+  color: #000;
   border: none;
-  padding: 12px 22px;
-  border-radius: 10px;
-  color: black;
+  padding: 12px 35px;
+  font-family: 'Cinzel', serif;
   font-weight: bold;
   cursor: pointer;
-  font-size: 1rem;
-
-  box-shadow:
-    0 0 12px rgba(255, 200, 110, 0.4),
-    inset 0 0 6px rgba(255, 220, 150, 0.25);
-
-  transition: 0.3s ease;
+  border-radius: 4px;
+  transition: 0.3s;
 }
 
-.btn-sobre-mi:hover {
-  background: #f2d598;
+.btn-sobre-mi-egipcio:hover {
+  background: #ffdf7f;
   transform: scale(1.05);
 }
 
-/* DESPLEGABLE SOBRE MÍ */
-.sobre-mi-texto {
-  margin-top: 15px;
-  padding: 18px 22px;
-  background: rgba(0,0,0,0.55);
-  border-radius: 12px;
-  color: #f4e6b2;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.6;
-
-  border: 1px solid rgba(255, 215, 140, 0.35);
-  box-shadow:
-    0 0 18px rgba(255, 215, 140, 0.25),
-    inset 0 0 8px rgba(255, 215, 140, 0.15);
-
-  animation: fadeIn 0.8s ease forwards;
-}
-
-/* ANIMACIÓN GENERAL */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-/* Reducimos la altura total del Hero sin afectar su diseño */
-.hero-section {
-  padding-bottom: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-/* El cuadro místico debajo del título será más compacto */
-.mensaje-inicial-egipto {
-  margin-bottom: 10px !important;
-  padding: 16px 20px !important;
-}
-
-/* Reducimos el espacio bajo el texto del autor */
 .presentacion-autor {
-  margin-top: 10px !important;
-  margin-bottom: 0 !important;
+  color: #f4e6b2;
+  font-family: 'Cinzel', serif;
+}/* Añade esto al final de tu CSS */
+.contenedor-boton-editar {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 100;
 }
-
-/* Reducimos el espacio del desplegable “Sobre mí” */
-.sobre-mi-texto {
-  margin-top: 10px !important;
-  padding: 14px 18px !important;
+/* Estilo para que la momia se quede clavada en la pantalla */
+.momia-hero {
+  position: fixed;   /* LA CLAVE: se queda fija respecto a la pantalla */
+  bottom: 5%;        /* Ajusta la altura desde abajo (puedes usar px también) */
+  right: 5%;         /* Ajusta la posición desde la derecha */
+  width: 180px;      /* El tamaño que me dijiste, un poco más pequeña */
+  z-index: 100;      /* Para que flote por encima del contenido */
+  pointer-events: none; /* Para que si haces clic encima, detecte lo que hay detrás */
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5)); /* Sombra para que tenga relieve */
 }

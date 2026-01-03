@@ -29,11 +29,6 @@ export default function Header({ setSeccionActiva }) {
     navegarA("inicio");
   };
 
-  const irChatUsuarios = () => {
-    cerrarMenu();
-    navigate("/chat-usuarios");
-  };
-
   return (
     <header className="site-header">
       <div className="logo">EGIPTO</div>
@@ -42,13 +37,13 @@ export default function Header({ setSeccionActiva }) {
         ☰ Menú
       </button>
 
+      {menuAbierto && <div className="menu-overlay" onClick={cerrarMenu}></div>}
+
       <nav className="side-menu">
-        {/* 🔵 SIEMPRE DISPONIBLES */}
         <button onClick={() => navegarA("inicio")}>Inicio</button>
         <button onClick={() => navegarA("esfinge")}>Esfinge</button>
         <button onClick={() => navegarA("formularios")}>Formularios</button>
 
-        {/* 🔒 SOLO SI ESTÁ LOGEADO */}
         {auth && (
           <>
             <button onClick={() => navegarA("audio")}>Audio</button>
@@ -56,27 +51,10 @@ export default function Header({ setSeccionActiva }) {
             <button onClick={() => navegarA("galeria")}>Galería</button>
             <button onClick={() => navegarA("mapa")}>Mapa Interactivo</button>
             <button onClick={() => navegarA("minijuego")}>Minijuego</button>
-
-            {/* 🟡 CHAT IA */}
-            <button onClick={() => navegarA("ra")}>
-              Lo que Ra disponga
-            </button>
-
-            {/* 🔵 CHAT USUARIOS */}
-            <button onClick={irChatUsuarios}>
-              Chat Usuarios
-            </button>
+            <button onClick={() => navegarA("ra")}>Lo que Ra disponga</button>
+            <button onClick={() => navigate("/chat-usuarios")}>Chat Usuarios</button>
+            <button onClick={cerrarSesion} className="btn-logout">Cerrar sesión</button>
           </>
-        )}
-
-        {/* 🔴 CERRAR SESIÓN */}
-        {auth && (
-          <button
-            onClick={cerrarSesion}
-            style={{ background: "#ff4a4a", color: "white" }}
-          >
-            Cerrar sesión
-          </button>
         )}
       </nav>
     </header>

@@ -1,72 +1,29 @@
-.minijuego-wrapper {
-  padding: 20px;
-  text-align: center;
-  color: #f4e6b2;
+.minijuego-container {
+  background: #1a120b; border: 3px solid #d4af37; padding: 20px;
+  text-align: center; color: #d4af37; max-width: 500px; margin: 20px auto;
+  position: relative; box-shadow: 0 0 30px #000;
 }
-
-.titulo-juego {
-  font-size: 28px;
-  margin-bottom: 20px;
-  text-shadow: 0 0 5px #000;
+.btn-egipcio {
+  background: #2c1e11; color: #d4af37; border: 1px solid #d4af37;
+  padding: 15px; margin: 10px; cursor: pointer; transition: 0.3s;
 }
-
-/* Caja de pregunta */
-.pregunta-box {
-  background: rgba(20, 20, 20, 0.7);
-  padding: 25px;
-  border-radius: 12px;
-  width: 80%;
-  margin: 0 auto;
-  box-shadow: 0 0 10px #000;
+.btn-egipcio:hover { background: #d4af37; color: #1a120b; }
+.btn-escape {
+  position: absolute; top: 10px; left: 10px; background: none;
+  border: 1px solid #d4af37; color: #d4af37; cursor: pointer; z-index: 50;
 }
-
-.texto-pregunta {
-  font-size: 20px;
-  margin-bottom: 20px;
+.escenario-arena {
+  height: 250px; background: #000; position: relative; overflow: hidden; cursor: pointer;
 }
-
-/* Botones */
-.btn-opcion {
-  display: block;
-  width: 100%;
-  background: #e0a14d;
-  border: 2px solid #8a5f20;
-  color: black;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  transition: 0.2s;
+.momia-player { width: 50px; position: absolute; left: 30px; transition: top 0.3s ease-out; }
+.trampa-pinchos { 
+  width: 40px; height: 60px; background: #555; position: absolute; bottom: 20px; 
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 }
-
-.btn-opcion:hover {
-  background: #ffd58c;
-}
-
-/* Maldición (fallo) */
-.maldicion {
-  color: red;
-  font-size: 22px;
-  margin-bottom: 20px;
-  animation: shake 0.4s ease;
-}
-
-@keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-8px); }
-  50% { transform: translateX(8px); }
-  75% { transform: translateX(-8px); }
-  100% { transform: translateX(0); }
-}
-
-/* Final */
-.final-juego {
-  padding: 30px;
-  background: rgba(50, 30, 10, 0.8);
-  border-radius: 12px;
-  width: 80%;
-  margin: 0 auto;
-  box-shadow: 0 0 10px #000;
-}
+.suelo { position: absolute; bottom: 0; width: 100%; height: 20px; background: #d4af37; }
+.cronometro { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8); padding: 5px; }
+.barra-aire { width: 100%; height: 15px; background: #000; border: 1px solid #d4af37; margin-bottom: 20px; }
+.llenado { height: 100%; transition: 0.1s; }
+.sello-sagrado { font-size: 80px; cursor: pointer; animation: pulso 2s infinite; }
+@keyframes pulso { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+.overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.9); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 40; }

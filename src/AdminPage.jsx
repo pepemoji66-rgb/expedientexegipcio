@@ -1,245 +1,191 @@
 import React, { useState, useEffect } from "react";
-import api from "./api";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./admin.css";
+import GestionEsfinge from "./components/GestionEsfinge";
 
-function AdminPage({
-  usuariosFiltrados = [],
-  imagenesGaleria = [],
-  setImagenesGaleria
+export default function AdminPage({
+  imagenesGaleria, setImagenesGaleria,
+  audios, setAudios,
+  videos, setVideos,
+  resultadosBusqueda // Asumo que aquí vienen tus usuarios
 }) {
-  // =========================
-  // USUARIOS
-  // =========================
-  const [usuarios, setUsuarios] = useState([]);
-  const [paginaUsuarios, setPaginaUsuarios] = useState(1);
+  const navigate = useNavigate();
+  const [seccionAdmin, setSeccionAdmin] = useState("galeria");
+  const [nuevoTitulo, setNuevoTitulo] = useState("");
+  const [nuevaUrl, setNuevaUrl] = useState("");
+  
+  // --- ESTADOS PARA PAGINACIÓN ---
+  const [paginaActual, setPaginaActual] = useState(1);
   const usuariosPorPagina = 10;
 
-  useEffect(() => {
-    if (usuariosFiltrados.length === 0) {
-      cargarUsuarios();
-    } else {
-      setUsuarios(usuariosFiltrados);
-      setPaginaUsuarios(1);
+  // --- LÓGICA DE PAGINACIÓN ---
+  const usuarios = resultadosBusqueda || [];
+  const ultimoIndice = paginaActual * usuariosPorPagina;
+  const primerIndice = ultimoIndice - usuariosPorPagina;
+  const usuariosPaginados = usuarios.slice(primerIndice, ultimoIndice);
+  const totalPaginas = Math.ceil(usuarios.length / usuariosPorPagina);
+
+  // --- LÓGICA DE ELIMINAR ---
+  const eliminarItem = async (id, tipo) => {
+    if (!window.confirm(`¿Seguro que quieres borrar este item de ${tipo}?`)) return;
+    try {
+      await axios.delete(`http://localhost:5000/api/${tipo}/${id}`);
+      if (tipo === "imagenes") setImagenesGaleria(imagenesGaleria.filter(i => i.id !== id));
+      if (tipo === "audios") setAudios(audios.filter(a => a.id !== id));
+      if (tipo === "videos") setVideos(videos.length > 0 ? videos.filter(v => v.id !== id) : []);
+    } catch (e) {
+      alert("Error al eliminar");
     }
-  }, [usuariosFiltrados]);
-
-  const cargarUsuarios = async () => {
-    const res = await api.get("/usuarios");
-    setUsuarios(res.data);
   };
 
-  const eliminarUsuario = async (id) => {
-    if (!window.confirm("¿Seguro que deseas eliminar este usuario?")) return;
-    await api.delete(`/usuarios/${id}`);
-    cargarUsuarios();
+  // --- LÓGICA DE AÑADIR ---
+  const agregarItem = async (tipo) => {
+    if (!nuevaUrl || !nuevoTitulo) return alert("Rellena los campos, hermano");
+    try {
+      const res = await axios.post(`http://localhost:5000/api/${tipo}`, {
+        titulo: nuevoTitulo,
+        url: nuevaUrl
+      });
+      const nuevoObj = { id: res.data.id, titulo: nuevoTitulo, url: nuevaUrl };
+      if (tipo === "imagenes") setImagenesGaleria([...imagenesGaleria, nuevoObj]);
+      if (tipo === "audios") setAudios([...audios, nuevoObj]);
+      if (tipo === "videos") setVideos([...videos, nuevoObj]);
+      setNuevoTitulo(""); setNuevaUrl("");
+    } catch (e) {
+      alert("Error al añadir");
+    }
   };
 
-  const eliminarTodos = async () => {
-    if (!window.confirm("⚠ Esto borrará TODOS los usuarios. ¿Seguro?")) return;
-    await api.delete("/usuarios");
-    cargarUsuarios();
-  };
-
-  const indiceUltimoUsuario = paginaUsuarios * usuariosPorPagina;
-  const indicePrimerUsuario = indiceUltimoUsuario - usuariosPorPagina;
-  const usuariosActuales = usuarios.slice(
-    indicePrimerUsuario,
-    indiceUltimoUsuario
-  );
-
-  const totalPaginasUsuarios = Math.ceil(
-    usuarios.length / usuariosPorPagina
-  );
-
-  // =========================
-  // GALERÍA (PAGINADA)
-  // =========================
-  const imagenesPorPagina = 10;
-  const [paginaGaleria, setPaginaGaleria] = useState(1);
-
-  const totalPaginasGaleria = Math.ceil(
-    imagenesGaleria.length / imagenesPorPagina
-  );
-
-  const indiceUltimaImg = paginaGaleria * imagenesPorPagina;
-  const indicePrimeraImg = indiceUltimaImg - imagenesPorPagina;
-
-  const imagenesPagina = imagenesGaleria.slice(
-    indicePrimeraImg,
-    indiceUltimaImg
-  );
-
-  const toggleVisibleImagen = (id) => {
-    setImagenesGaleria((prev) =>
-      prev.map((img) =>
-        img.id === id ? { ...img, visible: !img.visible } : img
-      )
-    );
-  };
-
-  const eliminarImagen = (id) => {
-    if (!window.confirm("¿Seguro que quieres borrar esta imagen?")) return;
-
-    setImagenesGaleria((prev) =>
-      prev.filter((img) => img.id !== id)
-    );
-  };
-
-  // =========================
-  // RENDER
-  // =========================
   return (
-    <div style={{ padding: "20px" }}>
-      <h2 style={{ textAlign: "center", color: "#f4e6b2" }}>
-        Panel de Administración
-      </h2>
+    <div className="admin-panel">
+      <div className="admin-header">
+        <h1>🏛 Panel de Control del Templo</h1>
+        <button className="btn-volver" onClick={() => navigate("/")}>Volver al Inicio</button>
+      </div>
 
-      <button
-        onClick={() => (window.location.href = "/")}
-        style={{ marginBottom: "20px" }}
-      >
-        ⬅ Volver
-      </button>
+      <nav className="admin-nav">
+        <button className={seccionAdmin === "galeria" ? "active" : ""} onClick={() => setSeccionAdmin("galeria")}>🖼 Galería</button>
+        <button className={seccionAdmin === "audio" ? "active" : ""} onClick={() => setSeccionAdmin("audio")}>🎧 Audios</button>
+        <button className={seccionAdmin === "videos" ? "active" : ""} onClick={() => setSeccionAdmin("videos")}>🎬 Vídeos</button>
+        <button className={seccionAdmin === "usuarios" ? "active" : ""} onClick={() => setSeccionAdmin("usuarios")}>👥 Usuarios</button>
+        <button className={seccionAdmin === "esfinge" ? "active" : ""} onClick={() => setSeccionAdmin("esfinge")}>🦁 Esfinge</button>
+      </nav>
 
-      {/* =========================
-          USUARIOS
-      ========================= */}
-      <div className="tabla-contenedor">
-        <table className="tabla-egipcia">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Email</th>
-              <th>Ciudad</th>
-              <th>Edad</th>
-              <th>Sexo</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {usuariosActuales.map((user) => (
-              <tr key={user.id}>
-                <td>{user.id}</td>
-                <td>{user.nombre}</td>
-                <td>{user.email}</td>
-                <td>{user.ciudad}</td>
-                <td>{user.edad}</td>
-                <td>{user.sexo}</td>
-                <td>
-                  <button
-                    className="btn-eliminar-egipcio"
-                    onClick={() => eliminarUsuario(user.id)}
-                  >
-                    Eliminar
-                  </button>
-                </td>
-              </tr>
+      {/* GALERÍA */}
+      {seccionAdmin === "galeria" && (
+        <div className="admin-section">
+          <div className="inputs-admin">
+            <input placeholder="URL Imagen" value={nuevaUrl} onChange={e => setNuevaUrl(e.target.value)} />
+            <input placeholder="Título" value={nuevoTitulo} onChange={e => setNuevoTitulo(e.target.value)} />
+            <button onClick={() => agregarItem("imagenes")}>Añadir Imagen</button>
+          </div>
+          <div className="admin-grid">
+            {imagenesGaleria.map(img => (
+              <div key={img.id} className="admin-item">
+                <img src={img.url} alt={img.titulo} />
+                <button onClick={() => eliminarItem(img.id, "imagenes")}>🗑️</button>
+              </div>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </div>
+        </div>
+      )}
 
-      {/* PAGINACIÓN USUARIOS */}
-      <div style={{ textAlign: "center", marginTop: "20px" }}>
-        {Array.from({ length: totalPaginasUsuarios }, (_, i) => (
-          <button
-            key={i}
-            onClick={() => setPaginaUsuarios(i + 1)}
-            style={{
-              margin: "0 5px",
-              background: paginaUsuarios === i + 1 ? "#c4a552" : "#333",
-              color: "white"
-            }}
-          >
-            {i + 1}
-          </button>
-        ))}
-      </div>
+      {/* AUDIO */}
+      {seccionAdmin === "audio" && (
+        <div className="admin-section">
+          <div className="inputs-admin">
+            <input placeholder="Ruta audio" value={nuevaUrl} onChange={e => setNuevaUrl(e.target.value)} />
+            <input placeholder="Título" value={nuevoTitulo} onChange={e => setNuevoTitulo(e.target.value)} />
+            <button onClick={() => agregarItem("audios")}>Añadir Audio</button>
+          </div>
+          <table className="tabla-egipcia">
+            <thead><tr><th>Audio</th><th>Acciones</th></tr></thead>
+            <tbody>
+              {audios.map(a => (
+                <tr key={a.id}>
+                  <td>{a.titulo}</td>
+                  <td><button className="btn-borrar-tabla" onClick={() => eliminarItem(a.id, "audios")}>🗑️</button></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-      {/* =========================
-          GALERÍA
-      ========================= */}
-      <hr style={{ margin: "50px 0" }} />
+      {/* VÍDEOS */}
+      {seccionAdmin === "videos" && (
+        <div className="admin-section">
+          <div className="inputs-admin">
+            <input placeholder="URL Vídeo" value={nuevaUrl} onChange={e => setNuevaUrl(e.target.value)} />
+            <input placeholder="Título" value={nuevoTitulo} onChange={e => setNuevoTitulo(e.target.value)} />
+            <button onClick={() => agregarItem("videos")}>Añadir Vídeo</button>
+          </div>
+          <table className="tabla-egipcia">
+            <thead><tr><th>Vídeo</th><th>Acciones</th></tr></thead>
+            <tbody>
+              {videos.map(v => (
+                <tr key={v.id}>
+                  <td>{v.titulo}</td>
+                  <td><button className="btn-borrar-tabla" onClick={() => eliminarItem(v.id, "videos")}>🗑️</button></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-      <h3 style={{ color: "#f4e6b2" }}>Gestión de Galería</h3>
-
-      <div className="tabla-contenedor">
-        <table className="tabla-egipcia">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Miniatura</th>
-              <th>Título</th>
-              <th>Visible</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {imagenesPagina.map((img) => (
-              <tr key={img.id}>
-                <td>{img.id}</td>
-                <td>
-                  <img
-                    src={img.src}
-                    alt={img.titulo}
-                    style={{ width: "70px", borderRadius: "6px" }}
-                  />
-                </td>
-                <td>{img.titulo}</td>
-                <td>{img.visible ? "Sí" : "No"}</td>
-                <td>
-                  <button
-                    onClick={() => toggleVisibleImagen(img.id)}
-                    style={{
-                      background: img.visible ? "#b33" : "#2a8",
-                      color: "white",
-                      border: "none",
-                      padding: "6px 10px",
-                      borderRadius: "4px"
-                    }}
-                  >
-                    {img.visible ? "Ocultar" : "Mostrar"}
-                  </button>
-
-                  <button
-                    onClick={() => eliminarImagen(img.id)}
-                    style={{
-                      background: "#000",
-                      color: "white",
-                      border: "none",
-                      padding: "6px 10px",
-                      borderRadius: "4px",
-                      marginLeft: "6px"
-                    }}
-                  >
-                    🗑️ Eliminar
-                  </button>
-                </td>
+     {/* USUARIOS CON PAGINACIÓN Y BOTÓN ELIMINAR */}
+      {seccionAdmin === "usuarios" && (
+        <div className="admin-section">
+          <h2>Gestión de Usuarios</h2>
+          <table className="tabla-egipcia">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Acciones</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {usuariosPaginados.map(u => (
+                <tr key={u.id}>
+                  <td>{u.nombre}</td>
+                  <td>{u.email}</td>
+                  <td>
+                    <button 
+                      className="btn-borrar-tabla" 
+                      onClick={() => eliminarItem(u.id, "usuarios")}
+                    >
+                      🗑️
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          
+          {/* CONTROLES DE PAGINACIÓN */}
+          <div className="paginacion-controles">
+            <button 
+              disabled={paginaActual === 1} 
+              onClick={() => setPaginaActual(paginaActual - 1)}
+            >
+              Anterior
+            </button>
+            <span>Página {paginaActual} de {totalPaginas}</span>
+            <button 
+              disabled={paginaActual === totalPaginas} 
+              onClick={() => setPaginaActual(paginaActual + 1)}
+            >
+              Siguiente
+            </button>
+          </div>
+        </div>
+      )}
 
-      {/* PAGINACIÓN GALERÍA */}
-      <div style={{ textAlign: "center", marginTop: "20px" }}>
-        {Array.from({ length: totalPaginasGaleria }, (_, i) => (
-          <button
-            key={i}
-            onClick={() => setPaginaGaleria(i + 1)}
-            style={{
-              margin: "0 5px",
-              background: paginaGaleria === i + 1 ? "#c4a552" : "#333",
-              color: "white"
-            }}
-          >
-            {i + 1}
-          </button>
-        ))}
-      </div>
+      {/* ESFINGE */}
+      {seccionAdmin === "esfinge" && <GestionEsfinge />}
     </div>
   );
 }
-
-export default AdminPage;

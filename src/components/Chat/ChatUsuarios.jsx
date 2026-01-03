@@ -1,79 +1,69 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { io } from "socket.io-client";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../AuthContext";
 import "./chatUsuarios.css";
 
-export default function ChatUsuarios() {
+export default function ChatUsuarios({ setSeccionActiva }) {
+  const navigate = useNavigate();
+  const { auth } = useContext(AuthContext);
+
   const [mensajes, setMensajes] = useState([]);
   const [input, setInput] = useState("");
   const socketRef = useRef(null);
 
-  const { auth } = useContext(AuthContext); // admin logueado
+  // === NUEVO: ESTADOS PARA PERSONALIZAR EL COLOR ===
+  const [temaChat, setTemaChat] = useState("rgba(255, 255, 255, 0.1)"); // Fondo transparente suave
+  const [colorTexto, setColorTexto] = useState("#ffffff"); // Texto blanco por defecto
+
   const conversationId = "sala-prueba";
 
-  // ===============================
-  //   IDENTIDAD PARA EL CHAT
-  // ===============================
-  let chatUser = null;
-
   const storedUser = localStorage.getItem("user");
-
-  if (storedUser) {
-    // Usuario normal
-    chatUser = JSON.parse(storedUser);
-  } else if (auth) {
-    // Admin ficticio
-    chatUser = {
-      id: 0,
-      nombre: "ADMIN"
-    };
-  }
+  const chatUser = storedUser
+    ? JSON.parse(storedUser)
+    : auth
+    ? { id: 0, nombre: "ADMIN" }
+    : null;
 
   useEffect(() => {
     if (!chatUser) return;
-
     socketRef.current = io("http://localhost:5000");
-
     socketRef.current.emit("joinConversation", { conversationId });
-
     socketRef.current.on("chatHistory", (history) => {
       setMensajes(history);
     });
-
     socketRef.current.on("receiveMessage", (message) => {
       setMensajes((prev) => [...prev, message]);
     });
+    return () => {
+      socketRef.current.disconnect();
+    };
+  }, [chatUser]);
 
-    socketRef.current.on("chatCleared", () => {
-      setMensajes([]);
-    });
-
-    return () => socketRef.current.disconnect();
-  }, []);
-
-  // ===============================
-  //   ENVIAR MENSAJE
-  // ===============================
   const enviarMensaje = () => {
     if (!input.trim() || !chatUser) return;
-
-    socketRef.current.emit("sendMessage", {
-      conversationId,
+    const nuevoMensaje = {
       senderId: chatUser.id,
       senderNombre: chatUser.nombre,
       content: input
+    };
+    setMensajes((prev) => [...prev, nuevoMensaje]);
+    socketRef.current.emit("sendMessage", {
+      conversationId,
+      ...nuevoMensaje
     });
-
     setInput("");
   };
 
-  // ===============================
-  //   BORRAR CHAT
-  // ===============================
   const borrarChat = () => {
     if (!window.confirm("¿Seguro que quieres borrar todo el chat?")) return;
-
     socketRef.current.emit("clearChat", { conversationId });
+    setMensajes([]);
+  };
+
+  const volverInicio = () => {
+    setSeccionActiva("inicio");
+    navigate("/", { replace: true });
   };
 
   if (!chatUser) {
@@ -85,54 +75,48 @@ export default function ChatUsuarios() {
   }
 
   return (
-    <>
-      <h2 style={{ textAlign: "center", color: "#f5c36a" }}>
-        Chat Usuarios
-      </h2>
-
-      <div className="chat-container">
-        <button
-          onClick={borrarChat}
-          style={{
-            marginBottom: "10px",
-            background: "#c62828",
-            color: "#fff",
-            border: "none",
-            padding: "6px 10px",
-            borderRadius: "6px",
-            cursor: "pointer"
-          }}
-        >
-          🗑️ Borrar chat
+    <div className="chat-container">
+      <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap" }}>
+        <button onClick={volverInicio} style={{ marginBottom: "10px", background: "#d4a657", border: "none", padding: "8px 14px", borderRadius: "8px", cursor: "pointer", fontWeight: "bold" }}>
+          ⬅️ Volver al inicio
         </button>
 
-        <div className="chat-messages">
-          {mensajes.map((msg, index) => {
-            const esMio = msg.senderNombre === chatUser.nombre;
-
-            return (
-              <div
-                key={index}
-                className={`chat-message ${esMio ? "own" : "other"}`}
-              >
-                <div className="chat-user">{msg.senderNombre}</div>
-                {msg.content}
-              </div>
-            );
-          })}
+        {/* === NUEVA BOTONERA DE TEMAS === */}
+        <div style={{ marginBottom: "10px", padding: "5px", background: "rgba(0,0,0,0.3)", borderRadius: "10px" }}>
+          <span style={{ color: "#fff", marginRight: "10px", fontSize: "0.8rem" }}>Tema:</span>
+          <button onClick={() => { setTemaChat("#f4e4bc"); setColorTexto("#5d4037"); }} style={{ background: "#f4e4bc", border: "none", cursor: "pointer", borderRadius: "4px", marginRight: "5px" }}>🏜️</button>
+          <button onClick={() => { setTemaChat("#1a3a5a"); setColorTexto("#ffffff"); }} style={{ background: "#1a3a5a", border: "none", cursor: "pointer", borderRadius: "4px", marginRight: "5px" }}>💧</button>
+          <button onClick={() => { setTemaChat("#000000"); setColorTexto("#ffd700"); }} style={{ background: "#000000", border: "1px solid #ffd700", cursor: "pointer", borderRadius: "4px" }}>👑</button>
         </div>
 
-        <div className="chat-input">
-          <input
-            type="text"
-            placeholder="Escribe un mensaje..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && enviarMensaje()}
-          />
-          <button onClick={enviarMensaje}>Enviar</button>
-        </div>
+        <button onClick={borrarChat} style={{ marginBottom: "15px", background: "#c62828", color: "#fff", border: "none", padding: "8px 14px", borderRadius: "8px", cursor: "pointer", fontWeight: "bold" }}>
+          🗑️ Borrar chat
+        </button>
       </div>
-    </>
+
+      <h2 style={{ textAlign: "center", color: "#f5c36a" }}>Chat de Usuarios</h2>
+
+      {/* === APLICAMOS EL TEMA AQUÍ (style={{ backgroundColor: temaChat, color: colorTexto }}) === */}
+      <div className="chat-messages" style={{ backgroundColor: temaChat, color: colorTexto, transition: "0.3s" }}>
+        {mensajes.map((msg, index) => (
+          <div key={index} className="chat-message" style={{ borderBottom: `1px solid ${colorTexto}33` }}>
+            <strong style={{ color: colorTexto === "#ffffff" ? "#f5c36a" : "inherit" }}>
+              {msg.senderNombre}:
+            </strong> {msg.content}
+          </div>
+        ))}
+      </div>
+
+      <div className="chat-input">
+        <input
+          type="text"
+          placeholder="Escribe un mensaje..."
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && enviarMensaje()}
+        />
+        <button onClick={enviarMensaje}>Enviar</button>
+      </div>
+    </div>
   );
 }

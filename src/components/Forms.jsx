@@ -1,4 +1,4 @@
-import React, { useState, startTransition, useContext } from "react";
+import React, { useState, useContext } from "react";
 import api from "../api";
 import { AuthContext } from "../AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -16,243 +16,141 @@ function Forms({ setResultadosBusqueda }) {
   const navigate = useNavigate();
   const { auth, setAuth } = useContext(AuthContext);
 
-  const [authUser, setAuthUser] = useState(
-    localStorage.getItem("user") !== null
-  );
-
-  /* ---------------- UX ---------------- */
-  const [tipoAcceso, setTipoAcceso] = useState(null);
+  /* --- ESTADOS --- */
+  const [authUser, setAuthUser] = useState(localStorage.getItem("user") !== null);
+  const [tipoAcceso, setTipoAcceso] = useState(null); // 'admin' o 'usuario'
   const [mostrarInstrucciones, setMostrarInstrucciones] = useState(false);
 
-  /* ---------------- ADMIN ---------------- */
+  // Estados formularios (Login/Registro/Busca)
   const [adminNombre, setAdminNombre] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
-
-  /* ---------------- USER ---------------- */
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPass, setLoginPass] = useState("");
-
-  /* ---------------- REGISTRO ---------------- */
   const [modalRegistro, setModalRegistro] = useState(false);
-  const [nombre, setNombre] = useState("");
-  const [email, setEmail] = useState("");
-  const [ciudad, setCiudad] = useState("");
-  const [edad, setEdad] = useState("");
-  const [sexo, setSexo] = useState("");
-  const [password, setPassword] = useState("");
-
-  /* ---------------- BUSCAR ADMIN ---------------- */
   const [modalBuscar, setModalBuscar] = useState(false);
-  const [buscarNombre, setBuscarNombre] = useState("");
-  const [buscarCiudad, setBuscarCiudad] = useState("");
-  const [buscarEdad, setBuscarEdad] = useState("");
-  const [buscarSexo, setBuscarSexo] = useState("");
 
-  /* ================= LOGIN ADMIN ================= */
+  // Campos Registro
+  const [regData, setRegData] = useState({ nombre: "", email: "", ciudad: "", edad: "", sexo: "", password: "" });
+  // Campos Búsqueda
+  const [busData, setBusData] = useState({ nombre: "", ciudad: "", edad: "", sexo: "" });
+
+  /* ================= FUNCIONES LÓGICA ================= */
   const handleLoginAdmin = (e) => {
     e.preventDefault();
-    if (
-      adminNombre.trim().toLowerCase() === "pepe" &&
-      adminPassword === "1234"
-    ) {
+    if (adminNombre.trim().toLowerCase() === "pepe" && adminPassword === "1234") {
       setAuth(true);
-      alert("Admin conectado!");
-    } else {
-      alert("Datos incorrectos");
-    }
+      alert("Admin conectado");
+    } else { alert("Error de acceso"); }
   };
 
-  const logoutAdmin = () => setAuth(false);
-
-  /* ================= LOGIN USER ================= */
   const handleLoginUser = async (e) => {
     e.preventDefault();
-
     try {
-      const res = await api.post("/login", {
-        email: loginEmail,
-        password: loginPass
-      });
-
+      const res = await api.post("/login", { email: loginEmail, password: loginPass });
       if (res.data.ok) {
         localStorage.setItem("user", JSON.stringify(res.data.user));
         setAuthUser(true);
-        alert("Sesión iniciada correctamente");
+        alert("Bienvenido");
       }
-    } catch {
-      alert("Usuario o contraseña incorrectos");
-    }
+    } catch { alert("Usuario o contraseña incorrectos"); }
   };
 
-  const logoutUser = () => {
-    localStorage.removeItem("user");
-    setAuthUser(false);
-  };
-
-  /* ================= REGISTRO ================= */
-  const handleRegistro = async (e) => {
-    e.preventDefault();
-    try {
-      await api.post("/usuarios", {
-        nombre,
-        email,
-        ciudad,
-        edad,
-        sexo,
-        password
-      });
-
-      alert("Usuario registrado correctamente");
-
-      setNombre("");
-      setEmail("");
-      setCiudad("");
-      setEdad("");
-      setSexo("");
-      setPassword("");
-      setModalRegistro(false);
-    } catch {
-      alert("Error registrando usuario");
-    }
-  };
-
-  /* ================= BUSCAR ================= */
   const handleBuscar = async (e) => {
     e.preventDefault();
-    if (!auth) return alert("Debes iniciar sesión como admin.");
-
     try {
-      const res = await api.get("/usuarios", {
-        params: {
-          nombre: buscarNombre,
-          ciudad: buscarCiudad,
-          edad: buscarEdad,
-          sexo: buscarSexo
-        }
-      });
-
-      startTransition(() => {
-        setResultadosBusqueda(res.data);
-        setModalBuscar(false);
-        navigate("/admin");
-      });
-    } catch {
-      alert("Error realizando la búsqueda.");
-    }
+      const res = await api.get("/usuarios", { params: busData });
+      setResultadosBusqueda(res.data.usuarios || res.data);
+      setModalBuscar(false);
+      navigate("/admin");
+    } catch { alert("Error en búsqueda"); }
   };
-
   const buscarTodos = async () => {
-    if (!auth) return alert("Debes iniciar sesión como admin.");
+  try {
+    const res = await api.get("/usuarios");
+    setResultadosBusqueda(res.data.usuarios || res.data);
+    setModalBuscar(false);
+    navigate("/admin");
+  } catch {
+    alert("Error al traer a todos los usuarios");
+  }
+};
 
-    try {
-      const res = await api.get("/usuarios");
-
-      startTransition(() => {
-        setResultadosBusqueda(res.data);
-        setModalBuscar(false);
-        navigate("/admin");
-      });
-    } catch {
-      alert("Error buscando todos los usuarios.");
-    }
-  };
-
-  /* ================= UI ================= */
+  /* ================= UI RENDER ================= */
   return (
-    <section className="formularios-wrapper">
-      <h2 style={{ textAlign: "center", color: "#f4e6b2" }}>
-        Gestión de Usuarios
-      </h2>
-
-      <div style={{ textAlign: "center", marginBottom: "15px" }}>
-        <button
-          className="btn-form btn-yellow"
-          onClick={() => setMostrarInstrucciones(!mostrarInstrucciones)}
-        >
-          📘 Instrucciones de registro
+    <div className="forms">
+      <div className="forms-container">
+        
+        {/* BOTÓN MAESTRO VOLVER */}
+        <button className="btn-form btn-yellow" onClick={() => navigate("/?seccion=inicio")}>
+          ⬅ VOLVER AL INICIO
         </button>
-      </div>
 
-      <Instrucciones mostrar={mostrarInstrucciones} />
-
-      <SelectorAcceso
-        tipoAcceso={tipoAcceso}
-        setTipoAcceso={setTipoAcceso}
-      />
-
-      <div className="formularios-container">
-        {tipoAcceso === "admin" && (
-          <LoginAdmin
-            auth={auth}
-            adminNombre={adminNombre}
-            setAdminNombre={setAdminNombre}
-            adminPassword={adminPassword}
-            setAdminPassword={setAdminPassword}
-            handleLoginAdmin={handleLoginAdmin}
-            logoutAdmin={logoutAdmin}
-          />
-        )}
-
-        {tipoAcceso === "admin" && auth && (
+        <section className="formularios-wrapper">
           <div className="form-card">
-            <h3>Gestión</h3>
-            <button
-              className="btn-form btn-yellow"
-              onClick={() => setModalBuscar(true)}
-            >
-              Buscar usuarios
+            <h2 className="titulo-egipcio">Gestión de Usuarios</h2>
+            
+            <button className="btn-form btn-yellow" onClick={() => setMostrarInstrucciones(!mostrarInstrucciones)}>
+              {mostrarInstrucciones ? "❌ CERRAR INFO" : "📘 INSTRUCCIONES"}
             </button>
+
+            <Instrucciones mostrar={mostrarInstrucciones} />
+
+            {/* SI NO HAY ACCESO ELEGIDO, MOSTRAMOS EL SELECTOR */}
+            {!tipoAcceso && (
+              <SelectorAcceso setTipoAcceso={setTipoAcceso} />
+            )}
+
+            {/* --- PANEL DE ADMINISTRADOR --- */}
+            {tipoAcceso === "admin" && (
+              <div className="panel-interno">
+                <LoginAdmin 
+                  auth={auth} adminNombre={adminNombre} setAdminNombre={setAdminNombre}
+                  adminPassword={adminPassword} setAdminPassword={setAdminPassword}
+                  handleLoginAdmin={handleLoginAdmin} logoutAdmin={() => setAuth(false)}
+                />
+                
+                {auth && (
+                  <div className="acciones-admin">
+                    <button className="btn-form btn-blue" onClick={() => setModalBuscar(true)}>🔍 BUSCAR USUARIOS</button>
+                    <button className="btn-form btn-blue" onClick={() => navigate("/admin")}>🗂️ GESTIÓN DE ARCHIVOS</button>
+                  </div>
+                )}
+                <button className="btn-form btn-red" onClick={() => setTipoAcceso(null)}>VOLVER ATRÁS</button>
+              </div>
+            )}
+
+            {/* --- PANEL DE USUARIO --- */}
+            {tipoAcceso === "usuario" && (
+              <div className="panel-interno">
+                <LoginUsuario 
+                  authUser={authUser} loginEmail={loginEmail} setLoginEmail={setLoginEmail}
+                  loginPass={loginPass} setLoginPass={setLoginPass}
+                  handleLoginUser={handleLoginUser} logoutUser={() => {localStorage.removeItem("user"); setAuthUser(false);}}
+                  setModalRegistro={setModalRegistro}
+                />
+                <button className="btn-form btn-red" onClick={() => setTipoAcceso(null)}>VOLVER ATRÁS</button>
+              </div>
+            )}
           </div>
-        )}
+        </section>
 
-        {tipoAcceso === "usuario" && (
-          <LoginUsuario
-            authUser={authUser}
-            loginEmail={loginEmail}
-            setLoginEmail={setLoginEmail}
-            loginPass={loginPass}
-            setLoginPass={setLoginPass}
-            handleLoginUser={handleLoginUser}
-            logoutUser={logoutUser}
-            setModalRegistro={setModalRegistro}
-          />
-        )}
+        {/* MODALES (SE QUEDAN FUERA DEL FLUJO PARA NO ROMPER EL CSS) */}
+        <ModalRegistro 
+          modalRegistro={modalRegistro} setModalRegistro={setModalRegistro}
+          {...regData} setRegData={setRegData} // Simplificado
+        />
+
+        <ModalBuscar 
+          modalBuscar={modalBuscar} setModalBuscar={setModalBuscar}
+          {...busData} setBusData={setBusData} handleBuscar={handleBuscar}
+          
+          buscarTodos={buscarTodos} //
+          
+        />
+        
+
       </div>
-
-      <ModalRegistro
-        modalRegistro={modalRegistro}
-        setModalRegistro={setModalRegistro}
-        nombre={nombre}
-        setNombre={setNombre}
-        email={email}
-        setEmail={setEmail}
-        ciudad={ciudad}
-        setCiudad={setCiudad}
-        edad={edad}
-        setEdad={setEdad}
-        sexo={sexo}
-        setSexo={setSexo}
-        password={password}
-        setPassword={setPassword}
-        handleRegistro={handleRegistro}
-      />
-
-      <ModalBuscar
-        modalBuscar={modalBuscar}
-        setModalBuscar={setModalBuscar}
-        auth={auth}
-        buscarNombre={buscarNombre}
-        setBuscarNombre={setBuscarNombre}
-        buscarCiudad={buscarCiudad}
-        setBuscarCiudad={setBuscarCiudad}
-        buscarEdad={buscarEdad}
-        setBuscarEdad={setBuscarEdad}
-        buscarSexo={buscarSexo}
-        setBuscarSexo={setBuscarSexo}
-        handleBuscar={handleBuscar}
-        buscarTodos={buscarTodos}
-      />
-    </section>
+    </div>
   );
 }
 

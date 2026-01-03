@@ -4,81 +4,42 @@ import { AuthContext } from "../AuthContext";
 import Hero from "./Hero";
 
 export default function Home() {
-  const { auth } = useContext(AuthContext); // admin (true / false)
+  const { auth } = useContext(AuthContext); 
   const [contenido, setContenido] = useState({});
   const [form, setForm] = useState({});
   const [editando, setEditando] = useState(false);
 
-  // ======================
-  //  CARGAR CONTENIDO
-  // ======================
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/contenido-inicio")
+    axios.get("http://localhost:5000/api/contenido-inicio")
       .then((res) => {
         setContenido(res.data);
         setForm(res.data);
       })
-      .catch(() => {
-        alert("Error cargando contenido");
-      });
+      .catch(() => console.error("Error cargando contenido"));
   }, []);
 
-  // ======================
-  //  🔒 SINCRONIZAR AUTH → EDICIÓN
-  // ======================
-  useEffect(() => {
-    if (!auth && editando) {
-      setEditando(false);
-      setForm(contenido);
-    }
-  }, [auth, editando, contenido]);
-
-  // ======================
-  //  CAMBIOS EN FORM
-  // ======================
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // ======================
-  //  GUARDAR (SOLO ADMIN)
-  // ======================
   const guardarCambios = async () => {
-    if (!auth) {
-      alert("No autorizado");
-      return;
-    }
-
     try {
       for (const clave in form) {
-        await axios.post(
-          "http://localhost:5000/api/contenido-inicio",
-          {
-            clave,
-            contenido: form[clave]
-          },
-          {
-            headers: {
-              "x-admin": "true"
-            }
-          }
+        await axios.post("http://localhost:5000/api/contenido-inicio", 
+          { clave, contenido: form[clave] },
+          { headers: { "x-admin": "true" } }
         );
       }
-
       setContenido(form);
       setEditando(false);
-      alert("Contenido actualizado correctamente");
+      alert("Templo actualizado, Faraón");
     } catch (error) {
-      alert("Error guardando contenido (403 si no eres admin)");
+      alert("Error al guardar");
     }
   };
 
   return (
-    <>
+    <div className="home-main-container">
       <Hero
         contenido={contenido}
         form={form}
@@ -86,27 +47,21 @@ export default function Home() {
         onChange={handleChange}
       />
 
+      {/* 🔒 SEGURIDAD: Solo el admin ve esto */}
       {auth && (
-        <div style={{ textAlign: "center", marginTop: "20px" }}>
+        <div className="admin-zone">
           {!editando ? (
-            <button onClick={() => setEditando(true)}>
-              ✏️ Editar textos
+            <button className="btn-admin-gold" onClick={() => setEditando(true)}>
+              ✏️ EDITAR TEXTOS
             </button>
           ) : (
-            <>
-              <button onClick={guardarCambios}>💾 Guardar</button>
-              <button
-                onClick={() => {
-                  setForm(contenido);
-                  setEditando(false);
-                }}
-              >
-                ❌ Cancelar
-              </button>
-            </>
+            <div className="admin-actions">
+              <button className="btn-save" onClick={guardarCambios}>💾 GUARDAR</button>
+              <button className="btn-cancel" onClick={() => setEditando(false)}>❌ CANCELAR</button>
+            </div>
           )}
         </div>
       )}
-    </>
+    </div>
   );
 }

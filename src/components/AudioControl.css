@@ -49,4 +49,10 @@
 
 .volumen-container input {
   width: 120px;
+}.btn-audio {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 2000;
 }
+

@@ -5,64 +5,73 @@ export default function Hero({ contenido, form, editando, onChange }) {
   const [mostrarSobreMi, setMostrarSobreMi] = useState(false);
 
   return (
-    <section className="hero-section">
+    <section 
+      className="hero-section" 
+      style={{ backgroundImage: "url('/imagenes/esfinge.jpg')" }}
+    >
+      <div className="hero-overlay"></div>
+      
+      <div className="hero-container-dual">
+        {/* LADO IZQUIERDO: TEXTOS */}
+        <div className="hero-text-side">
+          {editando ? (
+            <input
+              className="hero-edit-title"
+              name="hero_title"
+              value={form.hero_title || ""}
+              onChange={onChange}
+            />
+          ) : (
+            <h1 className="hero-titulo-grande">
+              {contenido.hero_title || "BIENVENIDO A EGIPTO"}
+            </h1>
+          )}
 
-      {/* 💛 TÍTULO PRINCIPAL */}
-      {editando ? (
-        <textarea
-          name="hero_title"
-          value={form.hero_title || ""}
-          onChange={onChange}
-        />
-      ) : (
-        <h2 className="hero-titulo-grande">
-          {contenido.hero_title}
-        </h2>
-      )}
-
-      {/* 🔥 MENSAJE EGIPCIO */}
-      <div className="mensaje-inicial-egipto">
-        {editando ? (
-          <textarea
-            name="hero_message"
-            value={form.hero_message || ""}
-            onChange={onChange}
-            rows={5}
-          />
-        ) : (
-          <p style={{ whiteSpace: "pre-line" }}>
-            {contenido.hero_message}
-          </p>
-        )}
-      </div>
-
-      {/* ✨ SOBRE MÍ */}
-      <div className="presentacion-autor">
-        <p><strong>Hola, soy José Moreno Jiménez</strong></p>
-
-        <button
-          className="btn-sobre-mi"
-          onClick={() => setMostrarSobreMi(!mostrarSobreMi)}
-        >
-          {mostrarSobreMi ? "Ocultar" : "Sobre mí"}
-        </button>
-
-        {mostrarSobreMi && (
-          <div className="sobre-mi-texto">
+          <div className="hero-box-mística">
             {editando ? (
               <textarea
-                name="about_text"
-                value={form.about_text || ""}
+                className="hero-edit-textarea"
+                name="hero_message"
+                value={form.hero_message || ""}
                 onChange={onChange}
-                rows={5}
+                rows={6}
               />
             ) : (
-              <p>{contenido.about_text}</p>
+              <p className="mensaje-texto-egipto">
+                {contenido.hero_message}
+              </p>
             )}
           </div>
-        )}
-      </div>
 
+          <div className="presentacion-autor">
+            <p className="autor-nombre">Hola, soy <strong>José Moreno Jiménez</strong></p>
+            <button
+              className="btn-sobre-mi-egipcio"
+              onClick={() => setMostrarSobreMi(!mostrarSobreMi)}
+            >
+              {mostrarSobreMi ? "OCULTAR" : "SOBRE MÍ"}
+            </button>
+            
+            {mostrarSobreMi && (
+              <div className="sobre-mi-papiro">
+                <p>{contenido.about_text}</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* LADO DERECHO: LA MOMIA ANCLADA A LA ARENA */}
+        <div className="hero-image-side">
+          <div className="contenedor-momia-arena">
+            <img 
+              src="/momia.png" 
+              alt="Momia Sagrada" 
+              className="momia-integrada" 
+            />
+            <div className="sombra-pies"></div>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

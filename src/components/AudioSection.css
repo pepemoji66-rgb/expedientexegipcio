@@ -1,72 +1,104 @@
-.audio-section {
-  width: 90%;
-  max-width: 600px;
-  margin: 30px auto;
-  padding: 25px;
-
-  background: rgba(0, 0, 0, 0.45);
-  border-radius: 15px;
-  border: 2px solid rgba(255, 215, 120, 0.4);
-
-  box-shadow:
-    0 0 25px rgba(255,215,120,0.2),
-    inset 0 0 10px rgba(255,215,120,0.15);
-
+.audio-section-ancestral {
+  padding: 50px 20px;
   text-align: center;
-  backdrop-filter: blur(3px);
+  background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
 }
 
-.titulo-audio {
-  font-size: 1.8rem;
-  margin-bottom: 20px;
+.titulo-místico {
+  color: #ffd700;
+  font-family: 'Cinzel', serif;
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+  letter-spacing: 5px;
+  margin-bottom: 40px;
 }
 
-.audio-card {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  align-items: center;
+.contenedor-reliquias {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
-.btn-reproducir {
-  background: #d4a657;
-  border: none;
-  padding: 12px 20px;
-  font-size: 18px;
-  border-radius: 10px;
-  cursor: pointer;
-
-  box-shadow:
-    0 0 12px rgba(255,215,120,0.5),
-    inset 0 0 6px rgba(255,215,120,0.3);
-}
-
-.btn-reproducir:hover {
-  background: #f4dca3;
-}
-
-/* Barra de progreso */
-.barra-progreso {
-  width: 90%;
-  height: 10px;
-  background: rgba(255,255,255,0.2);
-  border-radius: 5px;
+.reliquia-card {
+  background: #2c2c2c;
+  border: 2px solid #444;
+  padding: 30px;
+  border-radius: 20px;
+  position: relative;
   overflow: hidden;
+  transition: all 0.5s ease;
+  box-shadow: inset 0 0 20px #000;
 }
 
-.progreso {
-  height: 100%;
-  background: #ffd87a;
-  transition: 0.2s linear;
+.reliquia-card.activa {
+  border-color: #ffd700;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3), inset 0 0 20px rgba(255, 215, 0, 0.2);
 }
 
-/* Volumen */
-.volumen-contenedor {
+.jeroglificos-fondo {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  opacity: 0.1;
+  font-size: 2rem;
+  color: #ffd700;
+  transition: opacity 0.5s;
+}
+
+.reliquia-card.activa .jeroglificos-fondo {
+  opacity: 0.8;
+  animation: brilloJeroglifico 2s infinite;
+}
+
+.boton-disco {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #d4a657, #8a6d3b);
+  border: 4px solid #000;
+  color: #000;
+  font-size: 30px;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  transition: all 0.3s;
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
 }
 
-.volumen-contenedor input {
-  width: 120px;
+.boton-disco:hover {
+  transform: scale(1.1);
+  background: #ffd700;
+}
+
+.boton-disco.girando {
+  animation: pulsoAura 1.5s infinite;
+}
+
+.barra-piedra {
+  width: 100%;
+  height: 6px;
+  background: #111;
+  border-radius: 10px;
+  margin-top: 25px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+
+.energia-flujo {
+  height: 100%;
+  background: linear-gradient(90deg, #8a6d3b, #ffd700);
+  box-shadow: 0 0 10px #ffd700;
+  transition: width 0.3s ease;
+}
+
+@keyframes brilloJeroglifico {
+  0%, 100% { filter: drop-shadow(0 0 2px #ffd700); }
+  50% { filter: drop-shadow(0 0 10px #ffd700); }
+}
+
+@keyframes pulsoAura {
+  0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+  100% { box-shadow: 0 0 0 20px rgba(255, 215, 0, 0); }
 }

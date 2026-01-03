@@ -2,211 +2,119 @@ import React, { useState, useEffect } from "react";
 import "./minijuego.css";
 
 export default function Minijuego() {
-  const [modo, setModo] = useState(null);          // Selección de modo
-  const [posicion, setPosicion] = useState(150);    // Posición del jugador
-  const [obstaculo, setObstaculo] = useState(300);  // Obstáculo Arena
-  const [vivo, setVivo] = useState(true);           // Estado para Escapar
-  const [poder, setPoder] = useState(100);          // Barra para Maldición
-  const [rompido, setRompido] = useState(false);    // Maldición rota
+  const [modo, setModo] = useState(null);
+  const [posicion, setPosicion] = useState(150);
+  const [obstaculo, setObstaculo] = useState(400);
+  const [vivo, setVivo] = useState(true);
+  const [segundos, setSegundos] = useState(0);
+  const [ganadoArena, setGanadoArena] = useState(false);
+  const [aire, setAire] = useState(100);
+  const [ganadoSello, setGanadoSello] = useState(false);
 
-  /* =============================================================
-     MODO 1 - ESCAPA DE LA ARENA (tipo Flappy Bird básico)
-  ============================================================= */
-
+  // --- LÓGICA JUEGO 1: ARENA ---
+  /* --- LÓGICA JUEGO 1: ARENA (VERSIÓN DEFINITIVA SIN ERRORES) --- */
+  
+  // 1. Movimiento del pincho
   useEffect(() => {
-    if (modo !== "arena" || !vivo) return;
-
+    if (modo !== "arena" || !vivo || ganadoArena) return;
     const intervalo = setInterval(() => {
-      setObstaculo((o) => {
-        if (o < -20) return 300;
-        return o - 5;
-      });
-    }, 40);
-
+      setObstaculo((o) => (o < -40 ? 400 : o - 5)); // Velocidad fluida
+    }, 20);
     return () => clearInterval(intervalo);
-  }, [modo, vivo]);
+  }, [modo, vivo, ganadoArena]);
 
-  const saltar = () => {
-    if (modo !== "arena") return;
-
-    setPosicion((p) => {
-      const nuevo = p - 60;
-      return nuevo < 0 ? 0 : nuevo;
-    });
-
-    setTimeout(() => {
-      setPosicion((p) => {
-        const nuevo = p + 60;
-        return nuevo > 250 ? 250 : nuevo;
-      });
-    }, 230);
-  };
-
+  // 2. Contador de tiempo
   useEffect(() => {
-    if (modo !== "arena" || !vivo) return;
-
-    if (obstaculo < 80 && obstaculo > 20 && posicion > 170) {
-      setVivo(false);
+    if (modo === "arena" && vivo && !ganadoArena) {
+      const timer = setInterval(() => {
+        setSegundos((s) => {
+          if (s >= 14) { setGanadoArena(true); clearInterval(timer); }
+          return s + 1;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
     }
-  }, [obstaculo, posicion, modo, vivo]);
+  }, [modo, vivo, ganadoArena]);
 
-  /* =============================================================
-     MODO 2 - ROMPE LA MALDICIÓN
-  ============================================================= */
+  // 3. Colisión (AJUSTADA: solo muere si está en el suelo Y el pincho está justo debajo)
+  useEffect(() => {
+    if (modo === "arena" && vivo && !ganadoArena) {
+      // El pincho está justo en el área de la momia (entre 40 y 80)
+      const pinchoPeligroso = obstaculo > 40 && obstaculo < 80;
+      // La momia está tocando el suelo (su posición normal es 150)
+      const momiaEnSuelo = posicion > 130; 
 
-  const romper = () => {
-    if (modo !== "maldicion" || rompido) return;
-
-    setPoder((p) => {
-      const nuevo = p - 7;
-      if (nuevo <= 0) {
-        setRompido(true);
+      if (pinchoPeligroso && momiaEnSuelo) {
+        setVivo(false);
       }
-      return nuevo > 0 ? nuevo : 0;
-    });
+    }
+  }, [obstaculo, posicion, vivo, modo, ganadoArena]);
+
+  // 4. Salto (MÁS ALTO Y SEGURO)
+  const saltar = () => {
+    // Solo salta si está en el suelo para evitar el doble salto que da error
+    if (modo !== "arena" || !vivo || posicion < 140 || ganadoArena) return;
+    
+    setPosicion(30); // Sube bien alto
+    setTimeout(() => {
+      setPosicion(150); // Vuelve al suelo
+    }, 600); // Se queda un poco más de tiempo arriba para asegurar
   };
 
-  /* =============================================================
-     UI PRINCIPAL
-  ============================================================= */
+  // --- LÓGICA JUEGO 2: SELLO ---
+  useEffect(() => {
+    if (modo === "maldicion" && aire > 0 && !ganadoSello) {
+      const timer = setInterval(() => setAire(a => a - 0.8), 100);
+      return () => clearInterval(timer);
+    } else if (aire <= 0) { setVivo(false); }
+  }, [modo, aire, ganadoSello]);
+
+  const romperSello = () => {
+    if (aire > 0 && !ganadoSello) {
+      setAire(a => (a + 10 > 100 ? 100 : a + 10));
+      if (Math.random() > 0.96) setGanadoSello(true);
+    }
+  };
+
+  const reset = () => {
+    setModo(null); setVivo(true); setGanadoArena(false); 
+    setGanadoSello(false); setSegundos(0); setAire(100); setObstaculo(400);
+  };
 
   return (
-    <div className="minijuego-wrapper">
+    <div className="minijuego-container">
+      <h2 className="titulo-egipcio">CÁMARA DE PRUEBAS</h2>
+      {modo && <button className="btn-escape" onClick={reset}>✕ ABANDONAR</button>}
 
-      {/* TÍTULO */}
-      <h2 className="titulo-juego">Sala de Desafíos del Faraón</h2>
-
-      {/* SELECCIÓN DE MODO */}
-      {!modo && (
-        <div>
-          <button className="btn-opcion" onClick={() => setModo("arena")}>
-            🏜️ Escapa de la Arena
-          </button>
-
-          <button className="btn-opcion" onClick={() => setModo("maldicion")}>
-            🔮 Rompe la Maldición
-          </button>
+      {!modo ? (
+        <div className="menu-inicial">
+          <button className="btn-egipcio" onClick={() => setModo("arena")}>𓀚 EL DESPERTAR</button>
+          <button className="btn-egipcio" onClick={() => setModo("maldicion")}>𓁢 EL SELLO</button>
         </div>
-      )}
-
-      {/* =========================================================
-          MODO 1 — ESCAPA DE LA ARENA
-      ========================================================= */}
-
-      {modo === "arena" && (
-        <div style={{ marginTop: "20px" }}>
-          {!vivo && <h3 className="maldicion">💀 ¡La arena te atrapó!</h3>}
-
-          <div
-            style={{
-              width: "300px",
-              height: "250px",
-              margin: "20px auto",
-              background: "linear-gradient(to top, #c8a35f, #f2d39b)",
-              borderRadius: "12px",
-              position: "relative",
-              overflow: "hidden",
-              boxShadow: "0 0 12px #000",
-              cursor: "pointer",
-            }}
-            onClick={saltar}
-          >
-            {/* JUGADOR */}
-            <div
-              style={{
-                width: "40px",
-                height: "40px",
-                background: "#8b5a2b",
-                borderRadius: "50%",
-                position: "absolute",
-                left: "20px",
-                top: posicion + "px",
-                boxShadow: "0 0 10px #000",
-              }}
-            ></div>
-
-            {/* OBSTÁCULO */}
-            <div
-              style={{
-                width: "30px",
-                height: "80px",
-                background: "#6c4a1d",
-                position: "absolute",
-                right: obstaculo + "px",
-                bottom: "0px",
-                boxShadow: "0 0 10px #000",
-                borderTopLeftRadius: "12px",
-                borderTopRightRadius: "12px",
-              }}
-            ></div>
-          </div>
-
-          {!vivo && (
-            <button className="btn-opcion" onClick={() => {
-              setVivo(true);
-              setObstaculo(300);
-              setPosicion(150);
-            }}>
-              🔁 Reintentar
-            </button>
+      ) : (
+        <div className="juego-activo">
+          {modo === "arena" && (
+            <div className="escenario-arena" onClick={saltar}>
+              <div className="cronometro">⏳ {15 - segundos}s</div>
+              {!vivo && <div className="overlay"><h3>💀 ATRAPADO</h3><button onClick={reset}>REINTENTAR</button></div>}
+              {ganadoArena && <div className="overlay success"><h3>✨ ¡LIBRE!</h3><button onClick={reset}>VOLVER</button></div>}
+              <div className="suelo"></div>
+              <img src="/momia.png" className="momia-player" style={{ top: posicion }} alt="momia" />
+              <div className="trampa-pinchos" style={{ right: obstaculo }}></div>
+            </div>
           )}
-        </div>
-      )}
-
-      {/* =========================================================
-          MODO 2 — ROMPE LA MALDICIÓN
-      ========================================================= */}
-
-      {modo === "maldicion" && (
-        <div style={{ marginTop: "20px" }}>
-          {!rompido && (
-            <>
-              <h3 className="texto-pregunta">💀 Una maldición te rodea...</h3>
-              <p>Haz clic rápido para romper el sello sagrado</p>
-
-              {/* Barra de contaminación */}
-              <div
-                style={{
-                  width: "80%",
-                  height: "25px",
-                  margin: "20px auto",
-                  background: "#3b2a15",
-                  borderRadius: "12px",
-                  boxShadow: "0 0 10px #000 inset",
-                  overflow: "hidden",
-                }}
-              >
-                <div
-                  style={{
-                    width: poder + "%",
-                    height: "100%",
-                    background: "#d4a657",
-                    transition: "0.1s",
-                  }}
-                ></div>
-              </div>
-
-              <button className="btn-opcion" onClick={romper}>
-                ⚡ Romper Maldición
-              </button>
-            </>
-          )}
-
-          {rompido && (
-            <div className="final-juego">
-              <h3>✨ ¡Has roto la maldición!</h3>
-              <p>Los dioses te conceden su favor.</p>
-              <button className="btn-opcion" onClick={() => {
-                setPoder(100);
-                setRompido(false);
-              }}>
-                🔁 Jugar otra vez
-              </button>
+          {modo === "maldicion" && (
+            <div className="escenario-sello">
+              {!ganadoSello && vivo ? (
+                <>
+                  <div className="barra-aire"><div className="llenado" style={{ width: `${aire}%`, background: aire < 30 ? "red" : "gold" }}></div></div>
+                  <div className="sello-sagrado" onClick={romperSello}>𓋹</div>
+                </>
+              ) : <div className="overlay">{ganadoSello ? "✨ LOGRADO" : "💀 OSCURIDAD"}<button onClick={reset}>SALIR</button></div>}
             </div>
           )}
         </div>
       )}
-
     </div>
   );
 }

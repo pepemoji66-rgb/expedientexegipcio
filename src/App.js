@@ -1,13 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-// AUTH
+import { BrowserRouter, Routes, Route, useSearchParams } from "react-router-dom";
+import axios from "axios";
 import { AuthContext } from "./AuthContext";
-
-// AUDIO PROVIDER
 import AudioProvider from "./AudioProvider";
-
-// PÁGINAS
 import AdminPage from "./AdminPage";
 
 // COMPONENTES
@@ -32,132 +27,84 @@ import "./buttons.css";
 import "./header.css";
 import "./hero.css";
 import "./videos.css";
-import "./galeria.css";
 import "./forms.css";
 import "./footer.css";
 import "./titulo.css";
 
-function App() {
-  const [seccionActiva, setSeccionActiva] = useState("inicio");
-  const [usuariosFiltrados, setUsuariosFiltrados] = useState([]);
+function AppContent() {
   const { auth } = useContext(AuthContext);
+  const [searchParams] = useSearchParams();
+  const [seccionActiva, setSeccionActiva] = useState("inicio");
+  const [resultadosBusqueda, setResultadosBusqueda] = useState([]);
 
-  // 🔑 ESTADO COMPARTIDO DE LA GALERÍA (MOCK)
-  const [imagenesGaleria, setImagenesGaleria] = useState([
-  { id: 1, src: "/imagenes/1.avif", titulo: "Imagen 1", orden: 1, visible: true },
-  { id: 2, src: "/imagenes/2.avif", titulo: "Imagen 2", orden: 2, visible: true },
-  { id: 3, src: "/imagenes/3.avif", titulo: "Imagen 3", orden: 3, visible: true },
-  { id: 4, src: "/imagenes/4.avif", titulo: "Imagen 4", orden: 4, visible: true },
-  { id: 5, src: "/imagenes/5.avif", titulo: "Imagen 5", orden: 5, visible: true },
-  { id: 6, src: "/imagenes/6.avif", titulo: "Imagen 6", orden: 6, visible: true },
-  { id: 7, src: "/imagenes/7.avif", titulo: "Imagen 7", orden: 7, visible: true },
-  { id: 8, src: "/imagenes/8.avif", titulo: "Imagen 8", orden: 8, visible: true },
-  { id: 9, src: "/imagenes/9.avif", titulo: "Imagen 9", orden: 9, visible: true },
-  { id: 10, src: "/imagenes/10.avif", titulo: "Imagen 10", orden: 10, visible: true },
-  { id: 11, src: "/imagenes/11.avif", titulo: "Imagen 11", orden: 11, visible: true },
-  { id: 12, src: "/imagenes/12.avif", titulo: "Imagen 12", orden: 12, visible: true },
-  { id: 13, src: "/imagenes/14.avif", titulo: "Imagen 13", orden: 13, visible: true },
-  { id: 14, src: "/imagenes/15.avif", titulo: "Imagen 14", orden: 14, visible: true },
-  { id: 15, src: "/imagenes/esfinge.jpg", titulo: "Esfinge", orden: 15, visible: true }
-]);
+  // ESTADOS QUE VIENEN DE LA BASE DE DATOS
+  const [imagenesGaleria, setImagenesGaleria] = useState([]);
+  const [audios, setAudios] = useState([]);
+  const [videos, setVideos] = useState([]);
 
-
+  // 🏺 CARGA TOTAL DE LA BASE DE DATOS
   useEffect(() => {
-    const estrella = document.querySelector(".estrella-fugaz");
+    const cargarTodo = async () => {
+      try {
+        const [resV, resA, resI] = await Promise.all([
+          axios.get("http://localhost:5000/api/videos"),
+          axios.get("http://localhost:5000/api/audios"),
+          axios.get("http://localhost:5000/api/imagenes")
+        ]);
 
-    function lanzarEstrella() {
-      if (!estrella) return;
-
-      estrella.style.animation = "none";
-      setTimeout(() => {
-        estrella.style.animation = "";
-      }, 50);
-
-      const siguiente = Math.random() * 15000 + 10000;
-      setTimeout(lanzarEstrella, siguiente);
-    }
-
-    lanzarEstrella();
+        setVideos(resV.data.map(v => ({ ...v, src: v.url, visible: true })));
+        setAudios(resA.data.map(a => ({ ...a, src: a.url, visible: true })));
+        setImagenesGaleria(resI.data.map(i => ({ ...i, src: i.url, visible: true })));
+        
+        console.log("🏺 Datos de Egipto sincronizados");
+      } catch (e) {
+        console.error("Error cargando el templo:", e);
+      }
+    };
+    cargarTodo();
   }, []);
 
+  useEffect(() => {
+    const seccion = searchParams.get("seccion");
+    setSeccionActiva(seccion || "inicio");
+  }, [searchParams]);
+
   return (
-    <BrowserRouter>
-      <AudioProvider>
-        <div className="App">
-          <div className="arena-particles"></div>
-          <div className="estrella-fugaz"></div>
-
-          {/* MENÚ */}
-          <Header setSeccionActiva={setSeccionActiva} />
-
-          {/* BOTÓN MÚSICA */}
-          <AudioControl />
-
-          <div id="contenido-principal">
-            <Routes>
-              {/* HOME / SECCIONES */}
-              <Route
-                path="/"
-                element={
-                  <>
-                    <TituloPrincipal />
-
-                    {seccionActiva === "inicio" && <Home />}
-                    {seccionActiva === "esfinge" && <Esfinge />}
-
-                    {seccionActiva === "formularios" && (
-                      <Forms setResultadosBusqueda={setUsuariosFiltrados} />
-                    )}
-
-                    {auth && seccionActiva === "audio" && <AudioSection />}
-                    {auth && seccionActiva === "videos" && <Videos />}
-
-                    {auth && seccionActiva === "galeria" && (
-                      <Galeria
-                        imagenes={imagenesGaleria
-                          .filter(img => img.visible)
-                          .sort((a, b) => a.orden - b.orden)}
-                      />
-                    )}
-
-                    {auth && seccionActiva === "mapa" && (
-                      <MapaInteractivo setSeccionActiva={setSeccionActiva} />
-                    )}
-
-                    {auth && seccionActiva === "minijuego" && <Minijuego />}
-                    {auth && seccionActiva === "ra" && <Ra />}
-                  </>
-                }
-              />
-
-              {/* ADMIN */}
-              <Route
-                path="/admin"
-                element={
-                  auth ? (
-                    <AdminPage
-                      usuariosFiltrados={usuariosFiltrados}
-                      imagenesGaleria={imagenesGaleria}
-                      setImagenesGaleria={setImagenesGaleria}
-                    />
-                  ) : (
-                    <h2 style={{ textAlign: "center" }}>
-                      Debes iniciar sesión para ver esta página.
-                    </h2>
-                  )
-                }
-              />
-
-              {/* CHAT */}
-              <Route path="/chat-usuarios" element={<ChatUsuarios />} />
-            </Routes>
-          </div>
-
-          <Footer />
-        </div>
-      </AudioProvider>
-    </BrowserRouter>
+    <AudioProvider>
+      <div className="App">
+        <Header setSeccionActiva={setSeccionActiva} />
+        <AudioControl />
+        <Routes>
+          <Route path="/" element={
+            <>
+              <TituloPrincipal />
+              {seccionActiva === "inicio" && <Home />}
+              {seccionActiva === "esfinge" && <Esfinge />}
+              {seccionActiva === "formularios" && <Forms setResultadosBusqueda={setResultadosBusqueda} />}
+              {auth && seccionActiva === "galeria" && <Galeria imagenes={imagenesGaleria} />}
+              {auth && seccionActiva === "audio" && <AudioSection audios={audios} />}
+              {auth && seccionActiva === "videos" && <Videos videos={videos} />}
+              {auth && seccionActiva === "mapa" && <MapaInteractivo setSeccionActiva={setSeccionActiva} />}
+              {auth && seccionActiva === "minijuego" && <Minijuego />}
+              {auth && seccionActiva === "ra" && <Ra />}
+            </>
+          } />
+          <Route path="/admin" element={
+            auth ? <AdminPage 
+              imagenesGaleria={imagenesGaleria} setImagenesGaleria={setImagenesGaleria}
+              audios={audios} setAudios={setAudios}
+              videos={videos} setVideos={setVideos}
+              resultadosBusqueda={resultadosBusqueda} 
+            /> : <h2 style={{textAlign: "center"}}>Inicia sesión para administrar el Templo</h2>
+          } />
+          <Route path="/chat-usuarios" element={<ChatUsuarios setSeccionActiva={setSeccionActiva} />} />
+        </Routes>
+        <Footer />
+      </div>
+    </AudioProvider>
   );
 }
 
-export default App;
+export default function App() {
+  return ( <BrowserRouter><AppContent /></BrowserRouter> );
+}

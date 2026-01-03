@@ -1,37 +1,24 @@
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
-require("dotenv").config();
-
 const app = express();
-const PORT = process.env.PORT || 5000;
+const db = require("./db"); 
 
-// =======================
-// 🧱 MIDDLEWARES
-// =======================
+// 1. PRIMERO LOS MIDDLEWARES (Imprescindible arriba)
 app.use(cors());
 app.use(express.json());
 
-// =======================
-// 🔵 RUTAS API
-// =======================
+// 2. IMPORTAR RUTAS
+const noticiasRoutes = require('./routes/noticias');
+
+// 3. CONEXIÓN DE TODAS LAS RUTAS
+app.use("/api/noticias", noticiasRoutes); // Su propia ruta limpia
+app.use("/api", require("./routes/usuarios"));
+app.use("/api", require("./routes/videos"));
+app.use("/api", require("./routes/audios"));
+app.use("/api", require("./routes/imagenes"));
 app.use("/api", require("./routes/contenidoInicio"));
-app.use("/api", require("./routes/usuarios"));   // 👈 USUARIOS OK
 
-// =======================
-// 🟡 SERVIR REACT (PROD)
-// =======================
-const buildPath = path.resolve(__dirname, "build");
-app.use(express.static(buildPath));
-
-// ⚠️ TODAS las rutas que NO sean /api → React
-app.get(/^\/(?!api).*/, (req, res) => {
-  res.sendFile(path.join(buildPath, "index.html"));
-});
-
-// =======================
-// 🚀 ARRANQUE
-// =======================
+const PORT = 5000;
 app.listen(PORT, () => {
-  console.log(`🔥 Servidor iniciado en puerto ${PORT}`);
+    console.log(`✅ Servidor funcionando en http://localhost:${PORT}`);
 });

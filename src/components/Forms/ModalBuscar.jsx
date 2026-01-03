@@ -1,77 +1,54 @@
 import React from "react";
 
-function ModalBuscar({
-  modalBuscar,
-  setModalBuscar,
-  auth,
-  buscarNombre,
-  setBuscarNombre,
-  buscarCiudad,
-  setBuscarCiudad,
-  buscarEdad,
-  setBuscarEdad,
-  buscarSexo,
-  setBuscarSexo,
+export default function ModalBuscar({ 
+  modalBuscar, 
+  setModalBuscar, 
+  nombre, ciudad, edad, sexo, 
+  setBusData, 
   handleBuscar,
-  buscarTodos
+  buscarTodos // <--- Importante que reciba esta función
 }) {
-  if (!modalBuscar || !auth) return null;
+  
+  if (!modalBuscar) return null;
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setBusData(prev => ({ ...prev, [name]: value }));
+  };
 
   return (
-    <div
-      className="modal-overlay"
-      onClick={() => setModalBuscar(false)}
-    >
-      <div
-        className="modal-content"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h3>Buscar usuarios</h3>
-
-        <form onSubmit={handleBuscar}>
-          <input
-            placeholder="Nombre"
-            value={buscarNombre}
-            onChange={(e) => setBuscarNombre(e.target.value)}
-          />
-
-          <input
-            placeholder="Ciudad"
-            value={buscarCiudad}
-            onChange={(e) => setBuscarCiudad(e.target.value)}
-          />
-
-          <input
-            type="number"
-            placeholder="Edad"
-            value={buscarEdad}
-            onChange={(e) => setBuscarEdad(e.target.value)}
-          />
-
-          <select
-            value={buscarSexo}
-            onChange={(e) => setBuscarSexo(e.target.value)}
-          >
-            <option value="">Cualquiera</option>
-            <option>Hombre</option>
-            <option>Mujer</option>
-            <option>Otro</option>
-          </select>
-
-          <button className="btn-form btn-yellow">
-            Buscar
-          </button>
-        </form>
-
-        <button
-          className="btn-form btn-yellow"
+    <div className="modal-overlay">
+      <div className="form-card modal-content">
+        <h2 className="titulo-egipcio">Buscador de Almas</h2>
+        
+        {/* BOTÓN RÁPIDO PARA VER TODOS */}
+        <button 
+          className="btn-form btn-blue" 
+          style={{ marginBottom: "15px" }}
           onClick={buscarTodos}
         >
-          Buscar todos
+          📜 MOSTRAR TODOS LOS USUARIOS
         </button>
+
+        <div className="divisor-dorado"><span>O FILTRAR POR:</span></div>
+
+        <form onSubmit={handleBuscar} className="panel-interno">
+          <input type="text" name="nombre" placeholder="Nombre..." value={nombre} onChange={handleChange} />
+          <input type="text" name="ciudad" placeholder="Ciudad..." value={ciudad} onChange={handleChange} />
+
+          <div className="fila-mixta">
+            <input type="number" name="edad" placeholder="Edad" value={edad} onChange={handleChange} />
+            <select name="sexo" value={sexo} onChange={handleChange}>
+              <option value="">Sexo</option>
+              <option value="M">M</option>
+              <option value="F">F</option>
+            </select>
+          </div>
+
+          <button type="submit" className="btn-form btn-yellow">🔍 APLICAR FILTROS</button>
+          <button type="button" className="btn-form btn-red" onClick={() => setModalBuscar(false)}>CERRAR</button>
+        </form>
       </div>
     </div>
   );
 }
-
-export default ModalBuscar;
