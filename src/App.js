@@ -37,26 +37,28 @@ function AppContent() {
   const [seccionActiva, setSeccionActiva] = useState("inicio");
   const [resultadosBusqueda, setResultadosBusqueda] = useState([]);
 
-  // ESTADOS QUE VIENEN DE LA BASE DE DATOS
+  // ESTADOS
   const [imagenesGaleria, setImagenesGaleria] = useState([]);
   const [audios, setAudios] = useState([]);
   const [videos, setVideos] = useState([]);
 
-  // 🏺 CARGA TOTAL DE LA BASE DE DATOS
+  // LLAVE MAESTRA: Si eres Admin O si hay un usuario logueado (invitado)
+  const tienePermiso = auth || localStorage.getItem("user") !== null;
+
   useEffect(() => {
     const cargarTodo = async () => {
       try {
+        // OJO: Si no ves fotos en el móvil es porque localhost solo funciona en tu PC
+        const baseURL = "http://localhost:5000"; 
         const [resV, resA, resI] = await Promise.all([
-          axios.get("http://localhost:5000/api/videos"),
-          axios.get("http://localhost:5000/api/audios"),
-          axios.get("http://localhost:5000/api/imagenes")
+          axios.get(`${baseURL}/api/videos`),
+          axios.get(`${baseURL}/api/audios`),
+          axios.get(`${baseURL}/api/imagenes`)
         ]);
 
         setVideos(resV.data.map(v => ({ ...v, src: v.url, visible: true })));
         setAudios(resA.data.map(a => ({ ...a, src: a.url, visible: true })));
         setImagenesGaleria(resI.data.map(i => ({ ...i, src: i.url, visible: true })));
-        
-        console.log("🏺 Datos de Egipto sincronizados");
       } catch (e) {
         console.error("Error cargando el templo:", e);
       }
@@ -81,12 +83,14 @@ function AppContent() {
               {seccionActiva === "inicio" && <Home />}
               {seccionActiva === "esfinge" && <Esfinge />}
               {seccionActiva === "formularios" && <Forms setResultadosBusqueda={setResultadosBusqueda} />}
-              {auth && seccionActiva === "galeria" && <Galeria imagenes={imagenesGaleria} />}
-              {auth && seccionActiva === "audio" && <AudioSection audios={audios} />}
-              {auth && seccionActiva === "videos" && <Videos videos={videos} />}
-              {auth && seccionActiva === "mapa" && <MapaInteractivo setSeccionActiva={setSeccionActiva} />}
-              {auth && seccionActiva === "minijuego" && <Minijuego />}
-              {auth && seccionActiva === "ra" && <Ra />}
+              
+              {/* SECCIONES PROTEGIDAS AHORA ACCESIBLES PARA INVITADOS */}
+              {tienePermiso && seccionActiva === "galeria" && <Galeria imagenes={imagenesGaleria} />}
+              {tienePermiso && seccionActiva === "audio" && <AudioSection audios={audios} />}
+              {tienePermiso && seccionActiva === "videos" && <Videos videos={videos} />}
+              {tienePermiso && seccionActiva === "mapa" && <MapaInteractivo setSeccionActiva={setSeccionActiva} />}
+              {tienePermiso && seccionActiva === "minijuego" && <Minijuego />}
+              {tienePermiso && seccionActiva === "ra" && <Ra />}
             </>
           } />
           <Route path="/admin" element={
@@ -95,7 +99,7 @@ function AppContent() {
               audios={audios} setAudios={setAudios}
               videos={videos} setVideos={setVideos}
               resultadosBusqueda={resultadosBusqueda} 
-            /> : <h2 style={{textAlign: "center"}}>Inicia sesión para administrar el Templo</h2>
+            /> : <h2 style={{textAlign: "center"}}>Inicia sesión como Admin</h2>
           } />
           <Route path="/chat-usuarios" element={<ChatUsuarios setSeccionActiva={setSeccionActiva} />} />
         </Routes>

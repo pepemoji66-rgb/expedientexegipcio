@@ -8,14 +8,14 @@
   justify-content: center;
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
-  overflow: hidden;
+  background-attachment: scroll; /* Cambiado para evitar fallos en móvil */
+  overflow: visible;
 }
 
 .hero-overlay {
   position: absolute;
   top: 0; left: 0; width: 100%; height: 100%;
-  background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+  background: rgba(0,0,0,0.6);
   z-index: 1;
 }
 
@@ -41,16 +41,13 @@
   font-size: 3rem;
   color: #ffdf7f;
   margin-bottom: 30px;
-  text-shadow: 2px 2px 10px rgba(0,0,0,0.9);
 }
 
 .hero-box-mística {
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.7);
   padding: 25px;
   border-left: 4px solid #ffdf7f;
   border-radius: 0 15px 15px 0;
-  margin-bottom: 25px;
 }
 
 .mensaje-texto-egipto {
@@ -63,54 +60,25 @@
 .hero-image-side {
   position: relative;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
+  z-index: 5;
 }
 
 .momia-integrada {
   width: 220px;
   height: auto;
-  filter: brightness(0.7) sepia(0.3) contrast(1.1);
-  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
 }
 
-.btn-sobre-mi-egipcio {
-  background: #f39c12;
-  color: #000;
-  border: none;
-  padding: 12px 35px;
-  font-family: 'Cinzel', serif;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.contenedor-boton-editar {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  z-index: 100;
-}
-
-/* --- BLOQUE RESPONSIVE (CORREGIDO) --- */
+/* --- RESPONSIVE MÓVIL --- */
 @media (max-width: 768px) {
-  .hero-section {
-    height: auto !important;
-    min-height: 100vh;
-    padding: 100px 20px 40px 20px !important;
-    background-attachment: scroll; /* Mejor rendimiento en móvil */
-  }
-
   .hero-container-dual {
     flex-direction: column !important;
+    padding-top: 100px !important;
     height: auto !important;
-    padding-top: 20px !important;
   }
 
   .hero-text-side {
     width: 100% !important;
-    max-width: 100% !important;
     text-align: center !important;
   }
 
@@ -118,22 +86,18 @@
     border-left: none;
     border-top: 4px solid #ffdf7f;
     border-radius: 15px;
-    width: 100% !important;
-    display: block !important;
   }
 
-  .mensaje-texto-egipto {
-    font-size: 1.1rem !important;
-    display: block !important;
+  .hero-titulo-grande {
+    font-size: 2rem !important;
   }
 
   .hero-image-side {
-    position: static !important;
     margin-top: 30px;
     width: 100% !important;
   }
 
   .momia-integrada {
-    width: 150px !important;
+    width: 160px !important;
   }
 }
