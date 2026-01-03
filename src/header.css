@@ -68,3 +68,50 @@ body.menu-abierto .side-menu {
 }
 
 .btn-logout { background: #ff4a4a !important; color: white !important; }
+/* Esto asegura que el menú esté POR ENCIMA de todo en el móvil */
+.site-header {
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.menu-btn {
+  z-index: 1001; /* Siempre visible */
+  padding: 10px 20px;
+  font-size: 1.2rem;
+}
+
+.side-menu {
+  position: fixed;
+  top: 0;
+  right: -100%; /* Escondido a la derecha */
+  width: 280px;
+  height: 100vh;
+  background: rgba(20, 20, 20, 0.95);
+  transition: 0.4s;
+  display: flex;
+  flex-direction: column;
+  padding-top: 80px;
+  z-index: 999;
+}
+
+.side-menu.abierto {
+  right: 0; /* Aparece al pulsar */
+}
+
+.side-menu button {
+  padding: 15px;
+  border-bottom: 1px solid #444;
+  color: gold;
+  background: transparent;
+  text-align: left;
+  font-size: 1.1rem;
+}
+
+.menu-separator {
+  color: #888;
+  font-size: 0.8rem;
+  padding: 10px 15px;
+  text-align: center;
+}

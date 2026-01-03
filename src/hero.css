@@ -8,7 +8,7 @@
   justify-content: center;
   background-size: cover;
   background-position: center;
-  background-attachment: fixed; /* Mantiene la esfinge quieta */
+  background-attachment: fixed;
   overflow: hidden;
 }
 
@@ -27,10 +27,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
 }
 
-/* --- LADO DEL TEXTO --- */
 .hero-text-side {
   flex: 1;
   max-width: 600px;
@@ -52,7 +51,6 @@
   border-left: 4px solid #ffdf7f;
   border-radius: 0 15px 15px 0;
   margin-bottom: 25px;
-  box-shadow: 10px 10px 30px rgba(0,0,0,0.5);
 }
 
 .mensaje-texto-egipto {
@@ -62,46 +60,21 @@
   line-height: 1.7;
 }
 
-/* --- LA MOMIA EN LA ARENA --- */
 .hero-image-side {
-  position: absolute;
-  right: 5%;
-  bottom: 5%; /* Para que pise la arena de la foto */
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.contenedor-momia-arena {
-  position: relative;
-  /* Movimiento muy sutil de respiración */
-  animation: vaivenMistico 12s ease-in-out infinite;
-}
-
 .momia-integrada {
-  width: 220px; /* Tamaño ideal para perspectiva */
+  width: 220px;
   height: auto;
   filter: brightness(0.7) sepia(0.3) contrast(1.1);
-  /* Difuminamos los pies para que se mezclen con la arena */
   mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
 }
 
-.sombra-pies {
-  width: 120px;
-  height: 15px;
-  background: rgba(0, 0, 0, 0.5);
-  filter: blur(12px);
-  border-radius: 50%;
-  margin-top: -15px;
-}
-
-@keyframes vaivenMistico {
-  0%, 100% { transform: translateY(0); opacity: 0.8; }
-  50% { transform: translateY(-10px); opacity: 0.9; }
-}
-
-/* --- BOTONES Y OTROS --- */
 .btn-sobre-mi-egipcio {
   background: #f39c12;
   color: #000;
@@ -111,75 +84,56 @@
   font-weight: bold;
   cursor: pointer;
   border-radius: 4px;
-  transition: 0.3s;
 }
 
-.btn-sobre-mi-egipcio:hover {
-  background: #ffdf7f;
-  transform: scale(1.05);
-}
-
-.presentacion-autor {
-  color: #f4e6b2;
-  font-family: 'Cinzel', serif;
-}/* Añade esto al final de tu CSS */
 .contenedor-boton-editar {
   position: fixed;
   bottom: 20px;
   left: 20px;
   z-index: 100;
 }
-/* Estilo para que la momia se quede clavada en la pantalla */
-.momia-hero {
-  position: fixed;   /* LA CLAVE: se queda fija respecto a la pantalla */
-  bottom: 5%;        /* Ajusta la altura desde abajo (puedes usar px también) */
-  right: 5%;         /* Ajusta la posición desde la derecha */
-  width: 180px;      /* El tamaño que me dijiste, un poco más pequeña */
-  z-index: 100;      /* Para que flote por encima del contenido */
-  pointer-events: none; /* Para que si haces clic encima, detecte lo que hay detrás */
-  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5)); /* Sombra para que tenga relieve */
-}
-/* --- ARREGLO PARA MÓVILES (POESÍA Y SOBRE MÍ) --- */
+
+/* --- BLOQUE RESPONSIVE (CORREGIDO) --- */
 @media (max-width: 768px) {
   .hero-section {
-    height: auto !important; /* Permite que la sección crezca hacia abajo */
+    height: auto !important;
     min-height: 100vh;
-    padding: 80px 20px 40px 20px; /* Espacio para que no lo tape el menú */
+    padding: 100px 20px 40px 20px !important;
+    background-attachment: scroll; /* Mejor rendimiento en móvil */
   }
 
   .hero-container-dual {
-    flex-direction: column !important; /* La momia baja y el texto sube */
-    align-items: center;
-    text-align: center;
+    flex-direction: column !important;
+    height: auto !important;
+    padding-top: 20px !important;
   }
 
   .hero-text-side {
     width: 100% !important;
-    padding: 0;
-    order: 1; /* El texto va primero */
-  }
-
-  .hero-image-side {
-    width: 100% !important;
-    margin-top: 30px;
-    order: 2; /* La momia va debajo */
-  }
-
-  .hero-titulo-grande {
-    font-size: 2.2rem !important; /* Un poco más pequeño para que no corte */
+    max-width: 100% !important;
+    text-align: center !important;
   }
 
   .hero-box-mística {
+    border-left: none;
+    border-top: 4px solid #ffdf7f;
+    border-radius: 15px;
     width: 100% !important;
-    padding: 15px;
-    margin: 10px 0;
+    display: block !important;
   }
 
   .mensaje-texto-egipto {
-    font-size: 1.1rem !important; /* Tu poesía más legible */
-    line-height: 1.6;
+    font-size: 1.1rem !important;
+    display: block !important;
   }
 
-  .sobre-mi-papiro {
-    width: 90% !important;
-    margin: 15px auto;
+  .hero-image-side {
+    position: static !important;
+    margin-top: 30px;
+    width: 100% !important;
+  }
+
+  .momia-integrada {
+    width: 150px !important;
+  }
+}
