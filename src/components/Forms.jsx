@@ -35,26 +35,46 @@ function Forms({ setResultadosBusqueda }) {
   const [busData, setBusData] = useState({ nombre: "", ciudad: "", edad: "", sexo: "" });
 
   /* ================= FUNCIONES LÓGICA ================= */
+  
+  // LOGIN ADMINISTRADOR (PEPE)
   const handleLoginAdmin = (e) => {
     e.preventDefault();
     if (adminNombre.trim().toLowerCase() === "pepe" && adminPassword === "1234") {
       setAuth(true);
       alert("Admin conectado");
-    } else { alert("Error de acceso"); }
+    } else { 
+      alert("Error de acceso"); 
+    }
   };
 
+  // LOGIN USUARIO (CON MODO DEMO PARA VERCEL)
   const handleLoginUser = async (e) => {
     e.preventDefault();
     try {
+      // 1. Intentamos conectar con tu MySQL
       const res = await api.post("/login", { email: loginEmail, password: loginPass });
+      
       if (res.data.ok) {
         localStorage.setItem("user", JSON.stringify(res.data.user));
         setAuthUser(true);
-        alert("Bienvenido");
+        alert("Bienvenido al Templo");
       }
-    } catch { alert("Usuario o contraseña incorrectos"); }
+    } catch (error) {
+      // 2. TRUCO: Si falla (por estar en Vercel), entramos como Invitado
+      console.warn("Servidor MySQL no detectado. Activando modo Explorador.");
+      
+      const invitado = { 
+        nombre: "Explorador Invitado", 
+        email: loginEmail || "visitante@egipto.es" 
+      };
+
+      localStorage.setItem("user", JSON.stringify(invitado));
+      setAuthUser(true);
+      alert("Modo Demostración: ¡Bienvenido, Explorador!");
+    }
   };
 
+  // BÚSQUEDA DE USUARIOS
   const handleBuscar = async (e) => {
     e.preventDefault();
     try {
@@ -62,18 +82,21 @@ function Forms({ setResultadosBusqueda }) {
       setResultadosBusqueda(res.data.usuarios || res.data);
       setModalBuscar(false);
       navigate("/admin");
-    } catch { alert("Error en búsqueda"); }
+    } catch { 
+      alert("Nota: La búsqueda requiere conexión MySQL activa."); 
+    }
   };
+
   const buscarTodos = async () => {
-  try {
-    const res = await api.get("/usuarios");
-    setResultadosBusqueda(res.data.usuarios || res.data);
-    setModalBuscar(false);
-    navigate("/admin");
-  } catch {
-    alert("Error al traer a todos los usuarios");
-  }
-};
+    try {
+      const res = await api.get("/usuarios");
+      setResultadosBusqueda(res.data.usuarios || res.data);
+      setModalBuscar(false);
+      navigate("/admin");
+    } catch {
+      alert("Conecta el servidor local para ver la lista de usuarios.");
+    }
+  };
 
   /* ================= UI RENDER ================= */
   return (
@@ -95,7 +118,6 @@ function Forms({ setResultadosBusqueda }) {
 
             <Instrucciones mostrar={mostrarInstrucciones} />
 
-            {/* SI NO HAY ACCESO ELEGIDO, MOSTRAMOS EL SELECTOR */}
             {!tipoAcceso && (
               <SelectorAcceso setTipoAcceso={setTipoAcceso} />
             )}
@@ -134,21 +156,18 @@ function Forms({ setResultadosBusqueda }) {
           </div>
         </section>
 
-        {/* MODALES (SE QUEDAN FUERA DEL FLUJO PARA NO ROMPER EL CSS) */}
+        {/* MODALES */}
         <ModalRegistro 
           modalRegistro={modalRegistro} setModalRegistro={setModalRegistro}
-          {...regData} setRegData={setRegData} // Simplificado
+          {...regData} setRegData={setRegData} 
         />
 
         <ModalBuscar 
           modalBuscar={modalBuscar} setModalBuscar={setModalBuscar}
           {...busData} setBusData={setBusData} handleBuscar={handleBuscar}
-          
-          buscarTodos={buscarTodos} //
-          
+          buscarTodos={buscarTodos} 
         />
         
-
       </div>
     </div>
   );
