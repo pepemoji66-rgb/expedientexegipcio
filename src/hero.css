@@ -139,3 +139,47 @@
   pointer-events: none; /* Para que si haces clic encima, detecte lo que hay detrás */
   filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5)); /* Sombra para que tenga relieve */
 }
+/* --- ARREGLO PARA MÓVILES (POESÍA Y SOBRE MÍ) --- */
+@media (max-width: 768px) {
+  .hero-section {
+    height: auto !important; /* Permite que la sección crezca hacia abajo */
+    min-height: 100vh;
+    padding: 80px 20px 40px 20px; /* Espacio para que no lo tape el menú */
+  }
+
+  .hero-container-dual {
+    flex-direction: column !important; /* La momia baja y el texto sube */
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-text-side {
+    width: 100% !important;
+    padding: 0;
+    order: 1; /* El texto va primero */
+  }
+
+  .hero-image-side {
+    width: 100% !important;
+    margin-top: 30px;
+    order: 2; /* La momia va debajo */
+  }
+
+  .hero-titulo-grande {
+    font-size: 2.2rem !important; /* Un poco más pequeño para que no corte */
+  }
+
+  .hero-box-mística {
+    width: 100% !important;
+    padding: 15px;
+    margin: 10px 0;
+  }
+
+  .mensaje-texto-egipto {
+    font-size: 1.1rem !important; /* Tu poesía más legible */
+    line-height: 1.6;
+  }
+
+  .sobre-mi-papiro {
+    width: 90% !important;
+    margin: 15px auto;
