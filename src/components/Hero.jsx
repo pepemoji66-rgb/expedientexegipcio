@@ -3,6 +3,22 @@ import "../hero.css";
 
 export default function Hero({ contenido, form, editando, onChange }) {
   const [mostrarSobreMi, setMostrarSobreMi] = useState(false);
+  const [mostrarSelectorMummy, setMostrarSelectorMummy] = useState(false);
+
+  const cambiarIdiomaTranslate = (codigoLang) => {
+    const selectCombo = document.querySelector(".goog-te-combo");
+    if (selectCombo) {
+      selectCombo.value = codigoLang;
+      selectCombo.dispatchEvent(new Event("change"));
+    } else {
+      // Intentar setear la cookie googtrans como fallback si Google Translate no ha cargado su select aún
+      document.cookie = `googtrans=/es/${codigoLang}; path=/; domain=${window.location.hostname}`;
+      document.cookie = `googtrans=/es/${codigoLang}; path=/; domain=.onrender.com`;
+      document.cookie = `googtrans=/es/${codigoLang}; path=/;`;
+      window.location.reload();
+    }
+    setMostrarSelectorMummy(false);
+  };
 
   return (
     <section 
@@ -62,11 +78,28 @@ export default function Hero({ contenido, form, editando, onChange }) {
 
         {/* LADO DERECHO: LA MOMIA ANCLADA A LA ARENA */}
         <div className="hero-image-side">
-          <div className="contenedor-momia-arena">
+          <div className="contenedor-momia-arena" style={{ position: "relative" }}>
+            {/* BOCADILLO DE DIÁLOGO / TRADUCTOR */}
+            {mostrarSelectorMummy && (
+              <div className="bocadillo-traductor skiptranslate">
+                <div className="bocadillo-triangulo"></div>
+                <p className="bocadillo-texto">
+                  ¿En qué lengua descifrarás la arena?
+                </p>
+                <div className="bocadillo-botones">
+                  <button onClick={() => cambiarIdiomaTranslate("es")} className="btn-lang-mummy" type="button">🇪🇸 ESP</button>
+                  <button onClick={() => cambiarIdiomaTranslate("en")} className="btn-lang-mummy" type="button">🇬🇧 ENG</button>
+                </div>
+              </div>
+            )}
+
             <img 
               src="/momia.png" 
               alt="Momia Sagrada" 
               className="momia-integrada" 
+              onClick={() => setMostrarSelectorMummy(!mostrarSelectorMummy)}
+              style={{ cursor: "pointer" }}
+              title="Haz clic para cambiar de idioma / Click to change language"
             />
             <div className="sombra-pies"></div>
           </div>
