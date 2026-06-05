@@ -2,7 +2,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 100px;
+    margin-top: 20px;
     margin-bottom: 25px;
     position: relative;
     z-index: 100;
@@ -23,17 +23,9 @@
     text-transform: uppercase;
 }
 
-/* Ajustes cuando Google Translate desplaza el header */
-.translated-ltr .titulo-principal-wrapper,
-.translated-rtl .titulo-principal-wrapper,
-html.translated-ltr .titulo-principal-wrapper,
-html.translated-rtl .titulo-principal-wrapper {
-    margin-top: 140px;
-}
-
 @media (max-width: 768px) {
     .titulo-principal-wrapper {
-        margin-top: 90px;
+        margin-top: 15px;
         padding: 0 15px;
     }
     .titulo-principal-text {
@@ -41,11 +33,6 @@ html.translated-rtl .titulo-principal-wrapper {
         padding: 10px 20px;
         letter-spacing: 1.5px;
     }
-    .translated-ltr .titulo-principal-wrapper,
-    .translated-rtl .titulo-principal-wrapper,
-    html.translated-ltr .titulo-principal-wrapper,
-    html.translated-rtl .titulo-principal-wrapper {
-        margin-top: 130px;
-    }
 }
+
 

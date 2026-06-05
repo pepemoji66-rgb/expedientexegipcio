@@ -109,7 +109,33 @@ function MisterioCard({ m, estaActivo, onToggle, setSeccionActiva }) {
   const isEn = htmlLang.startsWith("en");
 
   return (
-    <div className={`misterio-card ${estaActivo ? "activo" : ""}`}>
+    <div className={`misterio-card ${estaActivo ? "activo" : ""}`} style={{ position: "relative" }}>
+      {estaActivo && (
+        <button 
+          onClick={onToggle}
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "15px",
+            background: "transparent",
+            border: "none",
+            color: "#c5a059",
+            fontSize: "1.4rem",
+            cursor: "pointer",
+            padding: "5px",
+            lineHeight: 1,
+            zIndex: 10,
+            transition: "color 0.3s"
+          }}
+          onMouseOver={(e) => e.target.style.color = "#ff4d4d"}
+          onMouseOut={(e) => e.target.style.color = "#c5a059"}
+          title={isEn ? "Close" : "Cerrar"}
+          type="button"
+        >
+          ✕
+        </button>
+      )}
+
       <div className="card-cabecera">
         <div className="card-icono">{m.icono}</div>
         <h3 className="card-titulo">{m.titulo}</h3>
@@ -152,6 +178,34 @@ function MisterioCard({ m, estaActivo, onToggle, setSeccionActiva }) {
               📍 {isEn ? "LOCATE 𓂀" : "RASTREAR 𓂀"}
             </button>
           )}
+
+          <button 
+            onClick={onToggle}
+            type="button"
+            style={{
+              background: "rgba(220, 38, 38, 0.15)",
+              color: "#f87171",
+              border: "1px solid rgba(220, 38, 38, 0.4)",
+              borderRadius: "4px",
+              padding: "8px 12px",
+              fontSize: "11px",
+              cursor: "pointer",
+              fontWeight: "bold",
+              fontFamily: "monospace",
+              transition: "0.3s",
+              flex: 1
+            }}
+            onMouseOver={(e) => {
+              e.target.style.background = "rgba(220, 38, 38, 0.35)";
+              e.target.style.color = "#fff";
+            }}
+            onMouseOut={(e) => {
+              e.target.style.background = "rgba(220, 38, 38, 0.15)";
+              e.target.style.color = "#f87171";
+            }}
+          >
+            ❌ {isEn ? "CLOSE" : "CERRAR"}
+          </button>
         </div>
       )}
 
