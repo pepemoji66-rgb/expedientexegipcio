@@ -48,32 +48,39 @@ function AppContent() {
   const [imagenesGaleria, setImagenesGaleria] = useState([]);
   const [audios, setAudios] = useState([]);
   const [videos, setVideos] = useState([]);
+  const [expedientes, setExpedientes] = useState([]);
+  const [misterios, setMisterios] = useState([]);
 
   const tienePermiso = auth || localStorage.getItem("user") !== null;
 
-  useEffect(() => {
-    const cargarTodo = async () => {
-      try {
-        const baseURL = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") 
-          ? "http://localhost:5000" 
-          : "";
-        const [resV, resA, resI] = await Promise.all([
-          axios.get(`${baseURL}/api/videos`),
-          axios.get(`${baseURL}/api/audios`),
-          axios.get(`${baseURL}/api/imagenes`)
-        ]);
+  const cargarTodo = async () => {
+    try {
+      const baseURL = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") 
+        ? "http://localhost:5000" 
+        : "";
+      const [resV, resA, resI, resE, resM] = await Promise.all([
+        axios.get(`${baseURL}/api/videos`),
+        axios.get(`${baseURL}/api/audios`),
+        axios.get(`${baseURL}/api/imagenes`),
+        axios.get(`${baseURL}/api/expedientes`),
+        axios.get(`${baseURL}/api/misterios`)
+      ]);
 
-        setVideos(resV.data.map(v => ({ ...v, src: v.url, visible: true })));
-        setAudios(resA.data.map(a => ({ ...a, src: a.url, visible: true })));
-        setImagenesGaleria(resI.data.map(i => ({
-          ...i, src: i.url,
-          visible: i.visible === 1 || i.visible === true || i.visible === undefined,
-          descripcion: i.descripcion || "", latitud: i.latitud, longitud: i.longitud
-        })));
-      } catch (e) {
-        console.error("Error cargando el templo:", e);
-      }
-    };
+      setVideos(resV.data.map(v => ({ ...v, src: v.url, visible: true })));
+      setAudios(resA.data.map(a => ({ ...a, src: a.url, visible: true })));
+      setImagenesGaleria(resI.data.map(i => ({
+        ...i, src: i.url,
+        visible: i.visible === 1 || i.visible === true || i.visible === undefined,
+        descripcion: i.descripcion || "", latitud: i.latitud, longitud: i.longitud
+      })));
+      setExpedientes(resE.data);
+      setMisterios(resM.data);
+    } catch (e) {
+      console.error("Error cargando el templo:", e);
+    }
+  };
+
+  useEffect(() => {
     cargarTodo();
   }, []);
 
@@ -103,11 +110,18 @@ function AppContent() {
               {seccionActiva === "galeria" && <Galeria imagenes={imagenesGaleria} setSeccionActiva={setSeccionActiva} />}
               {seccionActiva === "audio" && <AudioSection audios={audios} />}
               {seccionActiva === "videos" && <Videos videos={videos} />}
-              {seccionActiva === "mapa" && <MapaInteractivo setSeccionActiva={setSeccionActiva} imagenes={imagenesGaleria} />}
-              {seccionActiva === "misterios" && <Misterios />}
+              {seccionActiva === "mapa" && (
+                <MapaInteractivo 
+                  setSeccionActiva={setSeccionActiva} 
+                  imagenes={imagenesGaleria} 
+                  expedientes={expedientes}
+                  misterios={misterios}
+                />
+              )}
+              {seccionActiva === "misterios" && <Misterios misterios={misterios} setSeccionActiva={setSeccionActiva} />}
               {seccionActiva === "ra" && <Ra />}
               {seccionActiva === "vivo" && <EgiptoEnVivo />}
-              {seccionActiva === "expedientes" && <Expedientes />}
+              {seccionActiva === "expedientes" && <Expedientes expedientes={expedientes} setSeccionActiva={setSeccionActiva} />}
 
               {/* SECCIONES ADSENSE */}
               {seccionActiva === "privacidad" && <Politicas tipo="privacidad" />}
@@ -134,6 +148,7 @@ function AppContent() {
               setVideos={setVideos}
               resultadosBusqueda={resultadosBusqueda}
               setResultadosBusqueda={setResultadosBusqueda}
+              cargarTodoApp={cargarTodo}
             />
           } />
 

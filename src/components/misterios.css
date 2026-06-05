@@ -142,3 +142,31 @@
     opacity: 1;
   }
 }
+
+/* BOTÓN RASTREAR EN MAPA SATÉLITE */
+.btn-rastrear-mapa {
+  background: #1a2f4c;
+  color: #ffd700;
+  border: 1px solid #c5a059;
+  padding: 10px 18px;
+  border-radius: 5px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-rastrear-mapa:hover {
+  background: #ffd700;
+  color: #16120b;
+  border-color: #ffd700;
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+}
+

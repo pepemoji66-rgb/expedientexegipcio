@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-// Este componente es el que "mueve" la cámara y activa el rojo
-function ManejadorMapa({ imagenes, setIdResaltado }) {
+// ManejadorMapa: vuela suavemente al marcador seleccionado y encuadra los puntos
+function ManejadorMapa({ imagenes = [], expedientes = [], misterios = [], setIdResaltado }) {
   const map = useMap();
 
   useEffect(() => {
@@ -14,44 +14,61 @@ function ManejadorMapa({ imagenes, setIdResaltado }) {
     if (centroGuardado) {
       const { lat, lon } = JSON.parse(centroGuardado);
 
-      // Volamos al punto que pulsamos en la galería
-      map.flyTo([lat, lon], 14, { duration: 2 });
+      // Volamos al punto geográfico (zoom 16 para vista de satélite detallada)
+      map.flyTo([lat, lon], 16, { duration: 2 });
 
       if (idGuardado) {
-        // Marcamos este ID como el "activo" para que se ponga rojo
-        setIdResaltado(Number(idGuardado));
+        setIdResaltado(idGuardado);
       }
 
-      // Limpiamos para que al refrescar no se quede "atrapado" en ese punto
+      // Limpiamos
       localStorage.removeItem("centro_mapa");
       localStorage.removeItem("id_resaltado");
-    } else if (imagenes && imagenes.length > 0) {
-      // Si entramos normal al mapa, encuadramos todos los puntos
-      const validPoints = imagenes
-        .filter(img => img.latitud && img.longitud)
-        .map(img => [Number(img.latitud), Number(img.longitud)]);
+    } else {
+      // Si entramos normal al mapa, encuadramos todos los marcadores existentes
+      const ptsImg = imagenes.filter(i => i.latitud && i.longitud).map(i => [Number(i.latitud), Number(i.longitud)]);
+      const ptsExp = expedientes.filter(e => e.latitud && e.longitud).map(e => [Number(e.latitud), Number(e.longitud)]);
+      const ptsMis = misterios.filter(m => m.latitud && m.longitud).map(m => [Number(m.latitud), Number(m.longitud)]);
 
-      if (validPoints.length > 0) {
-        map.fitBounds(validPoints, { padding: [50, 50], maxZoom: 12 });
+      const allPoints = [...ptsImg, ...ptsExp, ...ptsMis];
+
+      if (allPoints.length > 0) {
+        map.fitBounds(allPoints, { padding: [50, 50], maxZoom: 14 });
       }
     }
-  }, [imagenes, map, setIdResaltado]);
+  }, [imagenes, expedientes, misterios, map, setIdResaltado]);
 
   return null;
 }
 
-const MapaInteractivo = ({ imagenes }) => {
+const MapaInteractivo = ({ imagenes = [], expedientes = [], misterios = [], setSeccionActiva }) => {
   const [idResaltado, setIdResaltado] = useState(null);
 
-  // ICONO AZUL (Normal)
-  const customIcon = new L.Icon({
+  // 1. ICONO AZUL (Imágenes de la Galería)
+  const iconImagen = new L.Icon({
     iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png",
     iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34],
     shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
     shadowSize: [41, 41]
   });
 
-  // ICONO ROJO (Cuando vienes de la galería)
+  // 2. ICONO DORADO (Dosieres Históricos / Expedientes)
+  const iconDosier = new L.Icon({
+    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png",
+    iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34],
+    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+    shadowSize: [41, 41]
+  });
+
+  // 3. ICONO VIOLETA (Misterios)
+  const iconMisterio = new L.Icon({
+    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png",
+    iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34],
+    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+    shadowSize: [41, 41]
+  });
+
+  // 4. ICONO ROJO (Cuando el elemento está seleccionado / activo)
   const iconActivo = new L.Icon({
     iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
     iconSize: [30, 46], iconAnchor: [15, 46], popupAnchor: [1, -34],
@@ -59,37 +76,143 @@ const MapaInteractivo = ({ imagenes }) => {
     shadowSize: [41, 41]
   });
 
+  // Redirigir de forma contextual basándose en el tipo y título del marcador
+  const irAlTemplo = (item, tipo) => {
+    if (tipo === "expediente") {
+      localStorage.setItem("dossier_abierto_id", item.id);
+      if (setSeccionActiva) setSeccionActiva("expedientes");
+    } else if (tipo === "misterio") {
+      localStorage.setItem("misterio_abierto_id", item.id);
+      if (setSeccionActiva) setSeccionActiva("misterios");
+    } else {
+      // Es una imagen de la galería. Comprobamos título/descripción
+      const tit = (item.titulo || "").toLowerCase();
+      const desc = (item.descripcion || "").toLowerCase();
+
+      if (tit.includes("esfinge") || desc.includes("esfinge") || tit.includes("sphinx") || desc.includes("sphinx")) {
+        if (setSeccionActiva) setSeccionActiva("esfinge");
+      } else if (tit.includes("orion") || tit.includes("orión") || desc.includes("orion")) {
+        // Redirigir e intentar abrir la tarjeta de Orión en Misterios
+        localStorage.setItem("misterio_abierto_id", "orion-correlation");
+        if (setSeccionActiva) setSeccionActiva("misterios");
+      } else if (tit.includes("pirámide") || tit.includes("piramide") || tit.includes("pyramid") || tit.includes("keops")) {
+        // Redirigir e intentar abrir la Era de las Pirámides en Expedientes
+        localStorage.setItem("dossier_abierto_id", "imperio-antiguo");
+        if (setSeccionActiva) setSeccionActiva("expedientes");
+      } else {
+        if (setSeccionActiva) setSeccionActiva("galeria");
+      }
+    }
+  };
+
   return (
     <div style={{
       width: "100vw", height: "calc(100vh - 80px)", position: "relative",
       left: "50%", right: "50%", marginLeft: "-50vw", marginRight: "-50vw",
       marginTop: "-20px", zIndex: 10
     }}>
-      <MapContainer center={[26.8206, 30.8025]} zoom={6} style={{ height: "100%", width: "100%" }}>
-        <LayersControl position="topright">
-          <LayersControl.BaseLayer checked name="Mapa Político">
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          </LayersControl.BaseLayer>
-          <LayersControl.BaseLayer name="Visión Satélite">
-            <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
-          </LayersControl.BaseLayer>
-        </LayersControl>
+      {/* Mapa centrado inicialmente en la Meseta de Giza */}
+      <MapContainer center={[29.9792, 31.1342]} zoom={15} style={{ height: "100%", width: "100%" }}>
+        {/* Usamos única y exclusivamente la visión Satélite de ESRI */}
+        <TileLayer 
+          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" 
+          attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        />
 
-        <ManejadorMapa imagenes={imagenes} setIdResaltado={setIdResaltado} />
+        <ManejadorMapa 
+          imagenes={imagenes} 
+          expedientes={expedientes} 
+          misterios={misterios} 
+          setIdResaltado={setIdResaltado} 
+        />
 
+        {/* 1. MARCADORES DE IMÁGENES DE GALERÍA (AZUL / ROJO) */}
         {imagenes.map((img) => (
           img.latitud && img.longitud && (
             <Marker
-              key={img.id}
+              key={`img-${img.id}`}
               position={[Number(img.latitud), Number(img.longitud)]}
-              // Si el ID coincide con el que guardamos en localStorage, se pone ROJO
-              icon={idResaltado === img.id ? iconActivo : customIcon}
+              icon={String(idResaltado) === String(img.id) ? iconActivo : iconImagen}
             >
               <Popup>
-                <div style={{ textAlign: "center", minWidth: "150px" }}>
+                <div style={{ textAlign: "center", minWidth: "160px" }}>
                   <img src={img.url} alt={img.titulo} style={{ width: "100%", borderRadius: "5px" }} />
-                  <strong style={{ display: "block", marginTop: "5px" }}>{img.titulo}</strong>
-                  <p style={{ fontSize: "12px", margin: "5px 0" }}>{img.descripcion}</p>
+                  <strong style={{ display: "block", marginTop: "5px", color: "#333" }}>{img.titulo}</strong>
+                  <p style={{ fontSize: "11px", margin: "5px 0", color: "#555" }}>{img.descripcion}</p>
+                  <button 
+                    onClick={() => irAlTemplo(img, "galeria")}
+                    style={{
+                      background: "#c5a059", color: "#1a140e", border: "none", borderRadius: "4px",
+                      padding: "5px 10px", fontSize: "11px", cursor: "pointer", fontWeight: "bold", width: "100%",
+                      marginTop: "5px"
+                    }}
+                  >
+                    𓉴 Investigar en el Templo
+                  </button>
+                </div>
+              </Popup>
+            </Marker>
+          )
+        ))}
+
+        {/* 2. MARCADORES DE DOSIERES HISTÓRICOS (DORADO / ROJO) */}
+        {expedientes.map((exp) => (
+          exp.latitud && exp.longitud && (
+            <Marker
+              key={`exp-${exp.id}`}
+              position={[Number(exp.latitud), Number(exp.longitud)]}
+              icon={idResaltado === `expediente-${exp.id}` ? iconActivo : iconDosier}
+            >
+              <Popup>
+                <div style={{ textAlign: "center", minWidth: "160px" }}>
+                  {exp.imagen && <img src={exp.imagen} alt={exp.titulo} style={{ width: "100%", borderRadius: "5px" }} />}
+                  <span style={{ fontSize: "10px", fontWeight: "bold", color: "#c5a059", display: "block", marginTop: "4px" }}>
+                    📜 DOSIER HISTÓRICO ({exp.sigla})
+                  </span>
+                  <strong style={{ display: "block", marginTop: "3px", color: "#333" }}>{exp.titulo}</strong>
+                  <p style={{ fontSize: "11px", margin: "5px 0", color: "#555" }}>{exp.resumen}</p>
+                  <button 
+                    onClick={() => irAlTemplo(exp, "expediente")}
+                    style={{
+                      background: "#2b4c7e", color: "#fff", border: "none", borderRadius: "4px",
+                      padding: "5px 10px", fontSize: "11px", cursor: "pointer", fontWeight: "bold", width: "100%",
+                      marginTop: "5px"
+                    }}
+                  >
+                    𓉴 Investigar en el Templo
+                  </button>
+                </div>
+              </Popup>
+            </Marker>
+          )
+        ))}
+
+        {/* 3. MARCADORES DE MISTERIOS (VIOLETA / ROJO) */}
+        {misterios.map((mis) => (
+          mis.latitud && mis.longitud && (
+            <Marker
+              key={`mis-${mis.id}`}
+              position={[Number(mis.latitud), Number(mis.longitud)]}
+              icon={idResaltado === `misterio-${mis.id}` ? iconActivo : iconMisterio}
+            >
+              <Popup>
+                <div style={{ textAlign: "center", minWidth: "160px" }}>
+                  {mis.imagen && <img src={mis.imagen} alt={mis.titulo} style={{ width: "100%", borderRadius: "5px" }} />}
+                  <span style={{ fontSize: "10px", fontWeight: "bold", color: "#8b5cf6", display: "block", marginTop: "4px" }}>
+                    {mis.icono || "𓂀"} ENIGMA DE GIZA
+                  </span>
+                  <strong style={{ display: "block", marginTop: "3px", color: "#333" }}>{mis.titulo}</strong>
+                  <p style={{ fontSize: "11px", margin: "5px 0", color: "#555" }}>{mis.resumen}</p>
+                  <button 
+                    onClick={() => irAlTemplo(mis, "misterio")}
+                    style={{
+                      background: "#5b21b6", color: "#fff", border: "none", borderRadius: "4px",
+                      padding: "5px 10px", fontSize: "11px", cursor: "pointer", fontWeight: "bold", width: "100%",
+                      marginTop: "5px"
+                    }}
+                  >
+                    𓉴 Investigar en el Templo
+                  </button>
                 </div>
               </Popup>
             </Marker>

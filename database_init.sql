@@ -40,6 +40,29 @@ CREATE TABLE IF NOT EXISTS `noticias` (
   `fecha` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE IF NOT EXISTS `expedientes` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `sigla` VARCHAR(50) NOT NULL,
+  `titulo` VARCHAR(255) NOT NULL,
+  `periodo` VARCHAR(100) NOT NULL,
+  `imagen` VARCHAR(500),
+  `resumen` TEXT NOT NULL,
+  `detalles` LONGTEXT NOT NULL,
+  `latitud` VARCHAR(50),
+  `longitud` VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `misterios` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `titulo` VARCHAR(255) NOT NULL,
+  `icono` VARCHAR(50) NOT NULL,
+  `resumen` TEXT NOT NULL,
+  `textoCompleto` TEXT NOT NULL,
+  `imagen` VARCHAR(500),
+  `latitud` VARCHAR(50),
+  `longitud` VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE IF NOT EXISTS `usuarios` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `nombre` VARCHAR(100) NOT NULL,

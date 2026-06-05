@@ -10,6 +10,8 @@ app.use(express.json());
 // 2. CONEXIÓN DE TODAS LAS RUTAS EXISTENTES
 app.use("/api/noticias", require('./routes/noticias'));
 app.use("/api/ra", require("./routes/ra"));
+app.use("/api/expedientes", require("./routes/expedientes"));
+app.use("/api/misterios", require("./routes/misterios"));
 app.use("/api", require("./routes/usuarios"));
 app.use("/api", require("./routes/videos"));
 app.use("/api", require("./routes/audios"));

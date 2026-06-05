@@ -9,6 +9,8 @@ const DOSSIERS = [
     periodo: "c. 2686 – 2181 a.C.",
     imagen: "/imagenes/1.avif",
     resumen: "El surgimiento de la arquitectura monumental en piedra y la consolidación de la teocracia divina en torno a la figura del Faraón.",
+    latitud: 29.9792,
+    longitud: 31.1342,
     detalles: [
       {
         subtitulo: "Imhotep y la Revolución de Saqqara",
@@ -31,6 +33,8 @@ const DOSSIERS = [
     periodo: "c. 1353 – 1336 a.C. (Dinastía XVIII)",
     imagen: "/imagenes/6.avif",
     resumen: "La abolición del panteón tradicional de Amón en favor del monoteísmo solar de Atón, liderada por Akenatón y Nefertiti.",
+    latitud: 27.6406,
+    longitud: 30.9022,
     detalles: [
       {
         subtitulo: "El Alzamiento de Amenhotep IV",
@@ -53,6 +57,8 @@ const DOSSIERS = [
     periodo: "c. 1550 – 1069 a.C. (Imperio Nuevo)",
     imagen: "/imagenes/7.avif",
     resumen: "El abandono de las pirámides en favor de hipogeos excavados directamente en las montañas de Tebas occidental para evitar saqueos.",
+    latitud: 25.7402,
+    longitud: 32.6014,
     detalles: [
       {
         subtitulo: "El Cambio de Estrategia Funeraria",
@@ -70,7 +76,7 @@ const DOSSIERS = [
   }
 ];
 
-function DossierCard({ d, estaAbierto, onToggle }) {
+function DossierCard({ d, estaAbierto, onToggle, setSeccionActiva }) {
   const [paginaDetalle, setPaginaDetalle] = useState(0);
   const [leyendo, setLeyendo] = useState(false);
   const textRef = useRef(null);
@@ -143,8 +149,8 @@ function DossierCard({ d, estaAbierto, onToggle }) {
     window.speechSynthesis.speak(ut);
   };
 
-  const detActivo = d.detalles[paginaDetalle];
-  const totalPaginas = d.detalles.length;
+  const detActivo = (d.detalles && d.detalles[paginaDetalle]) ? d.detalles[paginaDetalle] : { subtitulo: "", texto: "" };
+  const totalPaginas = d.detalles ? d.detalles.length : 0;
 
   const htmlLang = document.documentElement.lang || "es";
   const isEn = htmlLang.startsWith("en");
@@ -189,15 +195,33 @@ function DossierCard({ d, estaAbierto, onToggle }) {
 
             {/* CONTROLES DE VOZ Y PAGINACIÓN */}
             <div className="dossier-footer-controles">
-              <button 
-                className={`btn-robocop-lector ${leyendo ? "leyendo-activo" : ""}`}
-                onClick={toggleLeerVoz}
-                type="button"
-              >
-                {leyendo 
-                  ? `🛑 ${isEn ? "STOP AUDIO" : "DETENER AUDIO"}` 
-                  : `🔊 ${isEn ? "LISTEN DOSSIER" : "ESCUCHAR DOSIER"}`}
-              </button>
+              <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                <button 
+                  className={`btn-robocop-lector ${leyendo ? "leyendo-activo" : ""}`}
+                  onClick={toggleLeerVoz}
+                  type="button"
+                >
+                  {leyendo 
+                    ? `🛑 ${isEn ? "STOP AUDIO" : "DETENER AUDIO"}` 
+                    : `🔊 ${isEn ? "LISTEN DOSSIER" : "ESCUCHAR DOSIER"}`}
+                </button>
+
+                {d.latitud && d.longitud && (
+                  <button 
+                    className="btn-rastrear-mapa"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const coordenadas = { lat: parseFloat(d.latitud), lon: parseFloat(d.longitud) };
+                      localStorage.setItem("centro_mapa", JSON.stringify(coordenadas));
+                      localStorage.setItem("id_resaltado", `expediente-${d.id}`);
+                      if (setSeccionActiva) setSeccionActiva("mapa");
+                    }}
+                    type="button"
+                  >
+                    📍 {isEn ? "LOCATE 𓂀" : "RASTREAR 𓂀"}
+                  </button>
+                )}
+              </div>
 
               {totalPaginas > 1 && (
                 <div className="paginacion-interna-pergamino">
@@ -230,8 +254,10 @@ function DossierCard({ d, estaAbierto, onToggle }) {
   );
 }
 
-export default function Expedientes() {
+export default function Expedientes({ expedientes = [], setSeccionActiva }) {
   const [dossierAbierto, setDossierAbierto] = useState(null);
+
+  const itemsAMostrar = expedientes && expedientes.length > 0 ? expedientes : DOSSIERS;
 
   const toggleDossier = (id) => {
     if (dossierAbierto === id) {
@@ -240,6 +266,17 @@ export default function Expedientes() {
       setDossierAbierto(id);
     }
   };
+
+  useEffect(() => {
+    const ab_id = localStorage.getItem("dossier_abierto_id");
+    if (ab_id) {
+      const matched = itemsAMostrar.find(d => String(d.id) === String(ab_id));
+      if (matched) {
+        setDossierAbierto(matched.id);
+      }
+      localStorage.removeItem("dossier_abierto_id");
+    }
+  }, [itemsAMostrar]);
 
   return (
     <div className="expedientes-seccion">
@@ -251,12 +288,13 @@ export default function Expedientes() {
       </header>
 
       <div className="dossiers-grid">
-        {DOSSIERS.map((d) => (
+        {itemsAMostrar.map((d) => (
           <DossierCard 
             key={d.id} 
             d={d} 
             estaAbierto={dossierAbierto === d.id} 
             onToggle={() => toggleDossier(d.id)} 
+            setSeccionActiva={setSeccionActiva}
           />
         ))}
       </div>

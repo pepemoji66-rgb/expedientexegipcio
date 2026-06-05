@@ -4,13 +4,16 @@ import api from "./api";
 import "./admin.css";
 import GestionEsfinge from "./components/GestionEsfinge";
 import GestionVivo from "./components/GestionVivo";
+import GestionExpedientes from "./components/GestionExpedientes";
+import GestionMisterios from "./components/GestionMisterios";
 
 export default function AdminPage({
   imagenesGaleria, setImagenesGaleria,
   audios, setAudios,
   videos, setVideos,
   resultadosBusqueda,
-  setResultadosBusqueda
+  setResultadosBusqueda,
+  cargarTodoApp
 }) {
   const navigate = useNavigate();
   const [seccionAdmin, setSeccionAdmin] = useState("galeria");
@@ -109,6 +112,8 @@ export default function AdminPage({
         <button className={seccionAdmin === "usuarios" ? "active" : ""} onClick={() => { setSeccionAdmin("usuarios"); cargarTodosLosUsuarios(); }}>👥 Usuarios</button>
         <button className={seccionAdmin === "esfinge" ? "active" : ""} onClick={() => setSeccionAdmin("esfinge")}>🦁 Esfinge</button>
         <button className={seccionAdmin === "vivo" ? "active" : ""} onClick={() => setSeccionAdmin("vivo")}>🛸 En Vivo</button>
+        <button className={seccionAdmin === "expedientes" ? "active" : ""} onClick={() => setSeccionAdmin("expedientes")}>📂 Expedientes</button>
+        <button className={seccionAdmin === "misterios" ? "active" : ""} onClick={() => setSeccionAdmin("misterios")}>𓂀 Misterios</button>
       </nav>
 
       <div className="admin-content-wrapper">
@@ -187,6 +192,8 @@ export default function AdminPage({
         {/* COMPONENTES EXTERNOS */}
         {seccionAdmin === "esfinge" && <GestionEsfinge />}
         {seccionAdmin === "vivo" && <GestionVivo />}
+        {seccionAdmin === "expedientes" && <GestionExpedientes cargarTodoApp={cargarTodoApp} />}
+        {seccionAdmin === "misterios" && <GestionMisterios cargarTodoApp={cargarTodoApp} />}
 
         {/* CONTROLES DE PAGINACIÓN UNIVERSALES */}
         {["galeria", "audio", "videos", "usuarios"].includes(seccionAdmin) && (
