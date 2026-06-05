@@ -31,51 +31,70 @@
   line-height: 1.6;
 }
 
-/* --- GRID DE DOSSIERS --- */
+/* --- GRID DE DOSSIERS (DISEÑO CUADRADO) --- */
 .dossiers-grid {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 30px;
   width: 100%;
-  max-width: 1000px;
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
 /* CARPETAS / EXPEDIENTES (DOSSIERS) */
 .dossier-card {
-  background: rgba(30, 24, 18, 0.6);
+  position: relative;
   border: 2px solid rgba(197, 160, 89, 0.4);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
   transition: all 0.4s ease;
+  min-height: 280px; /* Sensación cuadrada */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Empuja el texto a la base */
 }
 
 .dossier-card:hover {
   border-color: #ffd700;
-  box-shadow: 0 8px 30px rgba(197, 160, 89, 0.2);
+  box-shadow: 0 8px 30px rgba(197, 160, 89, 0.25);
+  transform: translateY(-3px);
 }
 
+/* EXPANDIR TARJETA ACTIVA A FILA COMPLETA */
 .dossier-card.abierto {
-  background: rgba(22, 17, 12, 0.8);
+  grid-column: 1 / -1; /* Ocupa todo el ancho de la fila del grid */
+  height: auto;
+  min-height: unset;
+  display: block;
+  background: rgba(22, 17, 12, 0.95);
+  transform: none !important;
   border-color: #ffd700;
 }
 
-/* PESTAÑA DEL EXPEDIENTE (BOTÓN DE ENTRADA) */
+/* PESTAÑA DEL EXPEDIENTE (CABECERA) */
 .dossier-pestaña {
-  padding: 24px 30px;
+  padding: 20px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  background: linear-gradient(90deg, rgba(45, 36, 25, 0.4) 0%, rgba(20, 15, 10, 0.4) 100%);
+  background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 100%);
+  width: 100%;
+  box-sizing: border-box;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 15px;
+}
+
+.dossier-card.abierto .dossier-pestaña {
+  background: linear-gradient(90deg, rgba(45, 36, 25, 0.6) 0%, rgba(20, 15, 10, 0.6) 100%);
+  border-bottom: 1px solid rgba(197, 160, 89, 0.2);
 }
 
 .dossier-header-main {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   flex: 1;
 }
 
@@ -88,27 +107,29 @@
 
 .dossier-titulo {
   font-family: 'Cinzel', serif;
-  font-size: 1.4rem;
+  font-size: 1.25rem;
   color: #f4e6b2;
   margin: 0;
   letter-spacing: 1px;
+  text-shadow: 1px 1px 3px #000;
 }
 
 .dossier-periodo {
-  color: rgba(224, 192, 151, 0.6);
-  font-size: 0.9rem;
+  color: rgba(224, 192, 151, 0.8);
+  font-size: 0.85rem;
   font-style: italic;
+  text-shadow: 1px 1px 2px #000;
 }
 
 .btn-abrir-dossier {
   background: transparent;
   border: 1px solid #c5a059;
   color: #c5a059;
-  padding: 10px 18px;
+  padding: 8px 14px;
   border-radius: 4px;
   cursor: pointer;
   font-family: 'Cinzel', serif;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: bold;
   letter-spacing: 1px;
   transition: all 0.3s ease;
@@ -127,7 +148,7 @@
 
 /* CONTENIDO EXPANDIBLE: PERGAMINO CLÁSICO */
 .dossier-contenido {
-  padding: 0 30px 30px 30px;
+  padding: 24px;
   animation: deslizarAbajo 0.4s ease-out forwards;
 }
 
@@ -143,32 +164,105 @@
 .resumen-dossier {
   font-size: 1.1rem;
   line-height: 1.6;
-  border-bottom: 2px dashed rgba(59, 35, 20, 0.3);
+  border-bottom: 2px dashed rgba(59, 35, 20, 0.25);
   padding-bottom: 15px;
   margin-bottom: 25px;
   font-style: italic;
 }
 
 .detalles-dossier {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
+  min-height: 140px; /* Altura mínima para que no salte el layout al paginar */
 }
 
 .dossier-seccion-info h4 {
   font-family: 'Cinzel', serif;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   color: #5c3a21;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   border-left: 4px solid #c5a059;
-  padding-left: 10px;
+  padding-left: 12px;
   font-weight: bold;
 }
 
 .dossier-seccion-info p {
-  font-size: 1rem;
+  font-size: 1.05rem;
   line-height: 1.7;
   text-align: justify;
+}
+
+/* BOTONERA Y CONTROLES DE LA BASE */
+.dossier-footer-controles {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px dashed rgba(59, 35, 20, 0.3);
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.btn-robocop-lector {
+  background: #5c3a21;
+  color: #ffd700;
+  border: 1px solid #ffd700;
+  padding: 10px 18px;
+  border-radius: 5px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.btn-robocop-lector:hover {
+  background: #ffd700;
+  color: #5c3a21;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.btn-robocop-lector.leyendo-activo {
+  background: #ff4500;
+  color: #fff;
+  border-color: #ff4500;
+  box-shadow: 0 0 10px rgba(255, 69, 0, 0.4);
+}
+
+.paginacion-interna-pergamino {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-pag-pergamino {
+  background: transparent;
+  border: 1px solid #5c3a21;
+  color: #5c3a21;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+}
+
+.btn-pag-pergamino:hover:not(:disabled) {
+  background: #5c3a21;
+  color: #f3e5ab;
+}
+
+.btn-pag-pergamino:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.pag-contador-pergamino {
+  font-weight: bold;
+  color: #5c3a21;
+  font-size: 0.95rem;
+  font-family: 'Cinzel', serif;
 }
 
 /* ANIMACIONES */

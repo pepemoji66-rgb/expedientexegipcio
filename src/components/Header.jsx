@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../header.css";
 import { AuthContext } from "../AuthContext";
@@ -12,6 +12,31 @@ export default function Header({ setSeccionActiva }) {
 
   const hayUsuario = localStorage.getItem("user") !== null;
   const mostrarTodo = auth || hayUsuario;
+
+  useEffect(() => {
+    const loadTranslate = () => {
+      if (window.google && window.google.translate && window.google.translate.TranslateElement) {
+        const element = document.getElementById('google_translate_element');
+        if (element && element.innerHTML === "") {
+          new window.google.translate.TranslateElement({
+            pageLanguage: 'es',
+            includedLanguages: 'en,es,fr,de,it,pt',
+            autoDisplay: false,
+            layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
+          }, 'google_translate_element');
+        }
+      }
+    };
+
+    // Vigilar y reponer si desaparece o tarda en cargar
+    const interval = setInterval(loadTranslate, 2000);
+    const timeout = setTimeout(loadTranslate, 1000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, []);
 
   const navegarA = (seccion) => {
     setMenuAbierto(false);
@@ -91,6 +116,11 @@ export default function Header({ setSeccionActiva }) {
               <option value="agua">🌊 NILO</option>
               <option value="faraon">🏛️ FARAÓN</option>
             </select>
+          </div>
+
+          {/* TRADUCTOR MULTIIDIOMA */}
+          <div className="traductor-header-box skiptranslate" style={{ margin: "5px 15px", display: "inline-block", verticalAlign: "middle" }}>
+            <div id="google_translate_element"></div>
           </div>
         </nav>
       </div>
