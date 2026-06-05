@@ -39,6 +39,11 @@ export default function Home({ setSeccionActiva }) {
     }
   };
 
+  const navegarA = (seccion) => {
+    setSeccionActiva(seccion);
+    window.scrollTo(0, 0);
+  };
+
   const pyramidsData = {
     keops: {
       title: "Gran Pirámide de Keops (Jufu)",
@@ -195,7 +200,7 @@ export default function Home({ setSeccionActiva }) {
         </p>
 
         <div className="explore-grid">
-          <div className="explore-card" onClick={() => setSeccionActiva("vivo")}>
+          <div className="explore-card" onClick={() => navegarA("vivo")}>
             <div>
               <h3 className="explore-title">🛸 EGIPTO EN VIVO</h3>
               <p className="explore-desc">
@@ -205,7 +210,7 @@ export default function Home({ setSeccionActiva }) {
             <button className="explore-btn">VOLAR DRON</button>
           </div>
 
-          <div className="explore-card" onClick={() => setSeccionActiva("ra")}>
+          <div className="explore-card" onClick={() => navegarA("ra")}>
             <div>
               <h3 className="explore-title">☀️ ORÁCULO DE RA</h3>
               <p className="explore-desc">
@@ -215,7 +220,7 @@ export default function Home({ setSeccionActiva }) {
             <button className="explore-btn">HABLAR CON RA</button>
           </div>
 
-          <div className="explore-card" onClick={() => setSeccionActiva("mapa")}>
+          <div className="explore-card" onClick={() => navegarA("mapa")}>
             <div>
               <h3 className="explore-title">🗺️ MAPA INTERACTIVO</h3>
               <p className="explore-desc">

@@ -25,7 +25,10 @@ CREATE TABLE IF NOT EXISTS `imagenes` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `titulo` VARCHAR(255) NOT NULL,
   `url` VARCHAR(500) NOT NULL,
-  `orden` INT DEFAULT 0
+  `orden` INT DEFAULT 0,
+  `descripcion` TEXT,
+  `latitud` VARCHAR(50),
+  `longitud` VARCHAR(50)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `noticias` (
@@ -33,7 +36,8 @@ CREATE TABLE IF NOT EXISTS `noticias` (
   `titulo` VARCHAR(255) NOT NULL,
   `resumen` TEXT NOT NULL,
   `url_enlace` VARCHAR(500),
-  `url_imagen` VARCHAR(500)
+  `url_imagen` VARCHAR(500),
+  `fecha` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `usuarios` (
