@@ -18,7 +18,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build:render": "npm install && npm run build && npm install --prefix backend",
+    "start:render": "node backend/server.js"
   },
   "browserslist": {
     "production": [
