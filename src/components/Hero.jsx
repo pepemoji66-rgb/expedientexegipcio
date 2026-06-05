@@ -93,6 +93,17 @@ export default function Hero({ contenido, form, editando, onChange }) {
               </div>
             )}
 
+            {/* HINT DE IDIOMA PARA SABER QUE SE PUEDE PINCHAR */}
+            {!mostrarSelectorMummy && (
+              <div 
+                className="momia-traductor-hint skiptranslate" 
+                onClick={() => setMostrarSelectorMummy(true)}
+              >
+                <span>🌐 Translate / Traducir</span>
+                <div className="hint-flechita">▼</div>
+              </div>
+            )}
+
             <img 
               src="/momia.png" 
               alt="Momia Sagrada" 

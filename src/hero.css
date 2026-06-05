@@ -549,4 +549,51 @@
 /* Ocultar el widget original de Google Translate si está visible para no duplicar */
 #google_translate_element {
   display: none !important;
-}
+}
+
+/* HINT FLOTANTE DE LA MOMIA TRADUCTORA */
+.momia-traductor-hint {
+  position: absolute !important;
+  top: -65px !important;
+  background: rgba(15, 15, 26, 0.92) !important;
+  color: #ffd700 !important;
+  border: 1.5px solid #c5a059 !important;
+  border-radius: 20px !important;
+  padding: 6px 14px !important;
+  font-family: 'Cinzel', serif !important;
+  font-size: 0.7rem !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6), 0 0 10px rgba(197, 160, 89, 0.3) !important;
+  z-index: 99 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 2px !important;
+  animation: flotarMomia 4s infinite ease-in-out !important; /* Mismo efecto para flotar síncronamente */
+  transition: all 0.3s ease !important;
+}
+
+.momia-traductor-hint:hover {
+  background: #c5a059 !important;
+  color: #0f0f1a !important;
+  border-color: #ffd700 !important;
+  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.6) !important;
+}
+
+.hint-flechita {
+  font-size: 0.65rem !important;
+  animation: saltarFlechita 1.5s infinite ease-in-out !important;
+  color: inherit !important;
+}
+
+@keyframes saltarFlechita {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+
