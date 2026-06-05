@@ -149,3 +149,317 @@
     /* La momia sale arriba en móvil para que se vea */
   }
 }
+
+/* ==============================================
+    NUEVA SECCIÓN: DASHBOARD (EL TEMPLO EN CIFRAS)
+============================================== */
+.home-dashboard-section {
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.seccion-subtitulo {
+  font-family: 'Cinzel', serif;
+  font-size: 2rem;
+  color: #c5a059;
+  margin-bottom: 15px;
+  letter-spacing: 2px;
+}
+
+.seccion-descripcion {
+  font-size: 1.1rem;
+  color: #f4e6b2;
+  opacity: 0.9;
+  max-width: 700px;
+  margin: 0 auto 40px auto;
+}
+
+.home-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.dashboard-card {
+  background: rgba(15, 15, 26, 0.65);
+  border: 1px solid rgba(197, 160, 89, 0.3);
+  border-radius: 15px;
+  padding: 30px 20px;
+  backdrop-filter: blur(10px);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.dashboard-card:hover {
+  transform: translateY(-8px);
+  border-color: #c5a059;
+  box-shadow: 0 15px 35px rgba(197, 160, 89, 0.2);
+}
+
+.dashboard-icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.dashboard-number {
+  font-family: 'Cinzel', serif;
+  font-size: 2.2rem;
+  color: #c5a059;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.dashboard-label {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.dashboard-desc {
+  font-size: 0.9rem;
+  color: #f4e6b2;
+  opacity: 0.8;
+  line-height: 1.4;
+}
+
+/* ==============================================
+    NUEVA SECCIÓN: ENIGMAS DE LAS PIRÁMIDES
+============================================== */
+.home-piramides-section {
+  padding: 60px 20px;
+  background: rgba(10, 10, 15, 0.8);
+  border-top: 1px solid rgba(197, 160, 89, 0.2);
+  border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+}
+
+.piramides-tabs-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.tab-buttons-row {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.btn-tab-cartucho {
+  background: rgba(15, 15, 26, 0.8);
+  border: 2px solid rgba(197, 160, 89, 0.4);
+  color: #f4e6b2;
+  padding: 12px 25px;
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.btn-tab-cartucho:hover,
+.btn-tab-cartucho.activo {
+  background: #c5a059;
+  color: #0f0f1a;
+  border-color: #ffd700;
+  box-shadow: 0 0 15px rgba(197, 160, 89, 0.6);
+}
+
+.papiro-tab-content {
+  background-image: linear-gradient(rgba(244, 228, 188, 0.95), rgba(228, 204, 152, 0.95));
+  border: 10px double #5d4037;
+  border-radius: 4px;
+  padding: 35px;
+  color: #3e2723;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+  min-height: 180px;
+  animation: abrirPapiro 0.5s ease-out;
+}
+
+@keyframes abrirPapiro {
+  from {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.papiro-title {
+  font-family: 'Cinzel', serif;
+  color: #5d4037 !important;
+  font-size: 1.6rem;
+  margin-bottom: 15px;
+  text-shadow: none !important;
+  border-bottom: 2px solid #5d4037;
+  padding-bottom: 10px;
+}
+
+.papiro-text {
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+/* ==============================================
+    NUEVA SECCIÓN: LÍNEA DE TIEMPO INTERACTIVA
+============================================== */
+.home-timeline-section {
+  padding: 80px 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.timeline-vertical {
+  position: relative;
+  margin: 40px 0;
+  padding-left: 30px;
+}
+
+.timeline-vertical::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, transparent, #c5a059, transparent);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 45px;
+}
+
+.timeline-node {
+  position: absolute;
+  left: -27px;
+  top: 5px;
+  width: 16px;
+  height: 16px;
+  background: #0f0f1a;
+  border: 3px solid #c5a059;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #c5a059;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.timeline-item:hover .timeline-node {
+  background: #c5a059;
+  transform: scale(1.3);
+  box-shadow: 0 0 15px #ffd700;
+}
+
+.timeline-content-card {
+  background: rgba(15, 15, 26, 0.5);
+  border: 1px solid rgba(197, 160, 89, 0.15);
+  border-radius: 12px;
+  padding: 25px;
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+}
+
+.timeline-item:hover .timeline-content-card {
+  border-color: rgba(197, 160, 89, 0.4);
+  background: rgba(15, 15, 26, 0.75);
+}
+
+.timeline-year {
+  font-family: 'Cinzel', serif;
+  font-size: 1.3rem;
+  color: #c5a059;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.timeline-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 8px;
+  text-shadow: none !important;
+}
+
+.timeline-desc {
+  font-size: 1rem;
+  color: #f4e6b2;
+  opacity: 0.85;
+  line-height: 1.6;
+}
+
+/* ==============================================
+    NUEVA SECCIÓN: EXPLORA EL TEMPLO
+============================================== */
+.home-explore-section {
+  padding: 60px 20px 100px 20px;
+  background: radial-gradient(circle at center, rgba(197, 160, 89, 0.15) 0%, transparent 70%);
+  text-align: center;
+}
+
+.explore-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  max-width: 1100px;
+  margin: 40px auto 0 auto;
+}
+
+.explore-card {
+  background: linear-gradient(135deg, rgba(20, 20, 30, 0.8) 0%, rgba(10, 10, 15, 0.9) 100%);
+  border: 1px solid rgba(197, 160, 89, 0.25);
+  border-radius: 15px;
+  padding: 35px 25px;
+  transition: all 0.4s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 250px;
+}
+
+.explore-card:hover {
+  border-color: #ffd700;
+  box-shadow: 0 10px 25px rgba(197, 160, 89, 0.2);
+  transform: translateY(-5px);
+}
+
+.explore-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.4rem;
+  color: #c5a059;
+  margin-bottom: 12px;
+}
+
+.explore-desc {
+  font-size: 0.95rem;
+  color: #f4e6b2;
+  opacity: 0.85;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.explore-btn {
+  background: transparent;
+  border: 1px solid #c5a059;
+  color: #c5a059;
+  padding: 8px 18px;
+  border-radius: 5px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-self: center;
+}
+
+.explore-card:hover .explore-btn {
+  background: #c5a059;
+  color: #0f0f1a;
+  box-shadow: 0 0 10px rgba(197, 160, 89, 0.5);
+}
