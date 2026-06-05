@@ -101,7 +101,7 @@ function AppContent() {
           {/* RUTA PRINCIPAL */}
           <Route path="/" element={
             <>
-              <TituloPrincipal />
+              {seccionActiva === "inicio" && <TituloPrincipal />}
               {seccionActiva === "inicio" && <Home setSeccionActiva={setSeccionActiva} />}
               {seccionActiva === "esfinge" && <Esfinge />}
               {seccionActiva === "formularios" && <Forms setResultadosBusqueda={setResultadosBusqueda} />}
