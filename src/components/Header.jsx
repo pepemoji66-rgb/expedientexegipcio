@@ -77,6 +77,13 @@ export default function Header({ setSeccionActiva }) {
             💬 CHAT USUARIOS
           </button>
 
+          {/* PANEL DE CONTROL (SOLO ADMINISTRADOR) */}
+          {auth && (
+            <button onClick={() => { setMenuAbierto(false); navigate("/admin"); }} className="nav-destacado-chat" style={{ background: "#c5a059", color: "#0f0f1a", border: "1px solid gold", fontWeight: "bold" }}>
+              ⚙️ PANEL DE CONTROL
+            </button>
+          )}
+
           {/* SELECTOR DE TEMA */}
           <div className="selector-tema-mini">
             <select value={tema} onChange={(e) => setTema(e.target.value)}>
