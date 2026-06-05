@@ -17,7 +17,7 @@ function LoginAdmin({
         <form onSubmit={handleLoginAdmin}>
           <input
             type="text"
-            placeholder="Nombre admin"
+            placeholder="Email de Administrador"
             value={adminNombre}
             onChange={(e) => setAdminNombre(e.target.value)}
           />

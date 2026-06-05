@@ -43,7 +43,7 @@ function Forms({ setResultadosBusqueda }) {
   // 1. LOGIN ADMINISTRADOR (PEPE)
   const handleLoginAdmin = (e) => {
     e.preventDefault();
-    if (adminNombre.trim().toLowerCase() === "pepe" && adminPassword === "1234") {
+    if (adminNombre.trim().toLowerCase() === "pepemoji66@gmail.com" && adminPassword === "pepemio") {
       setAuth(true);
       alert("Admin conectado");
     } else {
