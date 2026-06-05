@@ -7,6 +7,15 @@ CREATE TABLE IF NOT EXISTS `audios` (
   `url` VARCHAR(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE IF NOT EXISTS `chat_messages` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `conversation_id` VARCHAR(100) NOT NULL,
+  `sender_id` INT NOT NULL,
+  `sender_nombre` VARCHAR(100) NOT NULL,
+  `content` TEXT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE IF NOT EXISTS `contenido_inicio` (
   `clave` VARCHAR(100) PRIMARY KEY,
   `contenido` TEXT NOT NULL
@@ -53,5 +62,8 @@ CREATE TABLE IF NOT EXISTS `monumentos_360` (
 
 -- Insertar contenidos iniciales de prueba para evitar que la home se vea vacía
 INSERT INTO `contenido_inicio` (`clave`, `contenido`) VALUES 
-('sobre_mi', 'Soy un apasionado de los misterios, los enigmas de la historia y especialmente de las pirámides, uno de los mayores secretos de la humanidad.')
+('sobre_mi', 'Soy un apasionado de los misterios, los enigmas de la historia y especialmente de las pirámides, uno de los mayores secretos de la humanidad.'),
+('hero_title', 'MISTERIOS DE EGIPTO'),
+('hero_message', 'Descubre los secretos ocultos bajo la arena del desierto. Explora las pirámides, descifra los enigmas del Templo y embárcate en un viaje a través de los misterios más antiguos de la humanidad.'),
+('about_text', 'Soy un apasionado de los misterios, los enigmas de la historia y especialmente de las pirámides, uno de los mayores secretos de la humanidad.')
 ON DUPLICATE KEY UPDATE `contenido`=VALUES(`contenido`);

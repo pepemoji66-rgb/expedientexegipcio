@@ -23,7 +23,7 @@ export default function Hero({ contenido, form, editando, onChange }) {
             />
           ) : (
             <h1 className="hero-titulo-grande">
-              {contenido.hero_title || "BIENVENIDO A EGIPTO"}
+              {contenido.hero_title || "MISTERIOS DE EGIPTO"}
             </h1>
           )}
 
@@ -38,7 +38,7 @@ export default function Hero({ contenido, form, editando, onChange }) {
               />
             ) : (
               <p className="mensaje-texto-egipto">
-                {contenido.hero_message}
+                {contenido.hero_message || "Descubre los secretos ocultos bajo la arena del desierto. Explora las pirámides, descifra los enigmas del Templo y embárcate en un viaje a través de los misterios más antiguos de la humanidad."}
               </p>
             )}
           </div>
@@ -54,7 +54,7 @@ export default function Hero({ contenido, form, editando, onChange }) {
             
             {mostrarSobreMi && (
               <div className="sobre-mi-papiro">
-                <p>{contenido.about_text}</p>
+                <p>{contenido.about_text || "Soy un apasionado de los misterios, los enigmas de la historia y especialmente de las pirámides, uno de los mayores secretos de la humanidad."}</p>
               </div>
             )}
           </div>

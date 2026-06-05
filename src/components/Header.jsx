@@ -30,7 +30,7 @@ export default function Header({ setSeccionActiva }) {
     <header className="site-header">
       <div className="header-container">
         <div className="logo" onClick={() => navegarA("inicio")}>
-          EGIPTO
+          MISTERIOS DE EGIPTO
         </div>
 
         {/* BOTÓN HAMBURGUESA: Las tres rayitas */}
