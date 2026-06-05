@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import axios from "axios";
+import api from "../api";
 import { AuthContext } from "../AuthContext";
 import Hero from "./Hero";
 
@@ -10,7 +10,7 @@ export default function Home() {
   const [editando, setEditando] = useState(false);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/contenido-inicio")
+    api.get("/contenido-inicio")
       .then((res) => {
         setContenido(res.data);
         setForm(res.data);
@@ -25,8 +25,8 @@ export default function Home() {
   const guardarCambios = async () => {
     try {
       for (const clave in form) {
-        await axios.post("http://localhost:5000/api/contenido-inicio", 
-          { clave, contenido: form[clave] },
+        await api.post("/contenido-inicio", 
+          { [clave]: form[clave] },
           { headers: { "x-admin": "true" } }
         );
       }

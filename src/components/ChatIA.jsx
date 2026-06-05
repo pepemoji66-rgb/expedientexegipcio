@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import api from "../api";
 import "./chatIA.css";
 
 export default function ChatIA() {
@@ -32,7 +32,7 @@ export default function ChatIA() {
     setEscribiendo(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/chat", {
+      const res = await api.post("/chat", {
         mensaje: nuevoMensaje.texto
       });
 

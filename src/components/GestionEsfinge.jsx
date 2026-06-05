@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../api";
 
 export default function GestionEsfinge() {
   const [noticias, setNoticias] = useState([]);
@@ -12,7 +12,7 @@ export default function GestionEsfinge() {
 
   const cargarNoticias = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/noticias");
+      const res = await api.get("/noticias");
       setNoticias(res.data);
     } catch (e) { console.error("Error al cargar noticias"); }
   };
@@ -20,7 +20,7 @@ export default function GestionEsfinge() {
   const handleAgregar = async () => {
     if (!nuevo.titulo || !nuevo.url_enlace) return alert("El título y el enlace son obligatorios, hermano.");
     try {
-      const res = await axios.post("http://localhost:5000/api/noticias", nuevo);
+      const res = await api.post("/noticias", nuevo);
       if (res.data.ok) {
         setNoticias([{ id: res.data.id, ...nuevo }, ...noticias]);
         setNuevo({ titulo: "", resumen: "", url_enlace: "", url_imagen: "" });
@@ -31,7 +31,7 @@ export default function GestionEsfinge() {
   const eliminarNoticia = async (id) => {
     if (!window.confirm("¿Seguro que quieres borrar esta noticia?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/noticias/${id}`);
+      await api.delete(`/noticias/${id}`);
       setNoticias(noticias.filter(n => n.id !== id));
     } catch (e) { alert("Error al borrar"); }
   };

@@ -30,51 +30,69 @@ function Forms({ setResultadosBusqueda }) {
   const [modalBuscar, setModalBuscar] = useState(false);
 
   // Campos Registro
-  const [regData, setRegData] = useState({ nombre: "", email: "", ciudad: "", edad: "", sexo: "", password: "" });
+  const [regData, setRegData] = useState({
+    nombre: "",
+    email: "",
+    ciudad: "",
+    edad: "",
+    sexo: "",
+    password: ""
+  });
+
   // Campos Búsqueda
   const [busData, setBusData] = useState({ nombre: "", ciudad: "", edad: "", sexo: "" });
 
   /* ================= FUNCIONES LÓGICA ================= */
-  
-  // LOGIN ADMINISTRADOR (PEPE)
+
+  // 1. LOGIN ADMINISTRADOR (PEPE)
   const handleLoginAdmin = (e) => {
     e.preventDefault();
     if (adminNombre.trim().toLowerCase() === "pepe" && adminPassword === "1234") {
       setAuth(true);
       alert("Admin conectado");
-    } else { 
-      alert("Error de acceso"); 
+    } else {
+      alert("Error de acceso: Credenciales de administrador incorrectas.");
     }
   };
 
-  // LOGIN USUARIO (CON MODO DEMO PARA VERCEL)
+  // 2. LOGIN USUARIO (REAL CONTRA MYSQL)
   const handleLoginUser = async (e) => {
     e.preventDefault();
     try {
-      // 1. Intentamos conectar con tu MySQL
       const res = await api.post("/login", { email: loginEmail, password: loginPass });
-      
+
       if (res.data.ok) {
         localStorage.setItem("user", JSON.stringify(res.data.user));
         setAuthUser(true);
-        alert("Bienvenido al Templo");
+        alert("Bienvenido al Templo, " + res.data.user.nombre);
+      } else {
+        alert("El Faraón no reconoce tus credenciales. Revisa email y contraseña.");
       }
     } catch (error) {
-      // 2. TRUCO: Si falla (por estar en Vercel), entramos como Invitado
-      console.warn("Servidor MySQL no detectado. Activando modo Explorador.");
-      
-      const invitado = { 
-        nombre: "Explorador Invitado", 
-        email: loginEmail || "visitante@egipto.es" 
-      };
-
-      localStorage.setItem("user", JSON.stringify(invitado));
-      setAuthUser(true);
-      alert("Modo Demostración: ¡Bienvenido, Explorador!");
+      console.error("Error en login:", error);
+      alert("Error: No se pudo conectar con el servidor. ¿Está encendido XAMPP?");
     }
   };
 
-  // BÚSQUEDA DE USUARIOS
+  // 3. REGISTRO DE USUARIO (GRABAR EN TABLA USUARIOS)
+  const handleRegistro = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await api.post("/usuarios", regData);
+
+      if (res.status === 201 || res.data.ok) {
+        alert("¡Registro completado! Tus datos han sido grabados en el Templo.");
+        setModalRegistro(false);
+        // Limpiar el formulario
+        setRegData({ nombre: "", email: "", ciudad: "", edad: "", sexo: "", password: "" });
+      }
+    } catch (error) {
+      console.error("Error al registrar:", error);
+      alert("Error al crear la cuenta. Es posible que el email ya esté registrado.");
+    }
+  };
+
+  // 4. BÚSQUEDA DE USUARIOS
   const handleBuscar = async (e) => {
     e.preventDefault();
     try {
@@ -82,8 +100,8 @@ function Forms({ setResultadosBusqueda }) {
       setResultadosBusqueda(res.data.usuarios || res.data);
       setModalBuscar(false);
       navigate("/admin");
-    } catch { 
-      alert("Nota: La búsqueda requiere conexión MySQL activa."); 
+    } catch {
+      alert("Error: La búsqueda requiere conexión MySQL activa.");
     }
   };
 
@@ -102,16 +120,15 @@ function Forms({ setResultadosBusqueda }) {
   return (
     <div className="forms">
       <div className="forms-container">
-        
-        {/* BOTÓN MAESTRO VOLVER */}
-        <button className="btn-form btn-yellow" onClick={() => navigate("/?seccion=inicio")}>
-          ⬅ VOLVER AL INICIO
+
+        <button className="btn-form btn-volver-top" onClick={() => navigate("/?seccion=inicio")}>
+          🏠 VOLVER AL INICIO
         </button>
 
         <section className="formularios-wrapper">
           <div className="form-card">
             <h2 className="titulo-egipcio">Gestión de Usuarios</h2>
-            
+
             <button className="btn-form btn-yellow" onClick={() => setMostrarInstrucciones(!mostrarInstrucciones)}>
               {mostrarInstrucciones ? "❌ CERRAR INFO" : "📘 INSTRUCCIONES"}
             </button>
@@ -125,12 +142,12 @@ function Forms({ setResultadosBusqueda }) {
             {/* --- PANEL DE ADMINISTRADOR --- */}
             {tipoAcceso === "admin" && (
               <div className="panel-interno">
-                <LoginAdmin 
+                <LoginAdmin
                   auth={auth} adminNombre={adminNombre} setAdminNombre={setAdminNombre}
                   adminPassword={adminPassword} setAdminPassword={setAdminPassword}
                   handleLoginAdmin={handleLoginAdmin} logoutAdmin={() => setAuth(false)}
                 />
-                
+
                 {auth && (
                   <div className="acciones-admin">
                     <button className="btn-form btn-blue" onClick={() => setModalBuscar(true)}>🔍 BUSCAR USUARIOS</button>
@@ -144,10 +161,10 @@ function Forms({ setResultadosBusqueda }) {
             {/* --- PANEL DE USUARIO --- */}
             {tipoAcceso === "usuario" && (
               <div className="panel-interno">
-                <LoginUsuario 
+                <LoginUsuario
                   authUser={authUser} loginEmail={loginEmail} setLoginEmail={setLoginEmail}
                   loginPass={loginPass} setLoginPass={setLoginPass}
-                  handleLoginUser={handleLoginUser} logoutUser={() => {localStorage.removeItem("user"); setAuthUser(false);}}
+                  handleLoginUser={handleLoginUser} logoutUser={() => { localStorage.removeItem("user"); setAuthUser(false); }}
                   setModalRegistro={setModalRegistro}
                 />
                 <button className="btn-form btn-red" onClick={() => setTipoAcceso(null)}>VOLVER ATRÁS</button>
@@ -156,18 +173,22 @@ function Forms({ setResultadosBusqueda }) {
           </div>
         </section>
 
-        {/* MODALES */}
-        <ModalRegistro 
-          modalRegistro={modalRegistro} setModalRegistro={setModalRegistro}
-          {...regData} setRegData={setRegData} 
+        {/* MODAL DE REGISTRO */}
+        <ModalRegistro
+          modalRegistro={modalRegistro}
+          setModalRegistro={setModalRegistro}
+          regData={regData}
+          setRegData={setRegData}
+          handleRegistro={handleRegistro}
         />
 
-        <ModalBuscar 
+        {/* MODAL DE BÚSQUEDA */}
+        <ModalBuscar
           modalBuscar={modalBuscar} setModalBuscar={setModalBuscar}
           {...busData} setBusData={setBusData} handleBuscar={handleBuscar}
-          buscarTodos={buscarTodos} 
+          buscarTodos={buscarTodos}
         />
-        
+
       </div>
     </div>
   );

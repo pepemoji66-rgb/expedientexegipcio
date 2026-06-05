@@ -1,58 +1,55 @@
-/* BOTÓN DE MÚSICA */
+/* BOTÓN DE MÚSICA UNIFICADO */
 .btn-audio {
   position: fixed;
-  top: 85px;
+  top: 15px;
+  /* Centrado verticalmente en el header de 70px */
   left: 20px;
-  background: #d4a657;
-  color: black;
-  padding: 10px 15px;
+  background: rgba(15, 15, 26, 0.8);
+  /* Fondo a juego con el header */
+  color: #c5a059;
+  /* Oro viejo */
+  padding: 8px 12px;
+  font-family: 'Cinzel', serif;
   font-weight: bold;
-  border: none;
-  border-radius: 10px;
+  border: 1px solid #c5a059;
+  border-radius: 4px;
+  /* Menos redondeado, más elegante */
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
+  z-index: 20000;
+  /* Por encima de todo */
 
-  box-shadow:
-    0 0 12px rgba(255, 215, 120, 0.5),
-    inset 0 0 6px rgba(255, 215, 120, 0.3);
-
-  transition: 0.25s ease-in-out;
-  z-index: 9999999; /* SIEMPRE visible */
+  box-shadow: 0 0 10px rgba(197, 160, 89, 0.2);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .btn-audio:hover {
-  background: #f4dca3;
+  background: #c5a059;
+  color: #0f0f1a;
+  box-shadow: 0 0 15px rgba(197, 160, 89, 0.5);
 }
 
-.btn-audio.activo {
-  background: #f5e2b6;
-}
-
-/* CONTROL DE VOLUMEN */
+/* CONTROL DE VOLUMEN (Justo debajo del botón si se muestra) */
 .volumen-container {
   position: fixed;
-  top: 135px;
+  top: 65px;
   left: 20px;
-  z-index: 9999999;
-
+  z-index: 19999;
   display: flex;
   align-items: center;
   gap: 10px;
-
-  background: rgba(0, 0, 0, 0.45);
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 215, 120, 0.4);
-
-  backdrop-filter: blur(2px);
+  background: rgba(15, 15, 26, 0.9);
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid rgba(197, 160, 89, 0.4);
+  backdrop-filter: blur(5px);
 }
 
-.volumen-container input {
-  width: 120px;
-}.btn-audio {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 2000;
+.volumen-container input[type="range"] {
+  accent-color: #c5a059;
+  /* El color de la barrita en navegadores modernos */
+  cursor: pointer;
 }
-

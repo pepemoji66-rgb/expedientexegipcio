@@ -1,11 +1,12 @@
-/* CONTENEDOR PRINCIPAL QUE CENTRA TODO */
+/* --- CONTENEDOR PRINCIPAL DEL OASIS --- */
 .forms {
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 40px 20px;
-    box-sizing: border-box;
+    background: radial-gradient(circle, rgba(26, 18, 11, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
 }
 
 .forms-container {
@@ -13,105 +14,185 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 15px;
 }
 
-/* EL COFRE (LA TARJETA) */
+/* --- BOTÓN VOLVER SUPERIOR (ESTILO AMULETO) --- */
+.btn-volver-top {
+    min-width: 220px;
+    padding: 12px 30px;
+    margin-bottom: 25px;
+    background: rgba(20, 15, 10, 0.9);
+    color: #c5a059;
+    border: 2px solid #c5a059;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-family: 'Cinzel', serif;
+    font-weight: bold;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+}
+
+.btn-volver-top:hover {
+    background: #c5a059;
+    color: #140f0a;
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 8px 25px rgba(197, 160, 89, 0.4);
+}
+
+/* --- EL COFRE DE DATOS (CARD) --- */
 .form-card {
-    background: rgba(20, 15, 10, 0.95) !important;
-    border: 2px solid #c5a059 !important;
-    border-radius: 15px;
-    padding: 30px !important;
-    width: 100% !important;
-    max-width: 450px !important; /* El límite para que no se escape nada */
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+    background: linear-gradient(145deg, #140f0a, #1a140e);
+    border: 2px solid #c5a059;
+    border-radius: 12px;
+    padding: 40px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
     display: flex;
     flex-direction: column;
     gap: 20px;
-    box-sizing: border-box !important;
+    position: relative;
 }
 
-/* TÍTULOS */
 .titulo-egipcio {
     color: #c5a059;
     text-align: center;
-    font-family: 'Cinzel', serif; /* O la que uses para el templo */
-    margin-bottom: 10px;
+    font-family: 'Cinzel', serif;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 4px;
+    text-shadow: 0 0 10px rgba(197, 160, 89, 0.3);
 }
 
-/* PANEL INTERNO (ADMIN/USUARIO) */
-.panel-interno {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-}
-
-/* INPUTS Y SELECTS (LOS QUE SE ESTIRABAN) */
-.form-card input, 
+/* --- INPUTS ESTILO PAPIRO OSCURO --- */
+.form-card input,
 .form-card select {
-    width: 100% !important;
-    padding: 12px 15px !important;
-    background: #fdf5e6 !important; /* Color pergamino */
-    border: 1px solid #c5a059 !important;
-    border-radius: 8px;
-    color: #1a140e !important;
-    font-size: 1rem;
-    font-weight: 600;
-    box-sizing: border-box !important; /* FUNDAMENTAL para que no desborde */
+    width: 100%;
+    padding: 14px 15px;
+    background: #14100c;
+    border: 1px solid #5d4a31;
+    border-radius: 5px;
+    color: #f4e6b2;
+    font-weight: 500;
 }
 
-/* BOTONES */
+/* --- SISTEMA DE BOTONES UNIFICADO --- */
 .btn-form {
-    width: 100% !important;
-    padding: 12px !important;
-    border: none !important;
-    border-radius: 8px !important;
-    font-weight: bold !important;
-    cursor: pointer !important;
+    width: 100%;
+    padding: 15px;
+    border-radius: 6px;
+    font-family: 'Cinzel', serif;
+    font-weight: bold;
+    cursor: pointer;
     text-transform: uppercase;
+    letter-spacing: 1px;
     transition: all 0.3s ease;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
 }
 
+/* 1. ORO (Acciones Principales: Login, Cerrar Sesión) */
 .btn-yellow {
-    background: linear-gradient(145deg, #c5a059, #8e6d2d) !important;
-    color: #1a140e !important;
+    background: linear-gradient(135deg, #c5a059 0%, #8e6d2d 100%);
+    color: #1a140e;
 }
 
+/* 2. PIEDRA/ORO (Gestión: Buscar Usuarios, Archivos - Antes Azules) */
 .btn-blue {
-    background: #2a4d69 !important;
-    color: white !important;
-    border: 1px solid #4b86b4 !important;
+    background: rgba(197, 160, 89, 0.1);
+    color: #e0c097;
+    border: 1px solid #c5a059 !important;
 }
 
+.btn-blue:hover {
+    background: rgba(197, 160, 89, 0.2);
+    color: #ffffff;
+}
+
+/* 3. ROJO TEMPLO (Volver Atrás, Salir) */
 .btn-red {
-    background: rgba(150, 40, 40, 0.8) !important;
-    color: white !important;
-    margin-top: 10px;
+    background: linear-gradient(135deg, #7a1f1f 0%, #4a1111 100%);
+    color: white;
+    border: 1px solid #3d0a0a;
 }
 
 .btn-form:hover {
     filter: brightness(1.2);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(197, 160, 89, 0.3);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
 }
 
-/* SECCIÓN DE ACCIONES (LOS BOTONES DE ABAJO) */
-.acciones-admin {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
-    border-top: 1px solid rgba(197, 160, 89, 0.3);
-    padding-top: 20px;
+/* --- 1. CONTROL DE LA IMAGEN GIGANTE (PREVIEW) --- */
+.admin-item img,
+.image-preview img,
+.gestor-galeria-card img {
+    width: 100% !important;
+    max-width: 300px;
+    /* Aquí le ponemos el freno de mano */
+    height: auto !important;
+    max-height: 200px;
+    object-fit: cover;
+    border: 2px solid #c5a059;
+    border-radius: 8px;
+    margin: 10px auto;
+    /* La centra */
+    display: block;
 }
-.divisor-dorado {
+
+/* --- 2. CENTRADO DE BOTONES Y FORMULARIO --- */
+.inputs-admin,
+.form-card,
+.gestor-galeria-card {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    /* Centra todo horizontalmente */
     text-align: center;
-    border-bottom: 1px solid #c5a059;
-    line-height: 0.1em;
-    margin: 10px 0 20px;
-    color: #c5a059;
-    font-size: 0.8rem;
+    gap: 20px;
+    padding: 30px;
+    width: 90%;
+    max-width: 500px;
+    margin: 0 auto;
+    /* Centra el contenedor en la pantalla */
 }
-.divisor-dorado span { background:#140f0a; padding:0 10px; }
+
+/* --- 3. ARREGLO DE LOS BOTONES --- */
+.botones-wrapper,
+.botones-fila {
+    display: flex;
+    justify-content: center;
+    /* Centra los botones entre sí */
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    flex-wrap: wrap;
+    /* Para que en el móvil no se rompa */
+}
+
+.btn-form,
+.admin-nav button {
+    min-width: 150px;
+    /* Que tengan un tamaño decente */
+    margin: 5px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- 4. INPUTS (PARA QUE NO MIDAN 1KM) --- */
+.inputs-admin input,
+.form-card input {
+    width: 100% !important;
+    max-width: 400px;
+    /* Controlamos el ancho */
+    box-sizing: border-box;
+}

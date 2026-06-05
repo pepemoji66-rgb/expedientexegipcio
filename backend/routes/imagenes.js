@@ -10,13 +10,24 @@ router.get("/imagenes", (req, res) => {
     });
 });
 
-// GUARDAR IMAGEN
+// GUARDAR IMAGEN (ACTUALIZADO CON DESCRIPCIÓN)
 router.post("/imagenes", (req, res) => {
-    const { titulo, url, orden } = req.body;
-    const sql = "INSERT INTO imagenes (titulo, url, orden) VALUES (?, ?, ?)";
-    db.query(sql, [titulo, url, orden || 0], (err, result) => {
+    // 1. Añadimos 'descripcion' aquí
+    const { titulo, url, orden, descripcion } = req.body;
+
+    // 2. Añadimos 'descripcion' a la consulta y una cuarta '?'
+    const sql = "INSERT INTO imagenes (titulo, url, orden, descripcion) VALUES (?, ?, ?, ?)";
+
+    // 3. Pasamos el valor en el array de parámetros
+    db.query(sql, [titulo, url, orden || 0, descripcion || ""], (err, result) => {
         if (err) return res.status(500).json(err);
-        res.json({ message: "Imagen guardada", id: result.insertId });
+        res.json({
+            message: "Imagen guardada",
+            id: result.insertId,
+            titulo,
+            url,
+            descripcion // Lo devolvemos para que React lo tenga al momento
+        });
     });
 });
 

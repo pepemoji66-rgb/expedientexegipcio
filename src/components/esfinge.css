@@ -1,40 +1,195 @@
-.esfinge-gran-contenedor { display: flex; flex-direction: column; align-items: center; padding: 20px; background-color: #000; min-height: 100vh; color: #fff; }
+/* --- CÁMARA DE LA ESFINGE: VISTA DE HALCÓN (OPTIMIZADA) --- */
 
-/* IMAGEN */
-.esfinge-imagen-contenedor { width: 100%; max-width: 500px; border: 3px solid #c5a059; border-radius: 8px; overflow: hidden; margin-bottom: 20px; }
-.esfinge-imagen { width: 100%; height: auto; max-height: 300px; object-fit: cover; transition: 0.4s; }
-.esfinge-imagen.imagen-peque { max-height: 180px; }
-
-/* BOTONES */
-.controles-esfinge { display: flex; gap: 15px; margin-bottom: 20px; }
-.btn-cartucho { background: transparent; border: 2px solid #ffcc00; color: #ffcc00; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-weight: bold; }
-.btn-cartucho.activo { background: #ffcc00; color: #000; }
-
-/* PAPIRO Y TEXTOS (MÁXIMA LEGIBILIDAD) */
-.papiro-texto-animado { 
-    background-color: #fdf5e6; 
-    width: 90%; 
-    max-width: 650px; 
-    padding: 30px; 
-    border-left: 12px solid #e2d1b3; 
-    border-right: 12px solid #e2d1b3; 
-    height: auto; 
-    overflow: visible;
-}
-.titulo-papiro-interno { color: #5d4037 !important; text-align: center; margin-bottom: 20px; border-bottom: 1px solid #c5a059; }
-.titulo-noticia-dorado { color: #795548 !important; margin: 10px 0; text-align: center; }
-.texto-noticia-papiro { color: #3e2723 !important; line-height: 1.5; margin-bottom: 15px; text-align: justify; }
-
-/* BOTÓN LEER MÁS (VISIBLE) */
-.link-egipcio-visible { 
-    display: inline-block !important; 
-    background-color: #8b6d31 !important; 
-    color: #fff !important; 
-    padding: 10px 20px; 
-    text-decoration: none; 
-    border-radius: 4px; 
-    font-weight: bold; 
-    border: 2px solid #5d4037;
+.esfinge-gran-contenedor {
+    position: relative;
+    padding: 100px 5% 40px 5%;
+    /* Padding superior ajustado para ganar espacio */
+    background: #0f0f1a;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
 }
 
-.rombo-dorado { display: block; width: 15px; height: 15px; background: #ffcc00; transform: rotate(45deg); margin: 20px auto; }
+/* HEADER SECCIÓN */
+.esfinge-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    /* Reducido para subir el contenido */
+    width: 100%;
+}
+
+.linea-dorada {
+    height: 1px;
+    width: clamp(20px, 8vw, 120px);
+    background: linear-gradient(90deg, transparent, #c5a059, transparent);
+}
+
+.esfinge-titulo {
+    font-family: 'Cinzel', serif;
+    color: #c5a059;
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+    text-align: center;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(197, 160, 89, 0.3);
+}
+
+/* POEMA: Más compacto y centrado */
+.esfinge-poema {
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 20px;
+    font-family: 'Cinzel', serif;
+    color: #f4e6b2;
+    line-height: 1.5;
+    text-align: center;
+    font-style: italic;
+    font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+    opacity: 0.85;
+}
+
+.poema-verso {
+    display: block;
+}
+
+/* CONTENEDOR DE IMAGEN (EFECTO PANORÁMICO) */
+.esfinge-imagen-contenedor {
+    position: relative;
+    width: 95%;
+    max-width: 900px;
+    max-height: 40vh;
+    /* Limitamos la altura para que los botones suban */
+    overflow: hidden;
+    /* Cortamos la imagen sobrante */
+    border: 1px solid rgba(197, 160, 89, 0.4);
+    padding: 8px;
+    background: rgba(197, 160, 89, 0.03);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.esfinge-imagen {
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+    object-fit: cover;
+    /* Ajuste tipo cine */
+    filter: sepia(0.1) brightness(0.9);
+    transition: all 0.6s ease;
+}
+
+/* ESTADO CUANDO HAY TEXTO ABIERTO (Se vuelve miniatura arriba) */
+.esfinge-imagen-contenedor.imagen-peque,
+.esfinge-imagen.imagen-peque {
+    max-width: 350px;
+    max-height: 200px;
+    margin-bottom: 10px;
+}
+
+/* BOTONES CARTUCHO (Suben a la vista) */
+.controles-esfinge {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin: 30px 0;
+    width: 100%;
+}
+
+.btn-cartucho {
+    background: transparent;
+    border: 1px solid #c5a059;
+    color: #c5a059;
+    padding: 10px 30px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 150px;
+}
+
+.btn-cartucho:hover,
+.btn-cartucho.activo {
+    background: #c5a059;
+    color: #0f0f1a;
+    box-shadow: 0 0 15px rgba(197, 160, 89, 0.3);
+}
+
+/* PAPIRO (TEXTO DESPLEGABLE) */
+.papiro-texto-animado {
+    position: relative;
+    width: 100%;
+    max-width: 850px;
+    background: rgba(15, 15, 26, 0.98);
+    border: 1px solid #c5a059;
+    padding: 30px;
+    margin-top: 10px;
+    backdrop-filter: blur(8px);
+    animation: slideUp 0.5s ease-out;
+}
+
+.titulo-papiro-interno {
+    font-family: 'Cinzel', serif;
+    color: #c5a059;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+}
+
+.texto-noticia-papiro {
+    color: #d1d1d1;
+    line-height: 1.7;
+    font-size: 1rem;
+    text-align: justify;
+}
+
+/* DIVISOR FINAL */
+.divisor-seccion {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.rombo-dorado {
+    width: 12px;
+    height: 12px;
+    background: #c5a059;
+    transform: rotate(45deg);
+    box-shadow: 0 0 8px #c5a059;
+}
+
+/* ANIMACIÓN */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* RESPONSIVE MÓVIL */
+@media (max-width: 768px) {
+    .esfinge-gran-contenedor {
+        padding-top: 85px;
+    }
+
+    .esfinge-imagen-contenedor {
+        max-height: 30vh;
+    }
+
+    .btn-cartucho {
+        width: 80%;
+    }
+}

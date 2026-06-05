@@ -1,57 +1,95 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "./api";
 import "./admin.css";
 import GestionEsfinge from "./components/GestionEsfinge";
+import GestionVivo from "./components/GestionVivo";
 
 export default function AdminPage({
   imagenesGaleria, setImagenesGaleria,
   audios, setAudios,
   videos, setVideos,
-  resultadosBusqueda // Asumo que aquí vienen tus usuarios
+  resultadosBusqueda,
+  setResultadosBusqueda
 }) {
   const navigate = useNavigate();
   const [seccionAdmin, setSeccionAdmin] = useState("galeria");
   const [nuevoTitulo, setNuevoTitulo] = useState("");
   const [nuevaUrl, setNuevaUrl] = useState("");
-  
-  // --- ESTADOS PARA PAGINACIÓN ---
+  const [nuevaDescripcion, setNuevaDescripcion] = useState("");
+  const [latitud, setLatitud] = useState("");
+  const [longitud, setLongitud] = useState("");
+
+  // LOGICA DE PAGINACIÓN UNIFICADA
   const [paginaActual, setPaginaActual] = useState(1);
-  const usuariosPorPagina = 10;
+  const itemsPorPagina = 10;
 
-  // --- LÓGICA DE PAGINACIÓN ---
-  const usuarios = resultadosBusqueda || [];
-  const ultimoIndice = paginaActual * usuariosPorPagina;
-  const primerIndice = ultimoIndice - usuariosPorPagina;
-  const usuariosPaginados = usuarios.slice(primerIndice, ultimoIndice);
-  const totalPaginas = Math.ceil(usuarios.length / usuariosPorPagina);
+  // Resetear página al cambiar de sección para no quedarnos en el limbo
+  useEffect(() => {
+    setPaginaActual(1);
+  }, [seccionAdmin]);
 
-  // --- LÓGICA DE ELIMINAR ---
-  const eliminarItem = async (id, tipo) => {
-    if (!window.confirm(`¿Seguro que quieres borrar este item de ${tipo}?`)) return;
+  const cargarTodosLosUsuarios = async () => {
     try {
-      await axios.delete(`http://localhost:5000/api/${tipo}/${id}`);
-      if (tipo === "imagenes") setImagenesGaleria(imagenesGaleria.filter(i => i.id !== id));
-      if (tipo === "audios") setAudios(audios.filter(a => a.id !== id));
-      if (tipo === "videos") setVideos(videos.length > 0 ? videos.filter(v => v.id !== id) : []);
+      const res = await api.get("/usuarios");
+      setResultadosBusqueda(res.data);
     } catch (e) {
-      alert("Error al eliminar");
+      console.error("Error al cargar los usuarios:", e);
     }
   };
 
-  // --- LÓGICA DE AÑADIR ---
+  // --- LÓGICA DE CORTE (SLICE) PARA CUALQUIER SECCIÓN ---
+  const obtenerItemsPaginados = (lista) => {
+    const ultimoIndice = paginaActual * itemsPorPagina;
+    const primerIndice = ultimoIndice - itemsPorPagina;
+    return lista.slice(primerIndice, ultimoIndice);
+  };
+
+  const calcularTotalPaginas = (lista) => Math.ceil(lista.length / itemsPorPagina) || 1;
+
+  // Seleccionamos la lista según la sección activa
+  let listaActiva = [];
+  if (seccionAdmin === "galeria") listaActiva = imagenesGaleria;
+  else if (seccionAdmin === "audio") listaActiva = audios;
+  else if (seccionAdmin === "videos") listaActiva = videos;
+  else if (seccionAdmin === "usuarios") listaActiva = resultadosBusqueda || [];
+
+  const itemsAMostrar = obtenerItemsPaginados(listaActiva);
+  const totalPaginas = calcularTotalPaginas(listaActiva);
+
+  const eliminarItem = async (id, tipo) => {
+    if (!window.confirm(`¿Seguro que quieres borrar este item de ${tipo}?`)) return;
+    try {
+      await api.delete(`/${tipo}/${id}`);
+      if (tipo === "imagenes") setImagenesGaleria(imagenesGaleria.filter(i => i.id !== id));
+      if (tipo === "audios") setAudios(audios.filter(a => a.id !== id));
+      if (tipo === "videos") setVideos(videos.filter(v => v.id !== id));
+      if (tipo === "usuarios") setResultadosBusqueda(resultadosBusqueda.filter(u => u.id !== id));
+      alert("Eliminado de las arenas del tiempo.");
+    } catch (e) {
+      alert("Error al eliminar.");
+    }
+  };
+
   const agregarItem = async (tipo) => {
     if (!nuevaUrl || !nuevoTitulo) return alert("Rellena los campos, hermano");
     try {
-      const res = await axios.post(`http://localhost:5000/api/${tipo}`, {
+      const datos = {
         titulo: nuevoTitulo,
-        url: nuevaUrl
-      });
-      const nuevoObj = { id: res.data.id, titulo: nuevoTitulo, url: nuevaUrl };
+        url: nuevaUrl,
+        descripcion: tipo === "imagenes" ? nuevaDescripcion : "",
+        latitud: tipo === "imagenes" ? latitud : null,
+        longitud: tipo === "imagenes" ? longitud : null
+      };
+      const res = await api.post(`/${tipo}`, datos);
+      const nuevoObj = { ...datos, id: res.data.id };
+
       if (tipo === "imagenes") setImagenesGaleria([...imagenesGaleria, nuevoObj]);
       if (tipo === "audios") setAudios([...audios, nuevoObj]);
       if (tipo === "videos") setVideos([...videos, nuevoObj]);
-      setNuevoTitulo(""); setNuevaUrl("");
+
+      setNuevoTitulo(""); setNuevaUrl(""); setNuevaDescripcion(""); setLatitud(""); setLongitud("");
+      alert("Añadido con éxito al Templo");
     } catch (e) {
       alert("Error al añadir");
     }
@@ -59,133 +97,107 @@ export default function AdminPage({
 
   return (
     <div className="admin-panel">
-      <div className="admin-header">
-        <h1>🏛 Panel de Control del Templo</h1>
+      <header className="admin-header">
+        <h1>🏛 Panel de Control</h1>
         <button className="btn-volver" onClick={() => navigate("/")}>Volver al Inicio</button>
-      </div>
+      </header>
 
       <nav className="admin-nav">
         <button className={seccionAdmin === "galeria" ? "active" : ""} onClick={() => setSeccionAdmin("galeria")}>🖼 Galería</button>
         <button className={seccionAdmin === "audio" ? "active" : ""} onClick={() => setSeccionAdmin("audio")}>🎧 Audios</button>
         <button className={seccionAdmin === "videos" ? "active" : ""} onClick={() => setSeccionAdmin("videos")}>🎬 Vídeos</button>
-        <button className={seccionAdmin === "usuarios" ? "active" : ""} onClick={() => setSeccionAdmin("usuarios")}>👥 Usuarios</button>
+        <button className={seccionAdmin === "usuarios" ? "active" : ""} onClick={() => { setSeccionAdmin("usuarios"); cargarTodosLosUsuarios(); }}>👥 Usuarios</button>
         <button className={seccionAdmin === "esfinge" ? "active" : ""} onClick={() => setSeccionAdmin("esfinge")}>🦁 Esfinge</button>
+        <button className={seccionAdmin === "vivo" ? "active" : ""} onClick={() => setSeccionAdmin("vivo")}>🛸 En Vivo</button>
       </nav>
 
-      {/* GALERÍA */}
-      {seccionAdmin === "galeria" && (
-        <div className="admin-section">
-          <div className="inputs-admin">
-            <input placeholder="URL Imagen" value={nuevaUrl} onChange={e => setNuevaUrl(e.target.value)} />
-            <input placeholder="Título" value={nuevoTitulo} onChange={e => setNuevoTitulo(e.target.value)} />
-            <button onClick={() => agregarItem("imagenes")}>Añadir Imagen</button>
-          </div>
-          <div className="admin-grid">
-            {imagenesGaleria.map(img => (
-              <div key={img.id} className="admin-item">
-                <img src={img.url} alt={img.titulo} />
-                <button onClick={() => eliminarItem(img.id, "imagenes")}>🗑️</button>
+      <div className="admin-content-wrapper">
+
+        {/* GALERÍA PAGINADA */}
+        {seccionAdmin === "galeria" && (
+          <div className="admin-section">
+            <div className="inputs-admin">
+              <div className="fila-inputs">
+                <input placeholder="URL Imagen" value={nuevaUrl} onChange={e => setNuevaUrl(e.target.value)} />
+                <input placeholder="Título" value={nuevoTitulo} onChange={e => setNuevoTitulo(e.target.value)} />
               </div>
-            ))}
-          </div>
-        </div>
-      )}
+              <div className="fila-inputs">
+                <input placeholder="Latitud" value={latitud} onChange={e => setLatitud(e.target.value)} />
+                <input placeholder="Longitud" value={longitud} onChange={e => setLongitud(e.target.value)} />
+              </div>
+              <textarea placeholder="Descripción..." value={nuevaDescripcion} onChange={e => setNuevaDescripcion(e.target.value)} className="admin-textarea" />
+              <button className="btn-form" onClick={() => agregarItem("imagenes")}>AÑADIR A LA GALERÍA</button>
+            </div>
 
-      {/* AUDIO */}
-      {seccionAdmin === "audio" && (
-        <div className="admin-section">
-          <div className="inputs-admin">
-            <input placeholder="Ruta audio" value={nuevaUrl} onChange={e => setNuevaUrl(e.target.value)} />
-            <input placeholder="Título" value={nuevoTitulo} onChange={e => setNuevoTitulo(e.target.value)} />
-            <button onClick={() => agregarItem("audios")}>Añadir Audio</button>
+            <div className="admin-grid">
+              {itemsAMostrar.map(img => (
+                <div key={img.id} className="admin-item">
+                  <img src={img.url} alt={img.titulo} />
+                  <button className="btn-borrar-mini" onClick={() => eliminarItem(img.id, "imagenes")}>🗑️</button>
+                </div>
+              ))}
+            </div>
           </div>
-          <table className="tabla-egipcia">
-            <thead><tr><th>Audio</th><th>Acciones</th></tr></thead>
-            <tbody>
-              {audios.map(a => (
-                <tr key={a.id}>
-                  <td>{a.titulo}</td>
-                  <td><button className="btn-borrar-tabla" onClick={() => eliminarItem(a.id, "audios")}>🗑️</button></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+        )}
 
-      {/* VÍDEOS */}
-      {seccionAdmin === "videos" && (
-        <div className="admin-section">
-          <div className="inputs-admin">
-            <input placeholder="URL Vídeo" value={nuevaUrl} onChange={e => setNuevaUrl(e.target.value)} />
-            <input placeholder="Título" value={nuevoTitulo} onChange={e => setNuevoTitulo(e.target.value)} />
-            <button onClick={() => agregarItem("videos")}>Añadir Vídeo</button>
+        {/* AUDIOS Y VIDEOS PAGINADOS */}
+        {(seccionAdmin === "audio" || seccionAdmin === "videos") && (
+          <div className="admin-section">
+            <div className="inputs-admin">
+              <input placeholder="URL" value={nuevaUrl} onChange={e => setNuevaUrl(e.target.value)} />
+              <input placeholder="Título" value={nuevoTitulo} onChange={e => setNuevoTitulo(e.target.value)} />
+              <button className="btn-form" onClick={() => agregarItem(seccionAdmin === "audio" ? "audios" : "videos")}>AÑADIR {seccionAdmin.toUpperCase()}</button>
+            </div>
+            <table className="tabla-egipcia">
+              <thead><tr><th>Título</th><th>Acciones</th></tr></thead>
+              <tbody>
+                {itemsAMostrar.map(item => (
+                  <tr key={item.id}>
+                    <td>{item.titulo}</td>
+                    <td className="acciones-celda">
+                      <button className="btn-borrar-tabla" onClick={() => eliminarItem(item.id, seccionAdmin === "audio" ? "audios" : "videos")}>🗑️</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          <table className="tabla-egipcia">
-            <thead><tr><th>Vídeo</th><th>Acciones</th></tr></thead>
-            <tbody>
-              {videos.map(v => (
-                <tr key={v.id}>
-                  <td>{v.titulo}</td>
-                  <td><button className="btn-borrar-tabla" onClick={() => eliminarItem(v.id, "videos")}>🗑️</button></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+        )}
 
-     {/* USUARIOS CON PAGINACIÓN Y BOTÓN ELIMINAR */}
-      {seccionAdmin === "usuarios" && (
-        <div className="admin-section">
-          <h2>Gestión de Usuarios</h2>
-          <table className="tabla-egipcia">
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Email</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {usuariosPaginados.map(u => (
-                <tr key={u.id}>
-                  <td>{u.nombre}</td>
-                  <td>{u.email}</td>
-                  <td>
-                    <button 
-                      className="btn-borrar-tabla" 
-                      onClick={() => eliminarItem(u.id, "usuarios")}
-                    >
-                      🗑️
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          
-          {/* CONTROLES DE PAGINACIÓN */}
+        {/* USUARIOS PAGINADOS */}
+        {seccionAdmin === "usuarios" && (
+          <div className="admin-section">
+            <table className="tabla-egipcia">
+              <thead><tr><th>Nombre</th><th>Email</th><th>Acciones</th></tr></thead>
+              <tbody>
+                {itemsAMostrar.map(u => (
+                  <tr key={u.id}>
+                    <td>{u.nombre}</td>
+                    <td>{u.email}</td>
+                    <td className="acciones-celda">
+                      <button className="btn-borrar-tabla" onClick={() => eliminarItem(u.id, "usuarios")}>🗑️</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* COMPONENTES EXTERNOS */}
+        {seccionAdmin === "esfinge" && <GestionEsfinge />}
+        {seccionAdmin === "vivo" && <GestionVivo />}
+
+        {/* CONTROLES DE PAGINACIÓN UNIVERSALES */}
+        {["galeria", "audio", "videos", "usuarios"].includes(seccionAdmin) && (
           <div className="paginacion-controles">
-            <button 
-              disabled={paginaActual === 1} 
-              onClick={() => setPaginaActual(paginaActual - 1)}
-            >
-              Anterior
-            </button>
+            <button disabled={paginaActual === 1} onClick={() => setPaginaActual(paginaActual - 1)}>Anterior</button>
             <span>Página {paginaActual} de {totalPaginas}</span>
-            <button 
-              disabled={paginaActual === totalPaginas} 
-              onClick={() => setPaginaActual(paginaActual + 1)}
-            >
-              Siguiente
-            </button>
+            <button disabled={paginaActual === totalPaginas} onClick={() => setPaginaActual(paginaActual + 1)}>Siguiente</button>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* ESFINGE */}
-      {seccionAdmin === "esfinge" && <GestionEsfinge />}
+      </div>
     </div>
   );
 }

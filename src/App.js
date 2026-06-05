@@ -2,8 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 import { BrowserRouter, Routes, Route, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
+import { ThemeProvider, ThemeContext } from "./ThemeContext";
 import AudioProvider from "./AudioProvider";
-import AdminPage from "./AdminPage";
 
 // COMPONENTES
 import Header from "./components/Header";
@@ -20,6 +20,11 @@ import Minijuego from "./components/Minijuego";
 import Ra from "./components/Ra";
 import Home from "./components/Home";
 import ChatUsuarios from "./components/Chat/ChatUsuarios";
+import EgiptoEnVivo from "./components/EgiptoEnVivo";
+import SeccionOrion from './components/SeccionOrion';
+
+// IMPORTA TU ADMIN PAGE AQUÍ (Asegúrate de que la ruta sea correcta)
+import AdminPage from "./AdminPage";
 
 // CSS
 import "./base.css";
@@ -33,23 +38,23 @@ import "./titulo.css";
 
 function AppContent() {
   const { auth } = useContext(AuthContext);
+  const { tema } = useContext(ThemeContext);
   const [searchParams] = useSearchParams();
   const [seccionActiva, setSeccionActiva] = useState("inicio");
   const [resultadosBusqueda, setResultadosBusqueda] = useState([]);
 
-  // ESTADOS
   const [imagenesGaleria, setImagenesGaleria] = useState([]);
   const [audios, setAudios] = useState([]);
   const [videos, setVideos] = useState([]);
 
-  // LLAVE MAESTRA: Si eres Admin O si hay un usuario logueado (invitado)
   const tienePermiso = auth || localStorage.getItem("user") !== null;
 
   useEffect(() => {
     const cargarTodo = async () => {
       try {
-        // OJO: Si no ves fotos en el móvil es porque localhost solo funciona en tu PC
-        const baseURL = "http://localhost:5000"; 
+        const baseURL = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") 
+          ? "http://localhost:5000" 
+          : "";
         const [resV, resA, resI] = await Promise.all([
           axios.get(`${baseURL}/api/videos`),
           axios.get(`${baseURL}/api/audios`),
@@ -58,7 +63,11 @@ function AppContent() {
 
         setVideos(resV.data.map(v => ({ ...v, src: v.url, visible: true })));
         setAudios(resA.data.map(a => ({ ...a, src: a.url, visible: true })));
-        setImagenesGaleria(resI.data.map(i => ({ ...i, src: i.url, visible: true })));
+        setImagenesGaleria(resI.data.map(i => ({
+          ...i, src: i.url,
+          visible: i.visible === 1 || i.visible === true || i.visible === undefined,
+          descripcion: i.descripcion || "", latitud: i.latitud, longitud: i.longitud
+        })));
       } catch (e) {
         console.error("Error cargando el templo:", e);
       }
@@ -68,47 +77,71 @@ function AppContent() {
 
   useEffect(() => {
     const seccion = searchParams.get("seccion");
-    setSeccionActiva(seccion || "inicio");
+    if (seccion) setSeccionActiva(seccion);
   }, [searchParams]);
 
   return (
-    <AudioProvider>
-      <div className="App">
-        <Header setSeccionActiva={setSeccionActiva} />
-        <AudioControl />
+    <div className={`App theme-${tema}`}>
+      <div className="estrella-fugaz"></div>
+
+      <Header setSeccionActiva={setSeccionActiva} />
+      <AudioControl />
+
+      <main className="content-wrapper">
         <Routes>
+          {/* RUTA PRINCIPAL */}
           <Route path="/" element={
             <>
               <TituloPrincipal />
               {seccionActiva === "inicio" && <Home />}
               {seccionActiva === "esfinge" && <Esfinge />}
               {seccionActiva === "formularios" && <Forms setResultadosBusqueda={setResultadosBusqueda} />}
-              
-              {/* SECCIONES PROTEGIDAS AHORA ACCESIBLES PARA INVITADOS */}
-              {tienePermiso && seccionActiva === "galeria" && <Galeria imagenes={imagenesGaleria} />}
-              {tienePermiso && seccionActiva === "audio" && <AudioSection audios={audios} />}
-              {tienePermiso && seccionActiva === "videos" && <Videos videos={videos} />}
-              {tienePermiso && seccionActiva === "mapa" && <MapaInteractivo setSeccionActiva={setSeccionActiva} />}
-              {tienePermiso && seccionActiva === "minijuego" && <Minijuego />}
-              {tienePermiso && seccionActiva === "ra" && <Ra />}
+
+              {tienePermiso && (
+                <>
+                  {seccionActiva === "galeria" && <Galeria imagenes={imagenesGaleria} setSeccionActiva={setSeccionActiva} />}
+                  {seccionActiva === "audio" && <AudioSection audios={audios} />}
+                  {seccionActiva === "videos" && <Videos videos={videos} />}
+                  {seccionActiva === "mapa" && <MapaInteractivo setSeccionActiva={setSeccionActiva} imagenes={imagenesGaleria} />}
+                  {seccionActiva === "minijuego" && <Minijuego />}
+                  {seccionActiva === "ra" && <Ra />}
+                  {seccionActiva === "chat" && <ChatUsuarios setSeccionActiva={setSeccionActiva} />}
+                  {seccionActiva === "vivo" && <EgiptoEnVivo />}
+                  {seccionActiva === "orion" && <SeccionOrion />}
+                </>
+              )}
             </>
           } />
+
+          {/* RUTA DEL ADMINISTRADOR (¡ESTA FALTABA!) */}
           <Route path="/admin" element={
-            auth ? <AdminPage 
-              imagenesGaleria={imagenesGaleria} setImagenesGaleria={setImagenesGaleria}
-              audios={audios} setAudios={setAudios}
-              videos={videos} setVideos={setVideos}
-              resultadosBusqueda={resultadosBusqueda} 
-            /> : <h2 style={{textAlign: "center"}}>Inicia sesión como Admin</h2>
+            <AdminPage
+              imagenesGaleria={imagenesGaleria}
+              setImagenesGaleria={setImagenesGaleria}
+              audios={audios}
+              setAudios={setAudios}
+              videos={videos}
+              setVideos={setVideos}
+              resultadosBusqueda={resultadosBusqueda}
+              setResultadosBusqueda={setResultadosBusqueda}
+            />
           } />
-          <Route path="/chat-usuarios" element={<ChatUsuarios setSeccionActiva={setSeccionActiva} />} />
+
         </Routes>
-        <Footer />
-      </div>
-    </AudioProvider>
+      </main>
+      <Footer />
+    </div>
   );
 }
 
 export default function App() {
-  return ( <BrowserRouter><AppContent /></BrowserRouter> );
+  return (
+    <BrowserRouter>
+      <ThemeProvider>
+        <AudioProvider>
+          <AppContent />
+        </AudioProvider>
+      </ThemeProvider>
+    </BrowserRouter>
+  );
 }

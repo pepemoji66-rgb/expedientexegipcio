@@ -1,0 +1,134 @@
+/* 1. CONTENEDOR RAIZ: Estilo Noche en el Desierto */
+.seccion-orion-full-container {
+  background: radial-gradient(circle at center, #1a140e 0%, #000 100%) !important;
+  color: #d4af37;
+  padding: 60px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 2. TITULO: Tipografía Cinzel para el toque egipcio */
+.titulo-seccion {
+  color: #d4af37;
+  font-family: 'Cinzel', serif;
+  font-size: 2.8rem;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+/* 3. ESTRUCTURA: Poema a la izquierda, Imagen a la derecha */
+.mapa-interactivo-horizontal {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  width: 100%;
+  max-width: 1300px;
+  flex-wrap: wrap;
+  /* Para que en móviles se apile */
+}
+
+/* 4. EL POEMA: Legibilidad máxima */
+.poema-lateral {
+  flex: 1;
+  min-width: 320px;
+  font-family: 'Cinzel', serif;
+  font-size: 1.25rem;
+  line-height: 2.2;
+  color: #f4e6b2;
+  /* Color arena clara para contraste */
+  text-align: right;
+  padding-right: 30px;
+  border-right: 3px solid #c5a059;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.9);
+}
+
+/* 5. EL MARCO DE LA IMAGEN: Oro Viejo y Grande */
+.mapa-interactivo-wrapper {
+  position: relative;
+  width: 800px;
+  /* Tamaño grande para que luzca */
+  height: 500px;
+  border: 4px solid #c5a059;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+  border-radius: 12px;
+  background-color: #000;
+  overflow: hidden;
+}
+
+/* 6. LOS PUNTOS ESTELARES (Animados) */
+.punto-estelar {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  background: radial-gradient(circle, #fff 10%, rgba(135, 206, 250, 0.8) 50%, transparent 70%);
+  border-radius: 50%;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  animation: pulsoEstelar 1.5s infinite alternate ease-in-out;
+  filter: drop-shadow(0 0 8px #87cefa);
+}
+
+/* Coordenadas precisas para el Cinturón de Orión */
+.keops {
+  top: 52%;
+  left: 41%;
+}
+
+.kefren {
+  top: 38%;
+  left: 51%;
+}
+
+.micerino {
+  top: 25%;
+  left: 61%;
+}
+
+@keyframes pulsoEstelar {
+  from {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+/* 7. PAPIRO DE INFO (El cuadro de abajo) */
+.papiro-info {
+  margin-top: 30px;
+  width: 90%;
+  max-width: 800px;
+  background: linear-gradient(135deg, #1a140e 0%, #0a0805 100%);
+  border: 2px solid #c5a059;
+  border-radius: 15px;
+  color: #f4e6b2;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+}
+
+.papiro-contenido {
+  padding: 25px;
+  text-align: center;
+}
+
+.cerrar-papiro {
+  background: none;
+  border: 1px solid #d4af37;
+  color: #d4af37;
+  padding: 5px 12px;
+  cursor: pointer;
+  float: right;
+  font-family: 'Cinzel', serif;
+}

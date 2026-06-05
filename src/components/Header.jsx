@@ -2,21 +2,22 @@ import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../header.css";
 import { AuthContext } from "../AuthContext";
+import { ThemeContext } from "../ThemeContext";
 
 export default function Header({ setSeccionActiva }) {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const { auth, setAuth } = useContext(AuthContext);
+  const { tema, setTema } = useContext(ThemeContext);
   const navigate = useNavigate();
 
-  // ESTA LÍNEA ES LA MAGIA: Mira si entró como Pepe O como Invitado
   const hayUsuario = localStorage.getItem("user") !== null;
   const mostrarTodo = auth || hayUsuario;
 
   const navegarA = (seccion) => {
-    setSeccionActiva(seccion);
     setMenuAbierto(false);
-    document.body.classList.remove("menu-abierto");
-    window.scrollTo(0, 0); 
+    navigate("/");
+    setSeccionActiva(seccion);
+    window.scrollTo(0, 0);
   };
 
   const cerrarSesion = () => {
@@ -27,28 +28,66 @@ export default function Header({ setSeccionActiva }) {
 
   return (
     <header className="site-header">
-      <div className="logo" onClick={() => navegarA("inicio")}>EGIPTO</div>
-      <button className="menu-btn" onClick={() => setMenuAbierto(!menuAbierto)}>
-        {menuAbierto ? "✖" : "☰ Menú"}
-      </button>
+      <div className="header-container">
+        <div className="logo" onClick={() => navegarA("inicio")}>
+          EGIPTO
+        </div>
 
-      <nav className={`side-menu ${menuAbierto ? "abierto" : ""}`}>
-        <button onClick={() => navegarA("inicio")}>Inicio</button>
-        <button onClick={() => navegarA("esfinge")}>Esfinge</button>
-        <button onClick={() => navegarA("formularios")}>Acceso</button>
+        {/* BOTÓN HAMBURGUESA: Las tres rayitas */}
+        <button
+          className={`menu-hamburguesa ${menuAbierto ? "activo" : ""}`}
+          onClick={() => setMenuAbierto(!menuAbierto)}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
 
-        {/* SI ESTÁ LOGUEADO, SE ABRE EL TEMPLO */}
-        {mostrarTodo && (
-          <>
-            <button onClick={() => navegarA("audio")}>Audio</button>
-            <button onClick={() => navegarA("videos")}>Vídeos</button>
-            <button onClick={() => navegarA("galeria")}>Galería</button>
-            <button onClick={() => navegarA("mapa")}>Mapa</button>
-            <button onClick={() => navegarA("minijuego")}>Minijuego</button>
-            <button onClick={cerrarSesion} className="btn-logout">Cerrar Sesión</button>
-          </>
-        )}
-      </nav>
+        {/* MENÚ DE NAVEGACIÓN */}
+        <nav className={`nav-menu ${menuAbierto ? "visible" : ""}`}>
+          <button onClick={() => navegarA("inicio")}>INICIO</button>
+          <button onClick={() => navegarA("esfinge")}>LA ESFINGE</button>
+          <button onClick={() => navegarA("formularios")}>ACCESO</button>
+
+          {mostrarTodo && (
+            <>
+              {/* SECCIONES MULTIMEDIA */}
+              <button onClick={() => navegarA("audio")}>AUDIO</button>
+              <button onClick={() => navegarA("videos")}>VÍDEOS</button>
+              <button onClick={() => navegarA("galeria")}>GALERÍA</button>
+
+              {/* SECCIONES INTERACTIVAS */}
+              <button onClick={() => navegarA("mapa")}>MAPA INTERACTIVO</button>
+              <button onClick={() => navegarA("minijuego")}>MINIJUEGO</button>
+              <button onClick={() => setSeccionActiva("vivo")} className="nav-destacado-vivo">
+                𓇳 EGIPTO EN VIVO
+              </button>
+
+              {/* SECCIONES ESPECIALES */}
+              <button onClick={() => navegarA("orion")} className="nav-destacado-azul">
+                ✨ CINTURÓN DE ORIÓN
+              </button>
+              <button onClick={() => navegarA("ra")} className="nav-destacado-oro">
+                ☀️ ORÁCULO DE RA
+              </button>
+              <button onClick={() => navegarA("chat")} className="nav-destacado-chat">
+                💬 CHAT USUARIOS
+              </button>
+
+              {/* SELECTOR DE TEMA */}
+              <div className="selector-tema-mini">
+                <select value={tema} onChange={(e) => setTema(e.target.value)}>
+                  <option value="desierto">🏜️ DESIERTO</option>
+                  <option value="agua">🌊 NILO</option>
+                  <option value="faraon">🏛️ FARAÓN</option>
+                </select>
+              </div>
+
+              <button onClick={cerrarSesion} className="btn-logout-header">CERRAR SESIÓN</button>
+            </>
+          )}
+        </nav>
+      </div>
     </header>
   );
 }

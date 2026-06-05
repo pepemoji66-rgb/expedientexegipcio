@@ -27,7 +27,10 @@ export default function ChatUsuarios({ setSeccionActiva }) {
 
   useEffect(() => {
     if (!chatUser) return;
-    socketRef.current = io("http://localhost:5000");
+    const socketURL = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") 
+      ? "http://localhost:5000" 
+      : "";
+    socketRef.current = io(socketURL);
     socketRef.current.emit("joinConversation", { conversationId });
     socketRef.current.on("chatHistory", (history) => {
       setMensajes(history);

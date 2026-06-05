@@ -1,0 +1,175 @@
+.vivo-container {
+    padding: 40px 20px;
+    text-align: center;
+    color: white;
+    z-index: 5;
+    position: relative;
+}
+
+.titulo-vivo {
+    color: #ffcc00;
+    /* Oro egipcio */
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.9);
+    margin-bottom: 30px;
+}
+
+.info-actual-vivo {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 50px;
+    flex-wrap: wrap;
+}
+
+.tarjeta-viva {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #ffcc00;
+    padding: 25px;
+    border-radius: 20px;
+    min-width: 250px;
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.2);
+}
+
+.dato-principal {
+    font-size: 3.5rem;
+    color: #ffcc00;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+.descripcion-dato {
+    font-size: 1.2rem;
+    color: #ddd;
+}
+
+.contenedor-video-vivo {
+    max-width: 900px;
+    margin: 0 auto;
+    background: black;
+    padding: 10px;
+    border-radius: 15px;
+    border: 1px solid #333;
+}
+
+.alerta-vivo {
+    color: #ff4444;
+    margin-bottom: 10px;
+    animation: parpadeo 1.5s infinite;
+}
+
+@keyframes parpadeo {
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.iframe-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    /* Ratio 16:9 */
+    height: 0;
+}
+
+.iframe-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.info-monumento-detalle {
+    background: rgba(0, 0, 0, 0.85);
+    padding: 25px;
+    border-radius: 0 0 15px 15px;
+    border: 1px solid #ffcc00;
+    border-top: none;
+    text-align: left;
+    margin-top: -5px;
+    /* Para que encaje con el visor */
+}
+
+.titulo-detalle {
+    color: #ffcc00;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.descripcion-detalle {
+    color: #eee;
+    line-height: 1.6;
+    font-size: 1.1rem;
+}
+
+.contenedor-video {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Capa de efecto visual sobre el vídeo */
+.contenedor-video::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Crea unas líneas finas que disimulan el logo central */
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+    background-size: 100% 3px, 3px 100%;
+    z-index: 2;
+    pointer-events: none;
+    /* Importante para poder clicar en el vídeo */
+}
+
+/* Un brillo dorado suave en las esquinas para distraer */
+.contenedor-video::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, transparent 40%, rgba(197, 160, 89, 0.1) 100%);
+    z-index: 3;
+    pointer-events: none;
+}
+
+video {
+    filter: sepia(0.2) contrast(1.1) brightness(0.9);
+    transition: all 0.5s ease;
+}
+
+.boton-directo-live:hover {
+    transform: scale(1.1);
+    background-color: #ff0000 !important;
+}
+
+.punto-rojo {
+    color: #fff;
+    animation: parpadeo 1s infinite;
+}
+
+@keyframes parpadeo {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Para que se vea bien en móviles */
+@media (max-width: 600px) {
+    .vivo-container h2 {
+        font-size: 1.2rem;
+    }
+}

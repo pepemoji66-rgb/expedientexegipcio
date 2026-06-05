@@ -1,66 +1,81 @@
 .audio-section-ancestral {
-  padding: 50px 20px;
+  padding: 80px 20px;
   text-align: center;
-  background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+  /* Fondo más profundo y místico */
+  background: radial-gradient(circle at center, #1a140e 0%, #050505 100%);
 }
 
 .titulo-místico {
-  color: #ffd700;
+  color: #c5a059;
+  /* Oro viejo en lugar de amarillo chillón */
   font-family: 'Cinzel', serif;
-  text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-  letter-spacing: 5px;
-  margin-bottom: 40px;
+  text-shadow: 0 0 20px rgba(197, 160, 89, 0.5);
+  letter-spacing: 8px;
+  margin-bottom: 50px;
+  text-transform: uppercase;
 }
 
 .contenedor-reliquias {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 30px;
-  max-width: 1000px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
 .reliquia-card {
-  background: #2c2c2c;
-  border: 2px solid #444;
-  padding: 30px;
-  border-radius: 20px;
+  /* Textura de piedra oscura */
+  background: linear-gradient(145deg, #161616, #000000);
+  border: 1px solid #3d3d3d;
+  padding: 40px 30px;
+  border-radius: 0;
+  /* ¡Cero redondeo! Estilo bloque de templo */
   position: relative;
   overflow: hidden;
-  transition: all 0.5s ease;
-  box-shadow: inset 0 0 20px #000;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
 }
 
+/* Efecto de borde iluminado al estar activo */
 .reliquia-card.activa {
-  border-color: #ffd700;
-  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3), inset 0 0 20px rgba(255, 215, 0, 0.2);
+  border-color: #c5a059;
+  box-shadow: 0 0 40px rgba(197, 160, 89, 0.15), inset 0 0 25px rgba(0, 0, 0, 1);
+  transform: translateY(-5px);
 }
 
 .jeroglificos-fondo {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  opacity: 0.1;
-  font-size: 2rem;
-  color: #ffd700;
-  transition: opacity 0.5s;
+  top: 15px;
+  right: 15px;
+  opacity: 0.05;
+  font-size: 1.8rem;
+  color: #c5a059;
+  transition: all 0.6s ease;
 }
 
 .reliquia-card.activa .jeroglificos-fondo {
-  opacity: 0.8;
-  animation: brilloJeroglifico 2s infinite;
+  opacity: 0.6;
+  animation: brilloJeroglifico 3s infinite ease-in-out;
+}
+
+.reliquia-header .audio-nombre {
+  font-family: 'Cinzel', serif;
+  color: #e0c097;
+  margin: 10px 0;
+  font-size: 1.2rem;
 }
 
 .boton-disco {
-  width: 80px;
-  height: 80px;
+  width: 75px;
+  height: 75px;
   border-radius: 50%;
-  background: linear-gradient(145deg, #d4a657, #8a6d3b);
-  border: 4px solid #000;
-  color: #000;
-  font-size: 30px;
+  /* Degradado metálico tipo moneda antigua */
+  background: linear-gradient(135deg, #c5a059 0%, #8a6d3b 100%);
+  border: 3px solid #1a140e;
+  color: #1a140e;
+  font-size: 24px;
   cursor: pointer;
-  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  margin: 0 auto;
   transition: all 0.3s;
   display: flex;
   align-items: center;
@@ -68,37 +83,61 @@
 }
 
 .boton-disco:hover {
-  transform: scale(1.1);
-  background: #ffd700;
+  filter: brightness(1.2);
+  transform: scale(1.05);
 }
 
 .boton-disco.girando {
-  animation: pulsoAura 1.5s infinite;
+  animation: pulsoAura 2s infinite, spinLento 8s linear infinite;
 }
 
+/* Barra de progreso estilo "Líquido de Oro" */
 .barra-piedra {
   width: 100%;
-  height: 6px;
-  background: #111;
-  border-radius: 10px;
-  margin-top: 25px;
+  height: 4px;
+  background: #0a0a0a;
+  margin-top: 30px;
   overflow: hidden;
-  border: 1px solid #333;
+  border: 1px solid #222;
 }
 
 .energia-flujo {
   height: 100%;
-  background: linear-gradient(90deg, #8a6d3b, #ffd700);
-  box-shadow: 0 0 10px #ffd700;
-  transition: width 0.3s ease;
+  background: linear-gradient(90deg, #8a6d3b, #f1c40f);
+  box-shadow: 0 0 15px #c5a059;
+}
+
+/* ANIMACIONES */
+@keyframes spinLento {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes brilloJeroglifico {
-  0%, 100% { filter: drop-shadow(0 0 2px #ffd700); }
-  50% { filter: drop-shadow(0 0 10px #ffd700); }
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 2px #c5a059);
+    opacity: 0.3;
+  }
+
+  50% {
+    filter: drop-shadow(0 0 12px #ffcc33);
+    opacity: 0.8;
+  }
 }
 
 @keyframes pulsoAura {
-  0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
-  100% { box-shadow: 0 0 0 20px rgba(255, 215, 0, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.6);
+  }
+
+  100% {
+    box-shadow: 0 0 0 25px rgba(197, 160, 89, 0);
+  }
 }

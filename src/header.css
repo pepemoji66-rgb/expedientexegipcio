@@ -1,117 +1,219 @@
+/* --- ESTILO GLOBAL DEL HEADER (PROFESIONAL Y RESPONSIVE) --- */
+
 .site-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #0f0f1a;
+  /* Azul noche profundo */
+  border-bottom: 2px solid #c5a059;
+  /* Oro viejo */
+  position: fixed;
+  /* Siempre arriba al hacer scroll */
+  top: 0;
+  width: 100%;
+  height: 70px;
+  z-index: 10000;
+}
+
+.header-container {
+  width: 90%;
+  max-width: 1200px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 30px;
-  background: #000;
-  border-bottom: 2px solid #ffd700;
-  position: relative;
-  z-index: 2000;
 }
 
 .logo {
   font-family: 'Cinzel', serif;
-  color: #ffd700;
-  font-size: 1.5rem;
-  letter-spacing: 3px;
-}
-
-.menu-btn {
-  background: #1a1a1a;
-  color: #ffd700;
-  border: 1px solid #ffd700;
-  padding: 8px 15px;
+  color: #c5a059;
+  font-size: 1.8rem;
+  letter-spacing: 4px;
   cursor: pointer;
-  z-index: 2100;
+  text-shadow: 0 0 10px rgba(197, 160, 89, 0.3);
 }
 
-/* El menú lateral escondido */
-.side-menu {
-  position: fixed;
-  top: 0;
-  right: -300px;
-  width: 260px;
-  height: 100vh;
-  background: #0a0a0a;
+/* BOTÓN HAMBURGUESA */
+.menu-hamburguesa {
+  background: none;
+  border: none;
+  cursor: pointer;
   display: flex;
   flex-direction: column;
-  padding: 80px 20px;
-  gap: 10px;
-  transition: 0.4s;
-  z-index: 2050;
-  border-left: 2px solid #ffd700;
+  gap: 6px;
+  padding: 10px;
+  z-index: 10002;
 }
 
-body.menu-abierto .side-menu {
-  right: 0;
+.menu-hamburguesa span {
+  display: block;
+  width: 30px;
+  height: 2px;
+  background-color: #c5a059;
+  transition: all 0.3s ease;
 }
 
-.side-menu button {
-  background: transparent;
-  color: #fff;
-  border: 1px solid #333;
-  padding: 12px;
-  text-align: left;
-  cursor: pointer;
+/* Animación a X */
+.menu-hamburguesa.activo span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
 }
 
-.side-menu button:hover {
-  background: #ffd700;
-  color: #000;
+.menu-hamburguesa.activo span:nth-child(2) {
+  opacity: 0;
 }
 
-.menu-overlay {
-  position: fixed;
-  top: 0; left: 0; width: 100vw; height: 100vh;
-  background: rgba(0,0,0,0.6);
-  z-index: 2000;
+.menu-hamburguesa.activo span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
 }
 
-.btn-logout { background: #ff4a4a !important; color: white !important; }
-/* Esto asegura que el menú esté POR ENCIMA de todo en el móvil */
-.site-header {
-  z-index: 1000;
+/* --- EL MENÚ DESPLEGABLE (RELATIVE Y RESPONSIVE) --- */
+.nav-menu {
   position: fixed;
   top: 0;
-  width: 100%;
-}
-
-.menu-btn {
-  z-index: 1001; /* Siempre visible */
-  padding: 10px 20px;
-  font-size: 1.2rem;
-}
-
-.side-menu {
-  position: fixed;
-  top: 0;
-  right: -100%; /* Escondido a la derecha */
+  right: -100%;
+  /* Escondido por defecto */
   width: 280px;
   height: 100vh;
-  background: rgba(20, 20, 20, 0.95);
-  transition: 0.4s;
+  /* 100% de la altura de la pantalla */
+  background: rgba(15, 15, 26, 0.98);
+  backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
-  padding-top: 80px;
-  z-index: 999;
+  padding: 90px 20px 50px 20px;
+  /* Mucho aire arriba y abajo */
+  gap: 5px;
+  transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border-left: 1px solid rgba(197, 160, 89, 0.3);
+  z-index: 10001;
+
+  /* Esto permite bajar si hay muchos botones */
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #c5a059 #0f0f1a;
 }
 
-.side-menu.abierto {
-  right: 0; /* Aparece al pulsar */
+.nav-menu.visible {
+  right: 0;
+  /* Aparece */
 }
 
-.side-menu button {
-  padding: 15px;
-  border-bottom: 1px solid #444;
-  color: gold;
+.nav-menu button {
   background: transparent;
+  color: #e0e0e0;
+  border: none;
+  border-bottom: 1px solid rgba(197, 160, 89, 0.1);
+  padding: 14px 10px;
   text-align: left;
-  font-size: 1.1rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-.menu-separator {
-  color: #888;
-  font-size: 0.8rem;
-  padding: 10px 15px;
-  text-align: center;
+.nav-menu button:hover {
+  color: #c5a059;
+  background: rgba(197, 160, 89, 0.05);
+  padding-left: 20px;
+}
+
+/* BOTONES CON COLORES ESPECIALES */
+.nav-destacado-azul {
+  color: #a2d2ff !important;
+  border-left: 3px solid #a2d2ff !important;
+}
+
+.nav-destacado-oro {
+  color: #ffd700 !important;
+  border-left: 3px solid #ffd700 !important;
+}
+
+.nav-destacado-vivo {
+  color: #ff9f43 !important;
+  border-left: 3px solid #ff9f43 !important;
+}
+
+.nav-destacado-chat {
+  color: #00ced1 !important;
+  border-left: 3px solid #00ced1 !important;
+}
+
+/* SELECTOR DE TEMA */
+.selector-tema-mini {
+  margin: 15px 0;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+}
+
+.selector-tema-mini select {
+  width: 100%;
+  background: #1a1a2e;
+  color: #c5a059;
+  border: 1px solid #3d3d5c;
+  padding: 8px;
+}
+
+/* BOTÓN CERRAR SESIÓN (AL FINAL) */
+.btn-logout-header {
+  margin-top: 20px;
+  margin-bottom: 30px;
+  /* Espacio extra para que no se pegue al borde */
+  color: #ff4d4d !important;
+  border: 1px solid #ff4d4d !important;
+  text-align: center !important;
+}
+
+/* Ajuste para pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .nav-menu {
+    width: 85%;
+  }
+}
+
+.boton-musica-flotante {
+  position: fixed;
+  top: 15px;
+  /* Un poco más abajo que el borde */
+  left: 20px;
+  /* A la izquierda como pedías */
+  z-index: 10005;
+  /* POR ENCIMA de todo (incluso del header) */
+  background: rgba(15, 15, 26, 0.8);
+  border: 2px solid #c5a059;
+  color: #c5a059;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(197, 160, 89, 0.2);
+}
+
+.boton-musica-flotante:hover {
+  transform: scale(1.1);
+  background: #c5a059;
+  color: #0f0f1a;
+  box-shadow: 0 0 20px rgba(197, 160, 89, 0.4);
+}
+
+.boton-musica-flotante.sonando {
+  animation: pulsoMusica 2s infinite;
+}
+
+@keyframes pulsoMusica {
+  0% {
+    box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.7);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(197, 160, 89, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(197, 160, 89, 0);
+  }
 }
