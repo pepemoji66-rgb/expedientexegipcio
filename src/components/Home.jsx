@@ -138,6 +138,41 @@ export default function Home({ setSeccionActiva }) {
         </div>
       </section>
 
+      {/* 📐 SECCIÓN: PRECISIONES MATEMÁTICAS (NUEVA SECCIÓN DE LECTURA) */}
+      <section className="home-math-section" style={{ padding: "60px 20px", background: "rgba(0,0,0,0.35)", borderTop: "1px solid rgba(197, 160, 89, 0.2)", borderBottom: "1px solid rgba(197, 160, 89, 0.2)" }}>
+        <div style={{ maxWidth: "1000px", margin: "0 auto", textAlign: "center" }}>
+          <h2 className="seccion-subtitulo" style={{ fontFamily: "Cinzel, serif", color: "#ffd700", fontSize: "1.8rem", letterSpacing: "3px", textShadow: "0 0 10px rgba(212,175,55,0.3)", marginBottom: "15px" }}>
+            𓍃 MATEMÁTICAS SAGRADAS Y PRECISIONES CÓSMICAS 𓍃
+          </h2>
+          <p className="seccion-descripcion" style={{ color: "#e0c097", fontSize: "1.05rem", marginBottom: "40px" }}>
+            Los monumentos de la meseta de Giza no son meras sepulturas de piedra, sino depósitos geométricos de conocimientos universales.
+          </p>
+          
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "30px", justifyContent: "center" }}>
+            <div className="math-card" style={{ flex: "1 1 300px", background: "rgba(20, 15, 10, 0.85)", border: "1px solid rgba(197, 160, 89, 0.3)", padding: "25px", borderRadius: "10px", textAlign: "left", boxShadow: "0 4px 15px rgba(0,0,0,0.5)" }}>
+              <h3 style={{ color: "#ffd700", fontFamily: "Cinzel, serif", fontSize: "1.15rem", marginBottom: "15px", display: "flex", alignItems: "center", gap: "8px" }}>📏 Coordenada de la Luz</h3>
+              <p style={{ color: "#f4e6b2", fontSize: "0.95rem", lineHeight: "1.6", textAlign: "justify" }}>
+                La coordenada exacta de la cúspide de la Gran Pirámide es <strong>29.9792458° N</strong>. Sorprendentemente, la velocidad de la luz en el vacío es de exactamente <strong>299,792,458 metros por segundo</strong>. Esta alineación numérica exacta desafía toda probabilidad en una estructura erigida hace 4,500 años.
+              </p>
+            </div>
+
+            <div className="math-card" style={{ flex: "1 1 300px", background: "rgba(20, 15, 10, 0.85)", border: "1px solid rgba(197, 160, 89, 0.3)", padding: "25px", borderRadius: "10px", textAlign: "left", boxShadow: "0 4px 15px rgba(0,0,0,0.5)" }}>
+              <h3 style={{ color: "#ffd700", fontFamily: "Cinzel, serif", fontSize: "1.15rem", marginBottom: "15px", display: "flex", alignItems: "center", gap: "8px" }}>📐 Constantes Universales (Pi y Phi)</h3>
+              <p style={{ color: "#f4e6b2", fontSize: "0.95rem", lineHeight: "1.6", textAlign: "justify" }}>
+                El número de oro (<strong>Phi = 1.618</strong>) y la constante circular (<strong>Pi = 3.1416</strong>) gobiernan el plano estructural de la pirámide. Si duplicamos el perímetro de la base y lo dividimos por su altura, la cifra resultante es exactamente igual al número Pi, revelando un profundo entendimiento de la física terrestre.
+              </p>
+            </div>
+
+            <div className="math-card" style={{ flex: "1 1 300px", background: "rgba(20, 15, 10, 0.85)", border: "1px solid rgba(197, 160, 89, 0.3)", padding: "25px", borderRadius: "10px", textAlign: "left", boxShadow: "0 4px 15px rgba(0,0,0,0.5)" }}>
+              <h3 style={{ color: "#ffd700", fontFamily: "Cinzel, serif", fontSize: "1.15rem", marginBottom: "15px", display: "flex", alignItems: "center", gap: "8px" }}>🧭 Precisión Geodésica Absoluta</h3>
+              <p style={{ color: "#f4e6b2", fontSize: "0.95rem", lineHeight: "1.6", textAlign: "justify" }}>
+                Las cuatro caras de Keops están orientadas hacia los puntos cardinales norte, sur, este y oeste con un margen de error de apenas <strong>tres minutos de arco</strong> (menos de cuatro centésimas de grado). Ningún otro edificio de la antigüedad se acerca a tal nivel de calibración científica.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ⏳ SECCIÓN: LÍNEA DE TIEMPO INTERACTIVA */}
       <section className="home-timeline-section">
         <h2 className="seccion-subtitulo">CRONOLOGÍA DE LA ARENA</h2>
@@ -152,7 +187,7 @@ export default function Home({ setSeccionActiva }) {
               <div className="timeline-year">2560 a.C.</div>
               <h3 className="timeline-title">El Despertar de la Gran Pirámide</h3>
               <p className="timeline-desc">
-                Se culmina la construcción de la pirámide de Keops tras más de 20 años de esfuerzos, convirtiéndose en el monumento más alto del planeta durante casi 4,000 años.
+                Se culmina la construcción de la pirámide de Keops tras más de 20 años de esfuerzos monumentales, utilizando más de 2.3 millones de bloques de piedra caliza y granito, convirtiéndose en el monumento más alto del planeta durante casi 4,000 años.
               </p>
             </div>
           </div>
@@ -163,7 +198,7 @@ export default function Home({ setSeccionActiva }) {
               <div className="timeline-year">2500 a.C.</div>
               <h3 className="timeline-title">El Guardián del Horizonte</h3>
               <p className="timeline-desc">
-                Bajo las órdenes de Kefrén, se esculpe la Gran Esfinge sobre un único bloque monolítico calizo para proteger los accesos al valle de las pirámides.
+                Bajo las órdenes del faraón Kefrén, se esculpe la Gran Esfinge sobre un bloque de roca monolítica de la meseta, para custodiar de forma sagrada el acceso a las calzadas procesionales y representar la unión solar divina.
               </p>
             </div>
           </div>
@@ -172,9 +207,9 @@ export default function Home({ setSeccionActiva }) {
             <div className="timeline-node"></div>
             <div className="timeline-content-card">
               <div className="timeline-year">1999 d.C.</div>
-              <h3 className="timeline-title">Teoría de la Correlación Estelar</h3>
+              <h3 className="timeline-title">Alineación y Teoría de la Correlación</h3>
               <p className="timeline-desc">
-                Estudios astronómicos populares demuestran la precisa coincidencia de ubicación entre las tres pirámides y las estrellas Alnitak, Alnilam y Mintaka.
+                Estudios astronómicos populares y la arqueoastronomía demuestran la precisa coincidencia de ubicación y tamaño entre las tres pirámides principales y las estrellas Alnitak, Alnilam y Mintaka, emulando el cielo sobre el Nilo.
               </p>
             </div>
           </div>
@@ -185,7 +220,7 @@ export default function Home({ setSeccionActiva }) {
               <div className="timeline-year">Hoy</div>
               <h3 className="timeline-title">Tu Exploración en Vivo</h3>
               <p className="timeline-desc">
-                Tomas el control del Templo interactivo para volar drones en 360°, geolocalizar imágenes en el mapa y chatear con el oráculo ancestral de Ra.
+                Tomas las riendas de este portal histórico interactivo para volar drones en 360°, geolocalizar misterios en el mapa interactivo y descifrar enigmas conversando con el Oráculo ancestral de Ra.
               </p>
             </div>
           </div>
@@ -210,6 +245,26 @@ export default function Home({ setSeccionActiva }) {
             <button className="explore-btn">VOLAR DRON</button>
           </div>
 
+          <div className="explore-card" onClick={() => navegarA("misterios")}>
+            <div>
+              <h3 className="explore-title">𓂀 MISTERIOS DE EGIPTO</h3>
+              <p className="explore-desc">
+                Descubre los enigmas matemáticos, la velocidad de la luz, las cámaras de resonancia acústica y los secretos de Giza.
+              </p>
+            </div>
+            <button className="explore-btn">DESCIFRAR ENIGMAS</button>
+          </div>
+
+          <div className="explore-card" onClick={() => navegarA("expedientes")}>
+            <div>
+              <h3 className="explore-title">📜 DOSIERES HISTÓRICOS</h3>
+              <p className="explore-desc">
+                Accede a expedientes documentados sobre las dinastías reales, Akenatón la herejía de Amarna y el Valle de los Reyes.
+              </p>
+            </div>
+            <button className="explore-btn">ABRIR ARCHIVO</button>
+          </div>
+
           <div className="explore-card" onClick={() => navegarA("ra")}>
             <div>
               <h3 className="explore-title">☀️ ORÁCULO DE RA</h3>
@@ -218,16 +273,6 @@ export default function Home({ setSeccionActiva }) {
               </p>
             </div>
             <button className="explore-btn">HABLAR CON RA</button>
-          </div>
-
-          <div className="explore-card" onClick={() => navegarA("mapa")}>
-            <div>
-              <h3 className="explore-title">🗺️ MAPA INTERACTIVO</h3>
-              <p className="explore-desc">
-                Visualiza los puntos de interés geolocalizados de la meseta y descubre sus galerías secretas.
-              </p>
-            </div>
-            <button className="explore-btn">ABRIR MAPA</button>
           </div>
         </div>
       </section>

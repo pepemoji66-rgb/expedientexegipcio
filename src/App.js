@@ -16,12 +16,12 @@ import Forms from "./components/Forms";
 import Footer from "./components/Footer";
 import MapaInteractivo from "./components/MapaInteractivo";
 import Esfinge from "./components/Esfinge";
-import Minijuego from "./components/Minijuego";
+import Misterios from "./components/Misterios";
 import Ra from "./components/Ra";
 import Home from "./components/Home";
 import ChatUsuarios from "./components/Chat/ChatUsuarios";
 import EgiptoEnVivo from "./components/EgiptoEnVivo";
-import SeccionOrion from './components/SeccionOrion';
+import Expedientes from "./components/Expedientes";
 import Politicas from "./components/Politicas";
 import Contacto from "./components/Contacto";
 
@@ -104,10 +104,10 @@ function AppContent() {
               {seccionActiva === "audio" && <AudioSection audios={audios} />}
               {seccionActiva === "videos" && <Videos videos={videos} />}
               {seccionActiva === "mapa" && <MapaInteractivo setSeccionActiva={setSeccionActiva} imagenes={imagenesGaleria} />}
-              {seccionActiva === "minijuego" && <Minijuego />}
+              {seccionActiva === "misterios" && <Misterios />}
               {seccionActiva === "ra" && <Ra />}
               {seccionActiva === "vivo" && <EgiptoEnVivo />}
-              {seccionActiva === "orion" && <SeccionOrion />}
+              {seccionActiva === "expedientes" && <Expedientes />}
 
               {/* SECCIONES ADSENSE */}
               {seccionActiva === "privacidad" && <Politicas tipo="privacidad" />}

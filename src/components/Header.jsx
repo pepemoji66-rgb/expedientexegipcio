@@ -61,14 +61,14 @@ export default function Header({ setSeccionActiva }) {
 
           {/* SECCIONES INTERACTIVAS */}
           <button onClick={() => navegarA("mapa")}>MAPA INTERACTIVO</button>
-          <button onClick={() => navegarA("minijuego")}>MINIJUEGO</button>
+          <button onClick={() => navegarA("misterios")}>MISTERIOS DE EGIPTO</button>
           <button onClick={() => setSeccionActiva("vivo")} className="nav-destacado-vivo">
             𓇳 EGIPTO EN VIVO
           </button>
 
           {/* SECCIONES ESPECIALES */}
-          <button onClick={() => navegarA("orion")} className="nav-destacado-azul">
-            ✨ CINTURÓN DE ORIÓN
+          <button onClick={() => navegarA("expedientes")} className="nav-destacado-azul">
+            📜 DOSIERES HISTÓRICOS
           </button>
           <button onClick={() => navegarA("ra")} className="nav-destacado-oro">
             ☀️ ORÁCULO DE RA

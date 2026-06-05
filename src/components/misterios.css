@@ -1,0 +1,144 @@
+/* --- SECCIÓN DE MISTERIOS --- */
+.misterios-seccion {
+  background: radial-gradient(circle at center, #0a0e1a 0%, #030408 100%) !important;
+  color: #ffd700;
+  padding: 60px 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.misterios-header {
+  text-align: center;
+  max-width: 800px;
+  margin-bottom: 50px;
+}
+
+.misterios-header h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 2.3rem;
+  letter-spacing: 4px;
+  text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+  margin-bottom: 15px;
+}
+
+/* --- GRID DE MISTERIOS --- */
+.misterios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+  width: 100%;
+  max-width: 1100px;
+}
+
+/* CARTAS DE ENIGMAS */
+.misterio-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(197, 160, 89, 0.3);
+  border-radius: 10px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  transition: all 0.4s ease;
+  min-height: 250px;
+}
+
+.misterio-card:hover {
+  border-color: #ffd700;
+  box-shadow: 0 8px 30px rgba(255, 215, 0, 0.15);
+  transform: translateY(-5px);
+}
+
+.misterio-card.activo {
+  background: rgba(15, 23, 42, 0.9);
+  border-color: #ffd700;
+  box-shadow: 0 12px 40px rgba(255, 215, 0, 0.2);
+}
+
+/* CABECERA DE LA CARTA */
+.card-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.card-icono {
+  font-size: 2.2rem;
+  filter: drop-shadow(0 0 8px gold);
+}
+
+.card-titulo {
+  font-family: 'Cinzel', serif;
+  font-size: 1.25rem;
+  color: #f4e6b2;
+  margin: 0;
+  letter-spacing: 1px;
+  line-height: 1.4;
+}
+
+.card-resumen {
+  color: #e0c097;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+/* CONTENIDO DETALLADO */
+.card-contenido-detallado {
+  margin-top: 15px;
+  margin-bottom: 25px;
+  padding-top: 15px;
+  border-top: 1px dashed rgba(197, 160, 89, 0.3);
+  animation: fundidoEntrada 0.5s ease-out forwards;
+}
+
+.card-contenido-detallado p {
+  color: #f4e6b2;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  text-align: justify;
+}
+
+/* BOTÓN DE ACCIÓN */
+.btn-misterio {
+  background: transparent;
+  border: 1px solid #c5a059;
+  color: #c5a059;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  width: 100%;
+  text-align: center;
+}
+
+.misterio-card:hover .btn-misterio {
+  background: #c5a059;
+  color: #0f172a;
+}
+
+.misterio-card.activo .btn-misterio {
+  background: #ffd700;
+  color: #0f172a;
+  border-color: #ffd700;
+}
+
+/* ANIMACIONES */
+@keyframes fundidoEntrada {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
