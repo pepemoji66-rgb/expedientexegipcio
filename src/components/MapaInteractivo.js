@@ -133,6 +133,7 @@ const MapaInteractivo = ({ imagenes = [], expedientes = [], misterios = [], setS
               key={`img-${img.id}`}
               position={[Number(img.latitud), Number(img.longitud)]}
               icon={String(idResaltado) === String(img.id) ? iconActivo : iconImagen}
+              zIndexOffset={String(idResaltado) === String(img.id) ? 1000 : 0}
             >
               <Popup>
                 <div style={{ textAlign: "center", minWidth: "160px" }}>
@@ -162,6 +163,7 @@ const MapaInteractivo = ({ imagenes = [], expedientes = [], misterios = [], setS
               key={`exp-${exp.id}`}
               position={[Number(exp.latitud), Number(exp.longitud)]}
               icon={idResaltado === `expediente-${exp.id}` ? iconActivo : iconDosier}
+              zIndexOffset={idResaltado === `expediente-${exp.id}` ? 1000 : 0}
             >
               <Popup>
                 <div style={{ textAlign: "center", minWidth: "160px" }}>
@@ -194,6 +196,7 @@ const MapaInteractivo = ({ imagenes = [], expedientes = [], misterios = [], setS
               key={`mis-${mis.id}`}
               position={[Number(mis.latitud), Number(mis.longitud)]}
               icon={idResaltado === `misterio-${mis.id}` ? iconActivo : iconMisterio}
+              zIndexOffset={idResaltado === `misterio-${mis.id}` ? 1000 : 0}
             >
               <Popup>
                 <div style={{ textAlign: "center", minWidth: "160px" }}>
