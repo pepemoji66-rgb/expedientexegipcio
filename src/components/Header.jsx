@@ -47,45 +47,44 @@ export default function Header({ setSeccionActiva }) {
         <nav className={`nav-menu ${menuAbierto ? "visible" : ""}`}>
           <button onClick={() => navegarA("inicio")}>INICIO</button>
           <button onClick={() => navegarA("esfinge")}>LA ESFINGE</button>
-          <button onClick={() => navegarA("formularios")}>ACCESO</button>
-
-          {mostrarTodo && (
-            <>
-              {/* SECCIONES MULTIMEDIA */}
-              <button onClick={() => navegarA("audio")}>AUDIO</button>
-              <button onClick={() => navegarA("videos")}>VÍDEOS</button>
-              <button onClick={() => navegarA("galeria")}>GALERÍA</button>
-
-              {/* SECCIONES INTERACTIVAS */}
-              <button onClick={() => navegarA("mapa")}>MAPA INTERACTIVO</button>
-              <button onClick={() => navegarA("minijuego")}>MINIJUEGO</button>
-              <button onClick={() => setSeccionActiva("vivo")} className="nav-destacado-vivo">
-                𓇳 EGIPTO EN VIVO
-              </button>
-
-              {/* SECCIONES ESPECIALES */}
-              <button onClick={() => navegarA("orion")} className="nav-destacado-azul">
-                ✨ CINTURÓN DE ORIÓN
-              </button>
-              <button onClick={() => navegarA("ra")} className="nav-destacado-oro">
-                ☀️ ORÁCULO DE RA
-              </button>
-              <button onClick={() => navegarA("chat")} className="nav-destacado-chat">
-                💬 CHAT USUARIOS
-              </button>
-
-              {/* SELECTOR DE TEMA */}
-              <div className="selector-tema-mini">
-                <select value={tema} onChange={(e) => setTema(e.target.value)}>
-                  <option value="desierto">🏜️ DESIERTO</option>
-                  <option value="agua">🌊 NILO</option>
-                  <option value="faraon">🏛️ FARAÓN</option>
-                </select>
-              </div>
-
-              <button onClick={cerrarSesion} className="btn-logout-header">CERRAR SESIÓN</button>
-            </>
+          
+          {!mostrarTodo ? (
+            <button onClick={() => navegarA("formularios")} className="nav-destacado-oro">ACCESO</button>
+          ) : (
+            <button onClick={cerrarSesion} className="btn-logout-header">CERRAR SESIÓN</button>
           )}
+
+          {/* SECCIONES MULTIMEDIA */}
+          <button onClick={() => navegarA("audio")}>AUDIO</button>
+          <button onClick={() => navegarA("videos")}>VÍDEOS</button>
+          <button onClick={() => navegarA("galeria")}>GALERÍA</button>
+
+          {/* SECCIONES INTERACTIVAS */}
+          <button onClick={() => navegarA("mapa")}>MAPA INTERACTIVO</button>
+          <button onClick={() => navegarA("minijuego")}>MINIJUEGO</button>
+          <button onClick={() => setSeccionActiva("vivo")} className="nav-destacado-vivo">
+            𓇳 EGIPTO EN VIVO
+          </button>
+
+          {/* SECCIONES ESPECIALES */}
+          <button onClick={() => navegarA("orion")} className="nav-destacado-azul">
+            ✨ CINTURÓN DE ORIÓN
+          </button>
+          <button onClick={() => navegarA("ra")} className="nav-destacado-oro">
+            ☀️ ORÁCULO DE RA
+          </button>
+          <button onClick={() => navegarA("chat")} className="nav-destacado-chat">
+            💬 CHAT USUARIOS
+          </button>
+
+          {/* SELECTOR DE TEMA */}
+          <div className="selector-tema-mini">
+            <select value={tema} onChange={(e) => setTema(e.target.value)}>
+              <option value="desierto">🏜️ DESIERTO</option>
+              <option value="agua">🌊 NILO</option>
+              <option value="faraon">🏛️ FARAÓN</option>
+            </select>
+          </div>
         </nav>
       </div>
     </header>

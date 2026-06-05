@@ -24,42 +24,11 @@ export default function ModalRegistro({
           <input
             type="text"
             name="nombre"
-            placeholder="Nombre completo"
+            placeholder="Nick de Explorador"
             value={regData.nombre}
             onChange={handleChange}
             required
           />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email sagrado"
-            value={regData.email}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            name="ciudad"
-            placeholder="Ciudad"
-            value={regData.ciudad}
-            onChange={handleChange}
-          />
-
-          <div className="fila-mixta">
-            <input
-              type="number"
-              name="edad"
-              placeholder="Edad"
-              value={regData.edad}
-              onChange={handleChange}
-            />
-            <select name="sexo" value={regData.sexo} onChange={handleChange}>
-              <option value="">Sexo</option>
-              <option value="M">M</option>
-              <option value="F">F</option>
-            </select>
-          </div>
-
           <input
             type="password"
             name="password"
@@ -69,7 +38,7 @@ export default function ModalRegistro({
             required
           />
 
-          <button type="submit" className="btn-form btn-yellow">📜 REGISTRAR ALMA</button>
+          <button type="submit" className="btn-form btn-yellow">📜 INSCRIBIR EXPLORADOR</button>
           <button type="button" className="btn-form btn-red" onClick={() => setModalRegistro(false)}>CERRAR</button>
         </form>
       </div>

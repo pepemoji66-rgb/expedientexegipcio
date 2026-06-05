@@ -32,10 +32,6 @@ function Forms({ setResultadosBusqueda }) {
   // Campos Registro
   const [regData, setRegData] = useState({
     nombre: "",
-    email: "",
-    ciudad: "",
-    edad: "",
-    sexo: "",
     password: ""
   });
 
@@ -78,17 +74,30 @@ function Forms({ setResultadosBusqueda }) {
   const handleRegistro = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post("/usuarios", regData);
+      // Autogeneramos los campos obligatorios del esquema para no romper restricciones
+      const nickLimpio = regData.nombre.trim().toLowerCase().replace(/[^a-z0-9]/g, "");
+      const emailAutogenerado = `${nickLimpio}_${Date.now()}@egipto.com`;
+
+      const datosCompletos = {
+        nombre: regData.nombre,
+        password: regData.password,
+        email: emailAutogenerado,
+        ciudad: "Egipto",
+        edad: 30,
+        sexo: "M"
+      };
+
+      const res = await api.post("/usuarios", datosCompletos);
 
       if (res.status === 201 || res.data.ok) {
-        alert("¡Registro completado! Tus datos han sido grabados en el Templo.");
+        alert("¡Registro completado! Has sido inscrito en el Templo.");
         setModalRegistro(false);
         // Limpiar el formulario
-        setRegData({ nombre: "", email: "", ciudad: "", edad: "", sexo: "", password: "" });
+        setRegData({ nombre: "", password: "" });
       }
     } catch (error) {
       console.error("Error al registrar:", error);
-      alert("Error al crear la cuenta. Es posible que el email ya esté registrado.");
+      alert("Error al crear la cuenta. Intenta con otro Nick.");
     }
   };
 

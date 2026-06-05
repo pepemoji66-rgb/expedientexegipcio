@@ -35,10 +35,10 @@ router.post("/usuarios", (req, res) => {
 
 // 🔑 NUEVO: LOGIN DE USUARIOS (¡Esta era la que faltaba!)
 router.post("/login", (req, res) => {
-  const { email, password } = req.body;
-  const sql = "SELECT * FROM usuarios WHERE email = ? AND password = ?";
+  const { email, password } = req.body; // email puede ser tanto el Nick como el Email
+  const sql = "SELECT * FROM usuarios WHERE (email = ? OR nombre = ?) AND password = ?";
 
-  db.query(sql, [email, password], (err, results) => {
+  db.query(sql, [email, email, password], (err, results) => {
     if (err) return res.status(500).json({ error: "Error en el servidor" });
 
     if (results.length > 0) {

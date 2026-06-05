@@ -22,7 +22,7 @@ function LoginUsuario({
         ) : (
           <form onSubmit={handleLoginUser}>
             <input
-              placeholder="Email"
+              placeholder="Nick o Email"
               value={loginEmail}
               onChange={(e) => setLoginEmail(e.target.value)}
             />

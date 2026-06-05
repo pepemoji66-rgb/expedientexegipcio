@@ -22,6 +22,8 @@ import Home from "./components/Home";
 import ChatUsuarios from "./components/Chat/ChatUsuarios";
 import EgiptoEnVivo from "./components/EgiptoEnVivo";
 import SeccionOrion from './components/SeccionOrion';
+import Politicas from "./components/Politicas";
+import Contacto from "./components/Contacto";
 
 // IMPORTA TU ADMIN PAGE AQUÍ (Asegúrate de que la ruta sea correcta)
 import AdminPage from "./AdminPage";
@@ -97,17 +99,25 @@ function AppContent() {
               {seccionActiva === "esfinge" && <Esfinge />}
               {seccionActiva === "formularios" && <Forms setResultadosBusqueda={setResultadosBusqueda} />}
 
+              {/* SECCIONES PÚBLICAS Y LIBRES */}
+              {seccionActiva === "galeria" && <Galeria imagenes={imagenesGaleria} setSeccionActiva={setSeccionActiva} />}
+              {seccionActiva === "audio" && <AudioSection audios={audios} />}
+              {seccionActiva === "videos" && <Videos videos={videos} />}
+              {seccionActiva === "mapa" && <MapaInteractivo setSeccionActiva={setSeccionActiva} imagenes={imagenesGaleria} />}
+              {seccionActiva === "minijuego" && <Minijuego />}
+              {seccionActiva === "ra" && <Ra />}
+              {seccionActiva === "vivo" && <EgiptoEnVivo />}
+              {seccionActiva === "orion" && <SeccionOrion />}
+
+              {/* SECCIONES ADSENSE */}
+              {seccionActiva === "privacidad" && <Politicas tipo="privacidad" />}
+              {seccionActiva === "terminos" && <Politicas tipo="terminos" />}
+              {seccionActiva === "contacto" && <Contacto />}
+
+              {/* SECCIONES PROTEGIDAS (REQUIEREN REGISTRO SIMPLIFICADO) */}
               {tienePermiso && (
                 <>
-                  {seccionActiva === "galeria" && <Galeria imagenes={imagenesGaleria} setSeccionActiva={setSeccionActiva} />}
-                  {seccionActiva === "audio" && <AudioSection audios={audios} />}
-                  {seccionActiva === "videos" && <Videos videos={videos} />}
-                  {seccionActiva === "mapa" && <MapaInteractivo setSeccionActiva={setSeccionActiva} imagenes={imagenesGaleria} />}
-                  {seccionActiva === "minijuego" && <Minijuego />}
-                  {seccionActiva === "ra" && <Ra />}
                   {seccionActiva === "chat" && <ChatUsuarios setSeccionActiva={setSeccionActiva} />}
-                  {seccionActiva === "vivo" && <EgiptoEnVivo />}
-                  {seccionActiva === "orion" && <SeccionOrion />}
                 </>
               )}
             </>
@@ -129,7 +139,7 @@ function AppContent() {
 
         </Routes>
       </main>
-      <Footer />
+      <Footer setSeccionActiva={setSeccionActiva} />
     </div>
   );
 }
