@@ -154,7 +154,7 @@ function AppContent() {
 
         </Routes>
       </main>
-      <Footer setSeccionActiva={setSeccionActiva} />
+      {seccionActiva !== "mapa" && <Footer setSeccionActiva={setSeccionActiva} />}
     </div>
   );
 }
