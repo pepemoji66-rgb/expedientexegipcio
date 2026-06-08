@@ -43,13 +43,7 @@ main,
   box-sizing: border-box;
 }
 
-/* Ajuste de espacio para cuando la barra de traducción está activa */
-.translated-ltr .content-wrapper,
-.translated-rtl .content-wrapper,
-html.translated-ltr .content-wrapper,
-html.translated-rtl .content-wrapper {
-  padding-top: 130px;
-}
+
 
 
 /* ==============================================

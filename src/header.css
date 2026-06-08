@@ -218,25 +218,4 @@
   }
 }
 
-/* AJUSTES PARA CUANDO GOOGLE TRANSLATE MUESTRA LA BARRA SUPERIOR */
-.translated-ltr .site-header,
-.translated-rtl .site-header,
-html.translated-ltr .site-header,
-html.translated-rtl .site-header {
-  top: 40px !important;
-}
-
-.translated-ltr .boton-musica-flotante,
-.translated-rtl .boton-musica-flotante,
-html.translated-ltr .boton-musica-flotante,
-html.translated-rtl .boton-musica-flotante {
-  top: 55px !important;
-}
-
-.translated-ltr .nav-menu,
-.translated-rtl .nav-menu,
-html.translated-ltr .nav-menu,
-html.translated-rtl .nav-menu {
-  top: 40px !important;
-  height: calc(100vh - 40px) !important;
-}
+

@@ -14,8 +14,8 @@ function ManejadorMapa({ imagenes = [], expedientes = [], misterios = [], setIdR
     if (centroGuardado) {
       const { lat, lon } = JSON.parse(centroGuardado);
 
-      // Volamos al punto geográfico (zoom 16 para vista de satélite detallada)
-      map.flyTo([lat, lon], 16, { duration: 2 });
+      // Volamos al punto geográfico (zoom 13 para vista de satélite equilibrada)
+      map.flyTo([lat, lon], 13, { duration: 2 });
 
       if (idGuardado) {
         setIdResaltado(idGuardado);
