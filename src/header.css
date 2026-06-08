@@ -218,4 +218,20 @@
   }
 }
 
-
+/* --- TRUCO PROFESIONAL: OCULTAR EL BANNER DE GOOGLE TRANSLATE ---
+   Esto permite que la página se traduzca perfectamente a cualquier idioma
+   pero oculta la molesta barra superior blanca de Google que rompe el diseño. */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame,
+.goog-te-banner,
+iframe.goog-te-banner-frame {
+  display: none !important;
+}
+
+body {
+  top: 0px !important;
+}
+
+html {
+  margin-top: 0px !important;
+}
